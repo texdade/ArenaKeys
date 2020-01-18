@@ -68,8 +68,8 @@ function getPrices(){
                                 tax: taxObj, //tax
                                 shipping: shippingObj //shipping
                             };
-                            console.log(game);
-                            //games.push(game);
+                            //console.log(game);
+                            games.push(game);
                             
                         });
                         node = result.iterateNext();

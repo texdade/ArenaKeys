@@ -8,31 +8,60 @@ function getDump() {
     return fetch(url);
 }
 
-//returns the [name, price, availability] of all games in proper formatted json
+//returns info of all games in proper formatted json
 //note that CDKeys has a steamID field but it's empty (at least at the time of writing of this code)
 function getPrices(){
-    getDump()
-        .then(res => res.text()) //res.text returns a promise too
-        .then(text => {
-            let result = Parser.parse(text); //NOTE: no need to specify delimiters/newlines because autodetects
-            let games = [];
-            for(let i=0; i<result.data.length; i++){
-                //json generation
-                let game = {
-                    name: result.data[i][1], //name
-                    price: result.data[i][4], //price
-                    availability: result.data[i][6] //availability
-                };
-                games.push(game);
-            }
-            //TODO: return as promise
-            console.log(JSON.stringify(games));
-        }); 
+    return new Promise((resolve, reject) => {
+        getDump()
+        
+        .then(res => {
+                res.text().then(text => {
+                    let result = Parser.parse(text); //NOTE: no need to specify delimiters/newlines because autodetects
+                    
+                    let games = [];
+                    for(let i=0; i<result.data.length; i++){
+                        //json generation
+                        let game = {
+                            internalID: result.data[i][0], //cdKeys internal id
+                            name: result.data[i][1], //name
+                            link: result.data[i][2], //link
+                            imageLink: result.data[i][3], //image link
+                            price: result.data[i][4], //price
+                            brand: result.data[i][5], //brand
+                            availability: result.data[i][6], //availability
+                            steamID: result.data[i][7], //steamID
+                            category: result.data[i][8] //category
+                        };
+                        games.push(game);
+                    }
+                    //console.log(JSON.stringify(games));
+                    resolve(games);
+                });
+        }) 
+
+        .catch(err => reject(err)); // error while fetching
+    });
+    
 }
 
-//returns the price of the specified game in proper formatted json
-function getPrice(steamId, gameName){
 
+//returns the price of the specified game in proper formatted json
+function getPrice(steamID, gameName){
+    return new Promise((resolve, reject) => {
+        
+        getPrices()
+            .then(data => {
+                for(let i=0; i<data.length; i++){
+                    //TODO check indian guy response to do the following
+                    if((data[i]["steamID"] && steamID == data[i]["steamID"]) || data[i]["name"].indexOf(gameName)!=-1){
+                        resolve(data[i]);
+                        break;
+                    }
+                }
+            })
+
+            .catch(err => reject(err));
+    });
 }
 
 module.exports = {getPrices, getPrice};

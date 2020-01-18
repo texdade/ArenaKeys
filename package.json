@@ -18,6 +18,9 @@
   "homepage": "https://github.com/texdade/SDE_project#readme",
   "dependencies": {
     "node-fetch-npm": "^2.0.2",
-    "papaparse": "^5.1.1"
+    "papaparse": "^5.1.1",
+    "xml2js": "^0.4.23",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
   }
 }

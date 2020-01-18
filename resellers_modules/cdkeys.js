@@ -10,7 +10,7 @@ function getDump() {
 
 //returns info of all games in proper formatted json
 //note that CDKeys has a steamID field but it's empty (at least at the time of writing of this code)
-function getPrices(){
+function getAllGamesInfo(){
     return new Promise((resolve, reject) => {
         getDump()
         
@@ -46,10 +46,10 @@ function getPrices(){
 
 
 //returns the price of the specified game in proper formatted json
-function getPrice(steamID, gameName){
+function getSingleGameInfo(steamID, gameName){
     return new Promise((resolve, reject) => {
-        
-        getPrices()
+
+        getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
                     //TODO check indian guy response to do the following
@@ -64,4 +64,4 @@ function getPrice(steamID, gameName){
     });
 }
 
-module.exports = {getPrices, getPrice};
+module.exports = {getAllGamesInfo, getSingleGameInfo};

@@ -12,22 +12,21 @@ function getDump() {
 
 //returns the info of all games in proper formatted json
 //note that Gamivo has an internal ID field but it doesn't come with the steamID (at least at the time of writing of this code)
-function getPrices(){
+function getAllGamesInfo(){
     return new Promise((resolve, reject) => {
         
         getDump()
-        
-        .then(res => {
+            .then(res => {
                 res.text().then(text => {
                     
                     let doc = new dom().parseFromString(text, 'text/xml');
-                    var result = xpath.evaluate(
+                    let result = xpath.evaluate(
                         "/rss/channel/item",            // xpathExpression
                         doc,                        // contextNode
                         null,                       // namespaceResolver
                         xpath.XPathResult.ANY_TYPE, // resultType
                         null                        // result
-                    )
+                    );
                     
                     let games = [];
         
@@ -86,10 +85,10 @@ function getPrices(){
 }
 
 //returns the price of the specified game in proper formatted json
-function getPrice(steamID, gameName){
+function getSingleGameInfo(steamID, gameName){
     return new Promise((resolve, reject) => {
-        
-        getPrices()
+
+        getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
 
@@ -104,4 +103,4 @@ function getPrice(steamID, gameName){
     });
 }
 
-module.exports = {getPrices, getPrice};
+module.exports = {getAllGamesInfo, getSingleGameInfo};

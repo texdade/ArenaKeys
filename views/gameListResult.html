@@ -1,0 +1,207 @@
+
+<!doctype html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">  
+    <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/arena-keys.css">
+
+    <title>SDE_Project</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">AppName</a>
+      <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+              <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+              <a class="nav-link" href="MyLists.html">My Lists<span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item active">
+              <a class="nav-link" href="#">New List<span class="sr-only">(current)</span></a>
+          </li>
+          <!--li class="nav-item">
+              <a class="nav-link disabled" href="#">Disabled</a>
+          </li-->
+      </ul>
+      <form class="ml-auto mr-1">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
+          Login
+        </button>
+        <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
+                  </div>
+                  <div><p></p></div>
+                  <div class="form-group">
+                    <label for="inputPassword" class="col-form-label">Password:</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                  </div>
+                </form>
+              </div>
+              <div class="row offset-1">
+                <div class="col-md-6" align="center">
+                  <button class="btn btn-primary">Google</button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-primary">Steam</button>
+                </div>
+              </div>
+              <div><p></p></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Login</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#RegisterModal">
+          Sign up
+        </button>
+        <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sign up</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="form-group">
+                    <label for="inputUsername" class="col-form-label">Username:</label>
+                    <input type="text" class="form-control" id="inputUsername" placeholder="Username">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputFirstName" class="col-form-label">First Name:</label>
+                    <input type="text" class="form-control" id="inputUsername" placeholder="First Name">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputLastName" class="col-form-label">Last Name:</label>
+                    <input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputEmail" class="col-form-label">Email:</label>
+                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputPassword" class="col-form-label">Password:</label>
+                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+                  </div>
+                  <div class="form-group">
+                    <label for="inputConfirmPassword" class="col-form-label">Confirm Password:</label>
+                    <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password">
+                  </div>
+                </form>
+              </div>
+              <div class="row offset-4">
+                <p>OR SIGN UP WITH:</p>
+              </div>
+              <div class="row offset-1">
+                <div class="col-md-6" align="center">
+                  <button class="btn btn-primary">Google</button>
+                </div>
+                <div class="col-md-6">
+                  <button class="btn btn-primary">Steam</button>
+                </div>
+              </div>
+              <div><p></p></div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Register</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </nav>
+    <div id="bg"></div>  
+    <div class="container" style="min-height: 100%;">
+      <div class="row m-5">
+      </div>
+      <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+        <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" id="selector">
+      </div>
+      <div class="row">
+        <div class="col-12 col-sm-8 col-lg-12">
+          <div class="row">
+            <div class="col-sm-11">
+              <h6 class="light">Results</h6>
+            </div>
+            <!--div class="col-sm-1">
+              <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Sort by
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                  <a class="dropdown-item" href="#">Price Ascending</a>
+                  <a class="dropdown-item" href="#">Price Descending</a>
+                  <a class="dropdown-item" href="#">Name A-Z</a>
+                  <a class="dropdown-item" href="#">Name Z-A</a>
+                </div>
+              </div>
+            </div-->
+          </div>
+          <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="image-parent">
+                  <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
+                  Game 1
+              </div>
+              Steam price: 16€<br>
+              Best price: 8€
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="image-parent">
+                  <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
+                  Game 2
+              </div>
+              Steam price: 16€<br>
+              Best price: 8€
+            </li>
+            <li class="list-group-item d-flex justify-content-between align-items-center">  
+              <div class="image-parent">
+                  <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
+                  Game 3
+              </div>
+              Steam price: 16€<br>
+              Best price: 8€
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <footer class="page-footer font-small blue">
+      <div class="footer-copyright text-center">© 2020 Copyright:
+          <a href="https://mdbootstrap.com/education/bootstrap/">SDE_Project</a>
+      </div>
+    </footer>  
+      
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+    <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="../data_template.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

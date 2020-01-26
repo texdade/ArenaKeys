@@ -52,8 +52,7 @@ function getSingleGameInfo(steamID, gameName){
         getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
-                    //TODO check indian guy response to do the following
-                    if((data[i]["steamID"] && steamID == data[i]["steamID"]) || data[i]["name"].indexOf(gameName)!=-1){
+                    if((data[i]["steamID"] && steamID === data[i]["steamID"]) || data[i]["name"].indexOf(gameName)!==-1){
                         resolve(data[i]);
                         break;
                     }
@@ -64,4 +63,25 @@ function getSingleGameInfo(steamID, gameName){
     });
 }
 
-module.exports = {getAllGamesInfo, getSingleGameInfo};
+
+//returns the price of the games with a matching name in proper formatted json
+function getMatchingGamesInfo(gameName){
+    return new Promise((resolve, reject) => {
+        let results = [];
+
+        getAllGamesInfo()
+            .then(data => {
+                for(let i=0; i<data.length; i++){
+                    if(data[i]["name"].indexOf(gameName)!==-1){//game with matching name
+                        results.push(data);
+                    }
+
+                    resolve(results);
+                }
+            })
+
+            .catch(err => reject(err));
+    });
+}
+
+module.exports = {getAllGamesInfo, getSingleGameInfo, getMatchingGamesInfo};

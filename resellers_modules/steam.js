@@ -35,6 +35,7 @@ function getSingleGameInfo(steamID){
                             name: game[steamID]["data"]["name"], //name
                             image: game[steamID]["data"]["header_image"], //link to image
                             description: game[steamID]["data"]["short_description"],
+                            link: "https://store.steampowered.com/app/"+steamID, //link to steam store item
                             price: game[steamID]["data"]["price_overview"]["final_formatted"] //price already formatted as string
                         };
                         //console.log(gameInfo);

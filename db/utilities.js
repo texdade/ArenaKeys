@@ -23,4 +23,16 @@ function logUpdateTable(tableName){
     });
 }
 
-module.exports = {connection, logUpdateTable};
+/*  Check validity of object gameData
+* */
+function isGameData(gameData){
+    return gameData && gameData['steamID'] && gameData['name'] && gameData['image'] && gameData['description'];
+}
+
+/*  Check validity of object gameDataPrice
+* */
+function isGameDataPrice(gameDataP){
+    return gameDataP && gameDataP['steamID'] && gameDataP['reseller'] && gameDataP['link'] && gameDataP['price'] && gameDataP['availability'];
+}
+
+module.exports = {connection, logUpdateTable, isGameData, isGameDataPrice};

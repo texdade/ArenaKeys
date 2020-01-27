@@ -71,13 +71,13 @@ function getAllGamesInfo(){
 
 
 //returns the price of the specified game in proper formatted json
-function getSingleGameInfo(steamID, gameName){
+function getSingleGameInfo(steamID){
     return new Promise((resolve, reject) => {
 
         getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
-                    if((data[i]["steamID"] && steamID === data[i]["steamID"]) || data[i]["name"].indexOf(gameName)!==-1){
+                    if(data[i]["steamID"] && steamID === data[i]["steamID"]){
                         resolve(data[i]);
                         break;
                     }
@@ -89,24 +89,41 @@ function getSingleGameInfo(steamID, gameName){
 }
 
 
-//returns the price of the games with a matching name in proper formatted json
-function getMatchingGamesInfo(gameName){
+//returns the price of the games with a matching name in proper formatted json, if steamID is present give priority to it
+function getMatchingGameInfo(gameName, steamID){
     return new Promise((resolve, reject) => {
-        let results = [];
+        const diff = (a,b) => (a.split(b).join('')).length; //returns the differences in terms of letters by string a and string b
 
         getAllGamesInfo()
             .then(data => {
+                let bestIndex = -1;
+                let bestDiff = gameName.length + 100;//init to high value
                 for(let i=0; i<data.length; i++){
-                    if(data[i]["name"].indexOf(gameName)!==-1){//game with matching name
-                        results.push(data);
+
+                    if(steamID && data[i]['steamID'] && steamID === data[i]['steamID'])//found the exact game by ID
+                        resolve(data[i]);
+
+                    if(data[i]['name']) {
+                        if(diff(data[i]['name'], gameName) < bestDiff){
+                            bestDiff = diff(data[i]['name'], gameName);
+                            bestIndex = i;
+                        }
+
+                        if(diff(gameName, data[i]['name']) < bestDiff){
+                            bestDiff = diff(gameName, data[i]['name']);
+                            bestIndex = i;
+                        }
                     }
 
-                    resolve(results);
                 }
+                if(bestIndex > 0)
+                    resolve(data[bestIndex]);
+                else
+                    resolve(null);//not founded
             })
 
             .catch(err => reject(err));
     });
 }
 
-module.exports = {getAllGamesInfo, getSingleGameInfo, getMatchingGamesInfo};
+module.exports = {getAllGamesInfo, getSingleGameInfo, getMatchingGameInfo};

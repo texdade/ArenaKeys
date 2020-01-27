@@ -2,6 +2,7 @@ const fetch = require("node-fetch-npm");
 const xpath = require("xpath");
 const dom = require("xmldom").DOMParser;
 const xml2js = require("xml2js");
+const stringSimilarity = require("string-similarity");
 
 const url = "https://www.hrkgame.com/en/hotdeals/xml-feed/?key=F546F-DFRWE-DS3FV&cur=EUR";
  
@@ -108,24 +109,21 @@ function getSingleGameInfo(steamID){
 function getMatchingGameInfo(gameName, steamID){
     return new Promise((resolve, reject) => {
         const diff = (a,b) => (a.split(b).join('')).length; //returns the differences in terms of letters by string a and string b
-
+        gameName = gameName.toLowerCase();
         getAllGamesInfo()
             .then(data => {
                 let bestIndex = -1;
-                let bestDiff = gameName.length + 100;//init to high value
+                let bestSimilarity = 0.65;
                 for(let i=0; i<data.length; i++){
-
                     if(steamID && data[i]['steamID'] && steamID === data[i]['steamID'])//found the exact game by ID
                         resolve(data[i]);
 
                     if(data[i]['name']) {
-                        if(diff(data[i]['name'], gameName) < bestDiff){
-                            bestDiff = diff(data[i]['name'], gameName);
-                            bestIndex = i;
-                        }
-
-                        if(diff(gameName, data[i]['name']) < bestDiff){
-                            bestDiff = diff(gameName, data[i]['name']);
+                        let dataName = data[i]['name'].toLowerCase();
+                        let similarity = stringSimilarity.compareTwoStrings(gameName, dataName);
+                        
+                        if(similarity > bestSimilarity){
+                            bestSimilarity = similarity;
                             bestIndex = i;
                         }
                     }

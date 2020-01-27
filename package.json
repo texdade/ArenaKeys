@@ -21,6 +21,7 @@
     "mysql": "^2.17.1",
     "node-fetch-npm": "^2.0.2",
     "papaparse": "^5.1.1",
+    "string-similarity": "^4.0.1",
     "xml2js": "^0.4.23",
     "xmldom": "^0.2.1",
     "xpath": "0.0.27"

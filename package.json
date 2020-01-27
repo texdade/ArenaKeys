@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/texdade/SDE_project#readme",
   "dependencies": {
+    "bcrypt": "^3.0.7",
     "mysql": "^2.17.1",
     "node-fetch-npm": "^2.0.2",
     "papaparse": "^5.1.1",

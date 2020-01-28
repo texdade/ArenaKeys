@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node -r dotenv/config server.js"
   },
   "repository": {
     "type": "git",
@@ -21,11 +21,16 @@
     "bcrypt": "^3.0.7",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
+    "google-auth-library": "^5.9.2",
     "mysql": "^2.18.1",
     "node-fetch-npm": "^2.0.2",
     "papaparse": "^5.1.1",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
+    "passport-http-bearer": "^1.0.1",
     "string-similarity": "^4.0.1",
     "xml2js": "^0.4.23",
     "xmldom": "^0.2.1",

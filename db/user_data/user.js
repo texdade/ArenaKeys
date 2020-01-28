@@ -1,4 +1,4 @@
-const mysqlConnection = require('../db/utilities').connection;
+const mysqlConnection = require('../utilities').connection;
 const bcrypt = require('bcrypt');
 
 function createUser(email, nickname, password, user_steam_id, age, country){
@@ -37,7 +37,7 @@ function getUser(email){
     });
 }
 
-
+//can update everything besides password
 function updateUserData(email, nickname, user_steam_id, age, country){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("UPDATE users SET email = ?, nickname = ?, user_steam_id = ?, age = ?, country = ? WHERE email = ?",
@@ -91,3 +91,5 @@ function deleteUser(email){
         });
     });
 }
+
+module.exports = {createUser, getUser, updateUserData, updateUserPassword, deleteUser}

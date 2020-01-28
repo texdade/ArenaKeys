@@ -23,17 +23,17 @@ function createUser(email, nickname, password, user_steam_id, age, country){
 function getUser(email){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("SELECT * FROM users WHERE email = ?",
-        [email],
-        (error, results, fields) =>{
-            if(error) {
-                console.log("ERROR while retrieving user with email " + email);
-                console.log(error);
-                reject(new Error(error));
-            }else{
-                console.log("Retrieved user with email: " + email);
-                resolve(results[0])
-            }
-        });
+            [email],
+            (error, results, fields) =>{
+                if(error) {
+                    console.log("ERROR while retrieving user with email " + email);
+                    console.log(error);
+                    reject(new Error(error));
+                }else{
+                    console.log("Retrieved user with email: " + email);
+                    resolve(results[0])
+                }
+            });
     });
 }
 
@@ -78,17 +78,17 @@ function updateUserPassword(email, password){
 function deleteUser(email){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("DELETE FROM users WHERE email = ?",
-        [email],
-        (error, results, fields) =>{
-            if(error) {
-                console.log("ERROR while deleting user with email " + email);
-                console.log(error);
-                reject(new Error(error));
-            }else{
-                console.log("Deleted user with email " + email);
-                resolve(null)
-            }
-        });
+            [email],
+            (error, results, fields) =>{
+                if(error) {
+                    console.log("ERROR while deleting user with email " + email);
+                    console.log(error);
+                    reject(new Error(error));
+                }else{
+                    console.log("Deleted user with email " + email);
+                    resolve(null)
+                }
+            });
     });
 }
 

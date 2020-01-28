@@ -31,7 +31,7 @@ function getUser(email){
                 reject(new Error(error));
             }else{
                 console.log("Retrieved user with email: " + email);
-                resolve(results)
+                resolve(results[0])
             }
         });
     });

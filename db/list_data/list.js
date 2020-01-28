@@ -11,7 +11,7 @@ function createList(email, name){
                 reject(new Error(error));
             }else{
                 console.log("Created list with name "+ name);
-                resolve(null)
+                resolve(results["insertId"]);
             }
         });
     });

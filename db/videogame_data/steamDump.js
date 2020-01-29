@@ -105,6 +105,26 @@ function refreshDump(){
     });
 }
 
+//insert name, description, image link, steam ID, last update
+function insertGameInfo(gameData){
+    return new Promise((resolve, reject)=>{
+        if(utilities.isGameData(gameData)){
+            mysqlConnection.query("INSERT INTO steam_games (name, description, image_link, steam_id, last_update) VALUES (?,?,?,?, NOW())",
+                [gameData['name'], gameData['description'], gameData['image'], gameData['steamID']],
+                (error, results, fields) =>{
+                    if(error)
+                        reject(error);
+                    else if(results.affectedRows === 1)
+                        resolve();
+                    else
+                        reject();
+                });
+        }else{
+            reject("Invalid format");
+        }
+    });
+}
+
 //update name, description, image link and eventually last_update
 function updateGameInfo(gameData, refreshLastUpdate){
 
@@ -191,4 +211,4 @@ function getGameBasicInfo(steamID){
     });
 }
 
-module.exports = {refreshDumpBruteForce, refreshDump, updateGameInfo, getGameBasicInfo};
+module.exports = {refreshDumpBruteForce, refreshDump, insertGameInfo, updateGameInfo, getGameBasicInfo};

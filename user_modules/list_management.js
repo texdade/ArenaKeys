@@ -1,6 +1,8 @@
 const db_list = require('../db/list_data/list');
 const db_user = require('../db/user_data/user');
 const steam_wishlist = require('../resellers_modules/steam');
+const steam_api = require('../resellers_modules/steam');
+const game_db = require('../db/videogame_data/steamDump')
 
 //create a new wishlist starting from the steam one
 function importSteamWishlist(email, wishlist_name){
@@ -16,11 +18,20 @@ function importSteamWishlist(email, wishlist_name){
             db_list.createList(email, wishlist_name).then(id => {
                 for(let i = 0; i<data.length; i++){
                     //and add every game from the steam wishlist in it
-                    db_list.addGame(id, data[i]["steamID"]);
+                    db_list.addGame(id, data[i]["steamID"]).catch(error => {
+                        //if there's an error, it's probably because the dump doesn't contain the game => try to add it
+                        steam_api.getSingleGameInfo(data[i]["steamID"]).then(game => {
+                            game_db.insertGameInfo(game).then(
+                                db_list.addGame(id, data[i]["steamID"])
+                            );
+                        });
+                    });
                 }
             });
         }).catch(error => console.log(error));
     }).catch(error => console.log(error));
 }
+
+importSteamWishlist("davidetessarolo@gmail.com", "Prova2");
 
 module.exports = {importSteamWishlist}

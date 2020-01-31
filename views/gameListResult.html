@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
+    <script src="https://kit.fontawesome.com/834387bfd8.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">  
     <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
     <link rel="stylesheet" href="css/arena-keys.css">
@@ -14,7 +15,7 @@
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="#">AppName</a>
+      <a class="navbar-brand" href="index.html">ArenaKeys</a>
       <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
               <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
@@ -55,12 +56,17 @@
                   </div>
                 </form>
               </div>
-              <div class="row offset-1">
-                <div class="col-md-6" align="center">
-                  <button class="btn btn-primary">Google</button>
+              <div class="row">
+                <div class="col-md-12" align="center">
+                  <p>OR SIGN IN WITH</p>
                 </div>
-                <div class="col-md-6">
-                  <button class="btn btn-primary">Steam</button>
+              </div>
+              <div class="row">
+                <div class="col-md-6" align="center">
+                  <button class="btn btn-primary"><i class="fab fa-google"></i> &nbsp; Google</button><div><p></p></div>
+                </div>
+                <div class="col-md-6" align="center">
+                  <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Steam</button>
                 </div>
               </div>
               <div><p></p></div>
@@ -138,7 +144,13 @@
       <div class="row m-5">
       </div>
       <div class="md-form active-pink active-pink-2 mb-3 mt-0">
-        <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" id="selector">
+        <h1>ArenaKeys</h1>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+          </div>
+          <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="selector">
+        </div>
       </div>
       <div class="row">
         <div class="col-12 col-sm-8 col-lg-12">

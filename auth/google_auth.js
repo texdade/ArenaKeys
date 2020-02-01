@@ -43,9 +43,6 @@ const registerGoogleAuth = app => {
                 callbackURL: process.env.CALLBACK_URL
             },
             (token, refreshToken, profile, done) => {
-                // here we would store the user information in the db, if the user does not exist.
-
-                //TODO Find or create user
                 return done(null, {
                     profile,
                     token
@@ -71,7 +68,18 @@ const registerGoogleAuth = app => {
             failureRedirect: '/auth/google'
         }),
         function(req, res) {
-            res.json({ token: req.user.token });
+            res.json({
+                user: {
+                    googleUserId: req.user.profile.id,
+                    steamUserId: undefined,
+                    name: req.user.profile.displayName,
+                    email: req.user.profile.emails[0].value,
+                    imageLink: req.user.profile.photos[0].value,
+                    steamProfileUrl: undefined,
+                    lists: []
+                },
+                token: req.user.token
+            });
         }
     );
 };
@@ -95,8 +103,7 @@ const registerGoogleBearerAuth = () => {
                 );
                 const tokenInfo = await client.getTokenInfo(token);
 
-                //TODO Find or create user
-                return cb(null, {googleId: tokenInfo.sub, email: tokenInfo.email});
+                return cb(null, {googleId: tokenInfo.sub, email: tokenInfo.email});//just identifier infos are necessary
 
             } catch (error) {
                 console.error(error);

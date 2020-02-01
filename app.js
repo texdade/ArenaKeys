@@ -3,8 +3,7 @@
 
 const express = require('express');
 const bodyParser = require('body-parser');
-//const {auth, protect} = require('./auth/google_auth');
-const {auth, protect} = require('./auth/steam_auth');
+const {auth, protect} = require('./auth/all_auth');
 
 const app = express();
 

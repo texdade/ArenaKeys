@@ -1,4 +1,5 @@
-const passport = require('passport');
+let Passport = require('passport').Passport;
+let passportSteam = new Passport();
 const {Strategy} = require('passport-http-bearer');
 const util = require('util');
 const jwt = require('jsonwebtoken');
@@ -13,26 +14,26 @@ const secretKeyForSteamAuthJWT = "DevisIsTheCodeMaster"; //I am very humble guy
  * @param {Object} app
  */
 exports.auth = app => {
-    app.use(passport.initialize());
+    app.use(passportSteam.initialize());
 
     registerSteamAuth(app);
-    registerBearerAuth();
+    registerSteamBearerAuth();
 };
 
 /**
  * A tiny helper to make an endpoint protected.
  */
 exports.protect = () => {
-    return passport.authenticate('bearer', { session: false });
+    return passportSteam.authenticate('bearer', {session: false});
 };
 
 // for further reference
 // http://www.passportjs.org/docs/steam
 const registerSteamAuth = app => {
-    passport.serializeUser((user, done) => {
+    passportSteam.serializeUser((user, done) => {
         done(null, user);
     });
-    passport.deserializeUser((user, done) => {
+    passportSteam.deserializeUser((user, done) => {
         done(null, user);
     });
 
@@ -41,7 +42,7 @@ const registerSteamAuth = app => {
     //   Strategies in passport require a `validate` function, which accept
     //   credentials (in this case, an OpenID identifier and profile), and invoke a
     //   callback with a user object.
-    passport.use(new SteamStrategy({
+    passportSteam.use(new SteamStrategy({
             returnURL: 'http://localhost:3000/auth/steam/return',
             realm: 'http://localhost:3000/',
             apiKey: '64C32EE47A2E9D468A769A1567B6749C'
@@ -66,7 +67,7 @@ const registerSteamAuth = app => {
     //   the user to steamcommunity.com.  After authenticating, Steam will redirect the
     //   user back to this application at /auth/steam/return
     app.get('/auth/steam',
-        passport.authenticate('steam', {session: false}));
+        passportSteam.authenticate('steam', {session: false}));
 
     // GET /auth/steam/return
     //   Use passport.authenticate() as route middleware to authenticate the
@@ -74,7 +75,7 @@ const registerSteamAuth = app => {
     //   login page.  Otherwise, the primary route function function will be called,
     //   which, in this example, will redirect the user to the home page.
     app.get('/auth/steam/return',
-        passport.authenticate('steam', { failureRedirect: '/auth/steam' }),
+        passportSteam.authenticate('steam', { failureRedirect: '/auth/steam' }),
         function(req, res) {
             const user = req.user;
             jwt.sign(
@@ -95,13 +96,13 @@ const registerSteamAuth = app => {
 /**
  * Registers the a bearer token strategy that we will use to protect our API.
  */
-const registerBearerAuth = () => {
+const registerSteamBearerAuth = () => {
     // docs
     //    https://github.com/googleapis/google-auth-library-nodejs#oauth2
     //    https://github.com/jaredhanson/passport-http-bearer
     //    https://github.com/passport/express-4.x-http-bearer-example
     //    https://developers.google.com/identity/sign-in/web/backend-auth
-    passport.use(
+    passportSteam.use(
         new Strategy(async (token, cb) => {
             try {
 

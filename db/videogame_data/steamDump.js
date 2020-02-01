@@ -69,34 +69,43 @@ function refreshDumpBruteForce(){
 }
 
 //Add new games(steam_id + name) if not already present in the generic dump
-function refreshDump(){
+//try to insert the game every interval (most of the insert will just fail 'cause the game is already present from previous inserts)
+function refreshDump(interval, LOG){
     return new Promise((resolve, reject) => {
         steamFetchModule.getAllGamesList()
             .then(list => {
                 let queryPerformed = 0;
-
+                let i = 0;
                 for(let game of list){
-                    console.log("Inserting " + game['name'] + " (id = " + game['steamID'] + ")");
-                    mysqlConnection.query("INSERT INTO steam_games(steam_id, name) VALUES(?,?)",
-                        [game['steamID'], game['name']],
-                        (error, results, fields) =>{
+                    setTimeout(() => {
+                        if(LOG)
+                            console.log("Inserting " + game['name'] + " (id = " + game['steamID'] + ")");
+                        mysqlConnection.query("INSERT INTO steam_games(steam_id, name) VALUES(?,?)",
+                            [game['steamID'], game['name']],
+                            (error, results, fields) =>{
 
-                            if(error) {
-                                // probably this would mean that game is already inserted in 99% of the cases...
-                                // no trouble, just go on (error will happen most of the time)
-                                console.log("ERROR while inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
-                                console.log(error);
-                            }else{
-                                console.log("Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
-                            }
+                                if(error) {
+                                    //TODO add this if, to have less logs
+                                    //if(error.code !== 'ER_DUP_ENTRY'){
+                                        // probably this would mean that game is already inserted in 99% of the cases...
+                                        // no trouble, just go on (error will happen most of the time)
+                                        if(LOG)
+                                            console.log(error.code + "\twhile inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
+                                    //}
+                                }else{
+                                    if(LOG)
+                                        console.log("NEW GAME! Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
+                                }
 
-                            queryPerformed++;
-                            if(queryPerformed === list.length)
-                                tableLastUpdate()//record that the dump has been updated
-                                    .then(()=>resolve(null))
-                                    .catch(err => reject(err));
+                                queryPerformed++;
+                                if(queryPerformed === list.length)
+                                    tableLastUpdate()//record that the dump has been updated
+                                        .then(()=>resolve(null))
+                                        .catch(err => reject(err));
 
-                        });
+                            });
+                    },i*interval);
+                    i++;
                 }
 
             })
@@ -211,4 +220,35 @@ function getGameBasicInfo(steamID){
     });
 }
 
-module.exports = {refreshDumpBruteForce, refreshDump, insertGameInfo, updateGameInfo, getGameBasicInfo};
+/*  Fetch JUST from the db (no refresh implied... just too much expensive)
+* */
+function getMatchingGamesBasicInfo(name){
+    console.log("Finding in db matching games for title " + name);
+    let nameLike = '%'+name+'%';//query LIKE value
+    return new Promise((resolve, reject) => {
+        mysqlConnection.query("SELECT steam_id, name, image_link, description, last_update FROM steam_games WHERE name LIKE ?",
+            [nameLike],
+            (error, results, fields) =>{
+
+                if(error) {
+                    reject(error);
+                }else{
+                    let gamesInfo = [];
+                    for(let gameDataSelect of results)
+                        gamesInfo.push({
+                            steamID: gameDataSelect['steam_id'],
+                            name: gameDataSelect['name'],
+                            description: gameDataSelect['description'],
+                            image: gameDataSelect['image_link'],
+                            lastUpdate: gameDataSelect['last_update']
+                        });
+
+                    resolve(gamesInfo);
+                }
+
+
+            });
+    });
+}
+
+module.exports = {refreshDumpBruteForce, refreshDump, insertGameInfo, updateGameInfo, getGameBasicInfo, getMatchingGamesBasicInfo};

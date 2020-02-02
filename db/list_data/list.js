@@ -1,45 +1,45 @@
 const mysqlConnection = require('../utilities').connection;
 
-function createList(email, name){
+function createList(userId, name, notify){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("INSERT INTO user_lists(user, name) VALUES(?,?)",
-        [email, name],
+        mysqlConnection.query("INSERT INTO user_lists(user, name, notifyMe) VALUES(?,?,?)",
+        [userId, name, notify],
         (error, results, fields) =>{
             if(error) {
-                console.log("ERROR while creating list "+ name + " for user " + email);
+                console.log("ERROR while creating list for user " + userId);
                 console.log(error);
                 reject(new Error(error));
             }else{
-                console.log("Created list with name "+ name);
-                resolve(results["insertId"]);
+                console.log("Created list for user "+ userId);
+                resolve(results["insertId"]); //return the new list id
             }
         });
     });
 }
 
 //given a user, get all associated wishlists
-function getLists(email){
+function getLists(user){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("SELECT * FROM user_lists WHERE user = ?",
-        [email],
+        [user],
         (error, results, fields) =>{
             if(error) {
-                console.log("ERROR while retrieving lists of user with email " + email);
+                console.log("ERROR while retrieving lists of user " + user);
                 console.log(error);
                 reject(new Error(error));
             }else{
-                console.log("Retrieved lists of user with email " + email);
+                console.log("Retrieved lists of user " + user);
                 resolve(results)
             }
         });
     });
 }
 
-//can only change name of a wishlist
-function updateList(id, name){
+//can only change name and notifier of a wishlist
+function updateList(id, name, notifyMe){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE user_lists SET name = ? WHERE user = ?",
-            [name, email],
+        mysqlConnection.query("UPDATE user_lists SET name = ?, notifyMe = ? WHERE id = ?",
+            [name, notifyMe, id],
             (error, results, fields) =>{
                 if(error) {
                     console.log("ERROR while updating list "+ id);

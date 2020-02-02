@@ -1,95 +1,74 @@
 const mysqlConnection = require('../utilities').connection;
 const bcrypt = require('bcrypt');
 
-function createUser(email, nickname, password, user_steam_id, age, country){
+function createUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("INSERT INTO users(email, nickname, password, user_steam_id, age, country) VALUES(?,?,?,?,?,?)",
+        mysqlConnection.query("INSERT INTO users(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email) VALUES(?,?,?,?,?,?)",
             //password is already hashed with salt via bcrypt
-            [email, nickname, bcrypt.hashSync(password, 10), user_steam_id, age, country],
+            [steamUserId, googleUserId, name, imageLink, steamProfileUrl, email],
             (error, results, fields) =>{
-
                 if(error) {
-                    console.log("ERROR while inserting user "+ nickname + " with email " + email);
+                    console.log("ERROR while inserting new user");
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Inserted user "+ nickname + " with email " + email);
-                    resolve(null)
+                    console.log("Inserted new user ");
+                    resolve(results["insertId"]);
                 }
             });
     });
 }
 
-function getUser(email){
+//return user infos taking either steam id or google id
+function getUser(id){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("SELECT * FROM users WHERE email = ?",
-            [email],
+        mysqlConnection.query("SELECT * FROM users WHERE steamUserId = ? OR googleUserId = ?",
+            [id, id],
             (error, results, fields) =>{
                 if(error) {
-                    console.log("ERROR while retrieving user with email " + email);
+                    console.log("ERROR while retrieving user with id " + id);
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Retrieved user with email: " + email);
+                    console.log("Retrieved user with id: " + id);
                     resolve(results[0])
                 }
             });
     });
 }
 
-//can update everything besides password
-function updateUserData(email, nickname, user_steam_id, age, country){
+function updateUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE users SET email = ?, nickname = ?, user_steam_id = ?, age = ?, country = ? WHERE email = ?",
-            [email, nickname, user_steam_id, age, country, email],
+        mysqlConnection.query("UPDATE users SET steamUserId = ?, googleUserId = ?, name = ?, imageLink = ?, steamProfileUrl = ?, email = ? WHERE steamUserId = ? OR googleUserId = ?",
+            [steamUserId, googleUserId, name, imageLink, steamProfileUrl, email, steamUserId, googleUserId],
             (error, results, fields) =>{
-
                 if(error) {
-                    console.log("ERROR while updating user "+ nickname + " with email " + email);
+                    console.log("ERROR while updating user");
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Updated user "+ nickname + " with email " + email);
+                    console.log("Updated user");
                     resolve(null)
                 }
             });
     });
 }
 
-function updateUserPassword(email, password){
+function deleteUser(id){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE users SET password = ? WHERE email = ?",
-            [bcrypt.hashSync(password, 10), email],
+        mysqlConnection.query("DELETE FROM users WHERE steamUserId = ? OR googleUserId = ?",
+            [id, id],
             (error, results, fields) =>{
                 if(error) {
-                    console.log("ERROR while updating user " + email + " password");
+                    console.log("ERROR while deleting user");
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Updated user " + email + " password");
+                    console.log("Deleted user");
                     resolve(null)
                 }
             });
     });
 }
 
-
-
-function deleteUser(email){
-    return new Promise((resolve, reject) => {
-        mysqlConnection.query("DELETE FROM users WHERE email = ?",
-            [email],
-            (error, results, fields) =>{
-                if(error) {
-                    console.log("ERROR while deleting user with email " + email);
-                    console.log(error);
-                    reject(new Error(error));
-                }else{
-                    console.log("Deleted user with email " + email);
-                    resolve(null)
-                }
-            });
-    });
-}
-
-module.exports = {createUser, getUser, updateUserData, updateUserPassword, deleteUser}
+module.exports = {createUser, getUser, updateUser, deleteUser}

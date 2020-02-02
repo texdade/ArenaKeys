@@ -32,6 +32,4 @@ function importSteamWishlist(email, wishlist_name){
     }).catch(error => console.log(error));
 }
 
-importSteamWishlist("davidetessarolo@gmail.com", "Prova2");
-
 module.exports = {importSteamWishlist}

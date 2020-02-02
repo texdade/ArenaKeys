@@ -85,15 +85,13 @@ const registerSteamAuth = app => {
                 (err, token) => {
                     if (err) throw err;
                     res.json({
-                        //decomment userFull in order to see all data returned from steam
-                        //userFull: user,//TODO @texdade usa questo come oggetto di riferimento (questo rappresenta i dati completi... poi lo togliamo via e NON lo ritorniamo, per cui quando hai sistemato togli pure)
                         user: {
                             googleUserId: undefined,
                             steamUserId: user.id,
                             name: user.displayName,
                             email: undefined,
-                            imageLink: user.photos[2].value, //TODO @texdade controlla se qui va bene il link dell'immagine (la vado a prendere da avatar???)
-                            steamProfileUrl: user['_json'].profileurl,//TODO @texdade controlla se qui va bene il link al profilo, specie in rif a quello che mi spiegavi prima con le wishlist (devo prendere i dati da identifier)
+                            imageLink: user.photos[2].value,
+                            steamProfileUrl: user['_json'].profileurl,
                             lists: []
                         },
                         token,
@@ -118,7 +116,7 @@ const registerSteamBearerAuth = () => {
 
                 const tokenInfo = await jwt.verify(token, secretKeyForSteamAuthJWT);
 
-                return cb(null, {steamId: tokenInfo.id});
+                return cb(null, {steamUserId: tokenInfo.id});
 
             } catch (error) {
                 console.error(error);

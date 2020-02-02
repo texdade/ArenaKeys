@@ -33,6 +33,7 @@ const secureRouter = require('./routes/secure_router'); //testing if normal auth
 const websiteRouter = require('./routes/website_router'); //testing website engine ejs
 
 const videogameRouter = require('./routes/videogame_router'); //router for getting videogame data
+const userRouter = require('./routes/user_router'); //router for getting user data
 
 //set up routers for latest version app
 app.use('/', genericRouter);
@@ -45,5 +46,9 @@ app.use('/', websiteRouter);
 
 //set up router for videogame data
 app.use('/', videogameRouter);
+
+//set up router for user data
+app.use('/steam', sProtect(), userRouter);
+app.use('/google', gProtect(), userRouter);
 
 module.exports = app;

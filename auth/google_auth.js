@@ -103,7 +103,7 @@ const registerGoogleBearerAuth = () => {
                 );
                 const tokenInfo = await client.getTokenInfo(token);
 
-                return cb(null, {googleId: tokenInfo.sub, email: tokenInfo.email});//just identifier infos are necessary
+                return cb(null, {googleUserId: tokenInfo.sub, email: tokenInfo.email});//just identifier infos are necessary
 
             } catch (error) {
                 console.error(error);

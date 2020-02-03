@@ -4,7 +4,7 @@
 const express = require('express');
 const router = express.Router();
 
-const manageUserData = require('../adapters/user_adapter');
+const manageUserData = require('../logic/user_logic');
 
 router.get('/user', (req, res) => {
     let googleId = req.user.googleUserId;

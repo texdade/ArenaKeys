@@ -2,7 +2,7 @@
 */
 
 //continously refresh data within the db
-const refreshGameAllDayLong = require('./adapters/videogame_adapter').refreshGamesDump;
+const refreshGameAllDayLong = require('./logic/videogame_logic').refreshGamesDump;
 refreshGameAllDayLong();
 
 const express = require('express');

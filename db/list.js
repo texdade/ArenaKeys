@@ -1,70 +1,83 @@
-const mysqlConnection = require('../utilities').connection;
+const mysqlConnection = require('./utilities').connection;
 
 function createList(userId, name, notify){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("INSERT INTO user_lists(user, name, notifyMe) VALUES(?,?,?)",
+        mysqlConnection.query("INSERT INTO user_lists(user, name, notify_me) VALUES(?,?,?)",
         [userId, name, notify],
         (error, results, fields) =>{
             if(error) {
                 console.log("ERROR while creating list for user " + userId);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
-                console.log("Created list for user "+ userId);
-                resolve(results["insertId"]); //return the new list id
+                resolve(results["insertId"]);
             }
         });
     });
 }
 
 //given a user, get all associated wishlists
-function getLists(user){
+function getListsByUser(userId){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("SELECT * FROM user_lists WHERE user = ?",
-        [user],
+        mysqlConnection.query("SELECT id, name, notify_me, user as userId FROM user_lists WHERE user = ?",
+        [userId],
         (error, results, fields) =>{
             if(error) {
-                console.log("ERROR while retrieving lists of user " + user);
+                console.log("ERROR while retrieving lists of user " + userId);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
-                console.log("Retrieved lists of user " + user);
                 resolve(results)
             }
         });
     });
 }
 
-//can only change name and notifier of a wishlist
-function updateList(id, name, notifyMe){
+//given a user, get all associated wishlists
+function getList(listId, userId){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE user_lists SET name = ?, notifyMe = ? WHERE id = ?",
-            [name, notifyMe, id],
+        mysqlConnection.query("SELECT id, name, notify_me, user as userId FROM user_lists WHERE id = ? AND user = ?",
+            [listId, userId],
             (error, results, fields) =>{
                 if(error) {
-                    console.log("ERROR while updating list "+ id);
+                    console.log("ERROR while retrieving lists of user " + userId);
                     console.log(error);
-                    reject(new Error(error));
+                    reject(error);
                 }else{
-                    console.log("Updated list "+ id);
-                    resolve(null)
+                    resolve(results[0])
                 }
             });
     });
 }
 
-function deleteList(id){
+//can only change name and notifier of a wishlist
+function updateList(id, userId, name, notifyMe){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("DELETE FROM user_lists WHERE id = ?",
-        [id],
+        mysqlConnection.query("UPDATE user_lists SET name = ?, notify_me = ? WHERE id = ? AND user = ?",
+            [name, notifyMe, id, userId],
+            (error, results, fields) =>{
+                if(error) {
+                    console.log("ERROR while updating list "+ id);
+                    console.log(error);
+                    reject(error);
+                }else{
+                    resolve(results.affectedRows)
+                }
+            });
+    });
+}
+
+function deleteList(id, userId){
+    return new Promise((resolve, reject) => {
+        mysqlConnection.query("DELETE FROM user_lists WHERE id = ? AND user = ?",
+        [id, userId],
         (error, results, fields) =>{
             if(error) {
                 console.log("ERROR while deleting list " + id);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
-                console.log("Deleted list " + id);
-                resolve(null)
+                resolve(results.affectedRows)
             }
         });
     });
@@ -78,26 +91,29 @@ function addGame(listId, steamId){
             if(error) {
                 console.log("ERROR while creating entry for list "+ listId + " with game " + steamId);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
                 console.log("Created entry for list "+ listId + " with game " + steamId);
-                resolve(null)
+                resolve({
+                    listId: listId,
+                    steamID: steamId
+                });
             }
         });
     });
 }
 
-function getGames(listId){
+function getGames(list){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("SELECT steam_id FROM user_list_items WHERE list_id = ?",
-        [listId],
+        [list['id']],
         (error, results, fields) =>{
             if(error) {
-                console.log("ERROR while retrieving items for list " + listId);
+                console.log("ERROR while retrieving items for list " + list['id']);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
-                console.log("Retrieved items of list " + listId);
+                console.log("Retrieved steamIds of list " + list['id']);
                 resolve(results)
             }
         });
@@ -112,13 +128,12 @@ function deleteGame(listId, steamId){
             if(error) {
                 console.log("ERROR while deleting entry from list " + listId);
                 console.log(error);
-                reject(new Error(error));
+                reject(error);
             }else{
-                console.log("Deleted entry from list " + listId);
-                resolve(null)
+                resolve(results.affectedRows)
             }
         });
     });
 }
 
-module.exports = {createList, getLists, updateList, deleteList, addGame, getGames, deleteGame}
+module.exports = {createList, getListsByUser, getList, updateList, deleteList, addGame, getGames, deleteGame}

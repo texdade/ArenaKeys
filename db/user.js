@@ -1,10 +1,8 @@
-const mysqlConnection = require('../utilities').connection;
-const bcrypt = require('bcrypt');
+const mysqlConnection = require('./utilities').connection;
 
 function createUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email){
     return new Promise((resolve, reject) => {
         mysqlConnection.query("INSERT INTO users(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email) VALUES(?,?,?,?,?,?)",
-            //password is already hashed with salt via bcrypt
             [steamUserId, googleUserId, name, imageLink, steamProfileUrl, email],
             (error, results, fields) =>{
                 if(error) {
@@ -71,4 +69,4 @@ function deleteUser(id){
     });
 }
 
-module.exports = {createUser, getUser, updateUser, deleteUser}
+module.exports = {createUser, getUser, updateUser, deleteUser};

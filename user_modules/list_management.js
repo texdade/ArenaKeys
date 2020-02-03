@@ -1,5 +1,5 @@
-const db_list = require('../db/list_data/list');
-const db_user = require('../db/user_data/user');
+const db_list = require('../db/list');
+const db_user = require('../db/user');
 const steam_wishlist = require('../resellers_modules/steam');
 const steam_api = require('../resellers_modules/steam');
 const game_db = require('../db/videogame_data/steamDump')

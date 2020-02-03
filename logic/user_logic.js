@@ -1,4 +1,4 @@
-const userCRUD = require('../db/user_data/user');
+const userCRUD = require('../db/user');
 
 function getUser(id){
     return new Promise((resolve, reject) => {

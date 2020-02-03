@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 
-const fetchGamesData = require('../adapters/videogame_adapter');
+const fetchGamesData = require('../logic/videogame_logic');
 
 router.get('/videogame', (req, res) => {
     let steamID = req.query.steamID;

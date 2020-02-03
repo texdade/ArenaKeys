@@ -2,7 +2,7 @@
 *
 *
 */
-const videoGameLogic = require('../logic/videogame_logic');
+const videoGameLogic = require('../website_processes/videogame_logic');
 const express = require('express');
 const router = express.Router();
 

@@ -192,6 +192,7 @@ function getGameBasicInfo(steamID){
                             lastUpdate: gameDataSelect['last_update']
                         });
                     else{
+                        console.log("game basic info for game " + steamID + "  needs refresh");
                         //game misses some basic data
                         steamFetchModule.getSingleGameInfo(steamID)
                             .then(gameDataFetch => {

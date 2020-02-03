@@ -1,6 +1,4 @@
-const listFetcher = require('../user_modules/list_management');
 const userCRUD = require('../db/user_data/user');
-const listCRUD = require('../db/list_data/list');
 
 function getUser(id){
     return new Promise((resolve, reject) => {

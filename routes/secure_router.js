@@ -10,9 +10,9 @@ router.get('/secret', (req, res) => {
     res.status(200).json({
         status: "Up",
         secret: "Working",
-        googleId: req.user.googleId,
+        googleId: req.user.googleUserId,
         email: req.user.email,
-        steamId: req.user.steamId
+        steamId: req.user.steamUserId
     });
 });
 
@@ -21,9 +21,9 @@ router.post('/secret', (req, res) => {
     res.status(200).json({
         status: "Up",
         secret: "Working",
-        googleId: req.user.googleId,
+        googleId: req.user.googleUserId,
         email: req.user.email,
-        steamId: req.user.steamId
+        steamId: req.user.steamUserId
     });
 });
 

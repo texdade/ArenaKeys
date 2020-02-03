@@ -26,10 +26,10 @@ router.get('/user', (req, res) => {
 router.post('/user', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
-    let name = req.user.name;
-    let imageLink = req.user.imageLink;
-    let steamProfileUrl = req.user.steamProfileUrl;
-    let email = req.user.email;
+    let name = req.body.name;
+    let imageLink = req.body.imageLink;
+    let steamProfileUrl = req.body.steamProfileUrl;
+    let email = req.body.email;
 
     if(googleId == undefined){ //section for users logged with steam
         manageUserData.createUser(steamId, null, name, imageLink, steamProfileUrl, email)
@@ -47,10 +47,10 @@ router.post('/user', (req, res) => {
 router.put('/user', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
-    let name = req.user.name;
-    let imageLink = req.user.imageLink;
-    let steamProfileUrl = req.user.steamProfileUrl;
-    let email = req.user.email;
+    let name = req.body.name;
+    let imageLink = req.body.imageLink;
+    let steamProfileUrl = req.body.steamProfileUrl;
+    let email = req.body.email;
 
     if(googleId == undefined){ //section for users logged with steam
         manageUserData.createUser(steamId, null, name, imageLink, steamProfileUrl, email)

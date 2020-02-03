@@ -52,4 +52,27 @@ function getList(userId, listId){
     });
 }
 
-module.exports = {getLists, getList};
+function createList(userId, name, notifyMe, games){
+    return new Promise((resolve, reject) => {
+        listCRUD.createLists(userId, name, notifyMe).then(listsId => {
+            if(listId!=undefined){
+                for(let i=0; i<games.length; i++){
+                    listCRUD.addGame(listId, games[i]["steamID"])
+                        .catch(err => reject(err));
+                }
+                let list = {
+                    "id": listId,
+                    "name": name,
+                    "notifyMe": notifyMe,
+                    "user": userId,
+                    "items": games
+                }
+                resolve(list);
+            } else {
+                reject("400");
+            }
+        }).catch(err => reject(err));
+    });
+}
+
+module.exports = {getLists, getList, createList};

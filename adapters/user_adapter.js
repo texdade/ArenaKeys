@@ -23,12 +23,18 @@ function getUser(id){
 
 function createUser(steamId, googleId, name, imageLink, steamProfileUrl, email){
     return new Promise((resolve, reject) => {
-        userCRUD.createUser(steamId, googleId, name, imageLink, steamProfileUrl, email).then(userData => {
-            if(userData != undefined){
-                let id = {
-                    id: userData
+        userCRUD.createUser(steamId, googleId, name, imageLink, steamProfileUrl, email).then(userId => {
+            if(userId != undefined){
+                let jsonUser = {
+                    steamUserId: steamId,
+                    googleUserId: googleId,
+                    name: name,
+                    imageLink: imageLink,
+                    id: userId, //internal id for our db
+                    steamProfileUrl: steamProfileUrl,
+                    email: email
                 }
-                resolve(id);
+                resolve(jsonUser);
             } else {
                 reject("400");
             }

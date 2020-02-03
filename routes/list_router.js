@@ -64,4 +64,41 @@ router.get('/userlist/:id', (req, res) => {
     }
 });
 
+//create a new list and (eventually) populates it with games
+router.post('/userlist', (req, res) => {
+    let googleId = req.user.googleUserId;
+    let steamId = req.user.steamUserId;
+    let listName = req.body.name;
+    let notifyMe = req.body.notifyMe;
+    let games = req.body.items;
+
+    if(listName==undefined){
+        res.status(400).json({}); //bad request!
+    }
+
+    if(notifyMe==undefined){
+        notifyMe=false;
+    }
+
+    if(googleId == undefined){ //section for users logged with steam
+        manageUserData.getUser(steamId)
+            .then(userData => { //get the user id from the steam id
+                manageListData.createList(userData["id"], listName, notifyMe, games).then(newList => {
+                    res.status(201).json(newList);
+                });
+            })
+            .catch(err => res.status(400).json({}));
+    }else if(steamId == undefined){ //section for users logged with google
+        manageUserData.getUser(googleId)
+            .then(userData => { //get the user id from the google id
+                manageListData.createList(userData["id"], listName, notifyMe, games).then(newList => {
+                    res.status(201).json(newList);
+                });
+            })
+            .catch(err => res.status(400).json({}));
+    }else{
+        res.status(403).json({});
+    }
+});
+
 module.exports = router;

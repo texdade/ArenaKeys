@@ -5,8 +5,8 @@ const util = require('util');
 const jwt = require('jsonwebtoken');
 const SteamStrategy = require('passport-steam').Strategy;
 
-let returnUrlSteam = 'https://gamekeys-arena.herokuapps.com/auth/steam/return';
-let realmSteam = 'https://gamekeys-arena.herokuapps.com/';
+let returnUrlSteam = 'https://gamekeys-arena.herokuapp.com/auth/steam/return';
+let realmSteam = 'https://gamekeys-arena.herokuapp.com/';
 
 if(process.env.LOCAL) {//working on localhost
     returnUrlSteam = 'http://localhost:3000/auth/steam/return';

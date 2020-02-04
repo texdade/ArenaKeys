@@ -82,10 +82,10 @@ function createList(list){
         }else{
             reject(400);//not valid input format
         }
-
-
     });
 }
+
+createList({userId: 3, name: "Giochi Barbie!", notifyMe: 0, items: [{steamID: 10}]})
 
 //get gamesOffers given an array of steamIds
 function getItemsOffers(steamIds){

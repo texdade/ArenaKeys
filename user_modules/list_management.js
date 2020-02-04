@@ -5,7 +5,7 @@ const steam_api = require('../resellers_modules/steam');
 const game_db = require('../db/videogame_data/steamDump')
 
 //create a new wishlist starting from the steam one
-function importSteamWishlist(email, wishlist_name){
+function importSteamWishlist(id, wishlist_name){
     //get user steam_id
     db_user.getUser(email).then(user => {
         let user_steam_id = user["user_steam_id"];

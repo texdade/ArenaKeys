@@ -35,10 +35,10 @@ function getUser(id){
     });
 }
 
-function updateUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email){
+function updateUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl, email, id){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE users SET steamUserId = ?, googleUserId = ?, name = ?, imageLink = ?, steamProfileUrl = ?, email = ? WHERE steamUserId = ? OR googleUserId = ?",
-            [steamUserId, googleUserId, name, imageLink, steamProfileUrl, email, steamUserId, googleUserId],
+        mysqlConnection.query("UPDATE users SET steamUserId = ?, googleUserId = ?, name = ?, imageLink = ?, steamProfileUrl = ?, email = ? WHERE (steamUserId = ? OR googleUserId = ?) AND id = ?",
+            [steamUserId, googleUserId, name, imageLink, steamProfileUrl, email, steamUserId, googleUserId, id],
             (error, results, fields) =>{
                 if(error) {
                     console.log("ERROR while updating user");
@@ -46,7 +46,7 @@ function updateUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl,
                     reject(new Error(error));
                 }else{
                     console.log("Updated user");
-                    resolve(null)
+                    resolve(results.affectedRows);
                 }
             });
     });
@@ -63,7 +63,7 @@ function deleteUser(id){
                     reject(new Error(error));
                 }else{
                     console.log("Deleted user");
-                    resolve(null)
+                    resolve(results.affectedRows)
                 }
             });
     });

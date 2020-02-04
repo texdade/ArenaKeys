@@ -10,14 +10,16 @@ router.get('/user', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
 
-    if(googleId == undefined){ //section for users logged with steam
+    if(!googleId && steamId){ //section for users logged with steam
         manageUserData.getUser(steamId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
-    }else if(steamId == undefined){ //section for users logged with google
+
+    }else if(googleId && !steamId){ //section for users logged with google
         manageUserData.getUser(googleId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
+
     }else{ //this should be impossible, but you never know!
         res.status(403).json({});
     }
@@ -31,14 +33,16 @@ router.post('/user', (req, res) => {
     let steamProfileUrl = req.body.steamProfileUrl;
     let email = req.body.email;
 
-    if(googleId == undefined){ //section for users logged with steam
+    if(!googleId && steamId){ //section for users logged with steam
         manageUserData.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
-    }else if(steamId == undefined){ //section for users logged with google
+
+    }else if(googleId && !steamId){ //section for users logged with google
         manageUserData.createUser({steamId: null, googleId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
+
     }else{ //this should be impossible, but you never know!
         res.status(403).json({});
     }
@@ -53,14 +57,16 @@ router.put('/user', (req, res) => {
     let email = req.body.email;
     let id = req.body.id;
 
-    if(googleId == undefined){ //section for users logged with steam
+    if(!googleId && steamId){ //section for users logged with steam
         manageUserData.updateUser({steamUserId: steamId, googleUserId: null, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
-    }else if(steamId == undefined){ //section for users logged with google
+
+    }else if(googleId && !steamId){ //section for users logged with google
         manageUserData.updateUser({steamUserId: null, googleUserId: googleId, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
+
     }else{ //this should be impossible, but you never know!
         res.status(403).json({});
     }
@@ -70,14 +76,16 @@ router.delete('/user', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
 
-    if(googleId == undefined){ //section for users logged with steam
+    if(!googleId && steamId){ //section for users logged with steam
         manageUserData.deleteUser(steamId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
-    }else if(steamId == undefined){ //section for users logged with google
+
+    }else if(googleId && !steamId){ //section for users logged with google
         manageUserData.deleteUser(googleId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
+
     }else{ //this should be impossible, but you never know!
         res.status(403).json({});
     }

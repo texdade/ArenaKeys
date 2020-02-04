@@ -1,7 +1,7 @@
 /*  Adapter for the userlist data layer
 * */
-const gamesPrices = require('../../db/videogame_data/gamesPrices');
-const steamDump = require('../../db/videogame_data/steamDump');
+const gamesPricesDAO = require('../../db/videogame_data/gamesPrices');
+const steamDumpDAO = require('../../db/videogame_data/steamDump');
 
 const utilities = require('../../db/utilities');
 
@@ -16,7 +16,7 @@ function getCachedGamePrices(gameData){
             reject("Invalid input format");
 
         }else{
-            gamesPrices.selectGamePrices(gameData)
+            gamesPricesDAO.selectGamePrices(gameData)
                 .then(gameDataOffers => {
                     let offers = [];
                     for(let offer of gameDataOffers['offers'])
@@ -42,7 +42,7 @@ function getCachedGamePrices(gameData){
 function existPricesInfo(steamID, reseller){
     return new Promise((resolve, reject) => {
         if(steamID && reseller){
-            gamesPrices.selectGamePrices({steamID:steamID}).then(gameDataOffers => {
+            gamesPricesDAO.selectGamePrices({steamID:steamID}).then(gameDataOffers => {
                 for(let offer of gameDataOffers['offers'])
                     if(offer['reseller'].toLowerCase() === reseller.toLowerCase())
                         resolve(true);
@@ -65,7 +65,7 @@ function modifyGamePrice(gamePrice){
             reject("Invalid input format");
 
         }else{
-            gamesPrices.updateGamePrice(gamePrice).then(affectedRows => {
+            gamesPricesDAO.updateGamePrice(gamePrice).then(affectedRows => {
                 resolve(affectedRows === 1);
             })
             .catch(err => reject(err));
@@ -83,7 +83,7 @@ function addGamePrice(gamePrice){
             reject("Invalid input format");
 
         }else{
-            gamesPrices.insertGamePrice(gamePrice).then(affectedRows => {
+            gamesPricesDAO.insertGamePrice(gamePrice).then(affectedRows => {
                 resolve(affectedRows === 1);
             })
                 .catch(err => reject(err));
@@ -100,7 +100,7 @@ function deleteGamePrices(steamID){
             reject("Invalid input format");
 
         }else{
-            gamesPrices.deleteGamePricesForGame(steamID).then(affectedRows => {
+            gamesPricesDAO.deleteGamePricesForGame(steamID).then(affectedRows => {
                 resolve(affectedRows > 0);
             })
                 .catch(err => reject(err));
@@ -113,7 +113,7 @@ function deleteGamePrices(steamID){
 function insertGameInfo(gameData){
     return new Promise((resolve, reject)=>{
         if(utilities.isGameData(gameData)){
-            steamDump.insertGameInfo(gameData).then(affRows => {
+            steamDumpDAO.insertGameInfo(gameData).then(affRows => {
                     if(affRows === 1)
                         resolve(gameData);
                     else
@@ -137,7 +137,7 @@ function updateGameInfo(gameData, refreshLastUpdate){
 
     return new Promise((resolve, reject)=>{
         if(utilities.isGameData(gameData)){
-            steamDump.updateGameInfo(gameData, lastUpdate).then(affRows => {
+            steamDumpDAO.updateGameInfo(gameData, lastUpdate).then(affRows => {
                 if(affRows === 1)
                     resolve(gameData);
                 else
@@ -155,7 +155,7 @@ function deleteGameInfo(gameData){
 
     return new Promise((resolve, reject)=>{
         if(utilities.isGameData(gameData)){
-            steamDump.deleteGameInfo(gameData).then(affRows => {
+            steamDumpDAO.deleteGameInfo(gameData).then(affRows => {
                 if(affRows === 1)
                     resolve(gameData);
                 else
@@ -171,7 +171,7 @@ function deleteGameInfo(gameData){
 //return name, description, image link, last_update
 function getGameInfo(steamID){
     return new Promise((resolve, reject)=>{
-        steamDump.getGameBasicInfo(steamID).then(gameInfo => resolve(gameInfo)).catch(err => reject(err));
+        steamDumpDAO.getGameBasicInfo(steamID).then(gameInfo => resolve(gameInfo)).catch(err => reject(err));
     });
 }
 
@@ -180,7 +180,7 @@ function getGameInfo(steamID){
 function getCachedMatchingGamesInfo(name){
 
     return new Promise((resolve, reject) => {
-        steamDump.getMatchingGamesBasicInfo(name).then(gamesInfoFetched => {
+        steamDumpDAO.getMatchingGamesBasicInfo(name).then(gamesInfoFetched => {
             let gamesInfo = [];
             let similarityThreshold = parseFloat(process.env.STRING_SIMILARITY_THRESHOLD);
             for(let gameDataSelect of gamesInfoFetched)

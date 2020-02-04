@@ -5,6 +5,13 @@ const util = require('util');
 const jwt = require('jsonwebtoken');
 const SteamStrategy = require('passport-steam').Strategy;
 
+let returnUrlSteam = 'https://gamekeys-arena.herokuapps.com/auth/steam/return';
+let realmSteam = 'https://gamekeys-arena.herokuapps.com/';
+
+if(process.env.LOCAL) {//working on localhost
+    returnUrlSteam = 'http://localhost:3000/auth/steam/return';
+    realmSteam = 'http://localhost:3000/';
+}
 //secret key to mount jwt over steam openID
 const secretKeyForSteamAuthJWT = "DevisIsTheCodeMaster"; //I am very humble guy
 
@@ -43,8 +50,8 @@ const registerSteamAuth = app => {
     //   credentials (in this case, an OpenID identifier and profile), and invoke a
     //   callback with a user object.
     passportSteam.use(new SteamStrategy({
-            returnURL: 'http://localhost:3000/auth/steam/return',
-            realm: 'http://localhost:3000/',
+            returnURL: returnUrlSteam,
+            realm: realmSteam,
             apiKey: '64C32EE47A2E9D468A769A1567B6749C'
         },
         function(identifier, profile, done) {
@@ -105,11 +112,6 @@ const registerSteamAuth = app => {
  * Registers the a bearer token strategy that we will use to protect our API.
  */
 const registerSteamBearerAuth = () => {
-    // docs
-    //    https://github.com/googleapis/google-auth-library-nodejs#oauth2
-    //    https://github.com/jaredhanson/passport-http-bearer
-    //    https://github.com/passport/express-4.x-http-bearer-example
-    //    https://developers.google.com/identity/sign-in/web/backend-auth
     passportSteam.use(
         new Strategy(async (token, cb) => {
             try {

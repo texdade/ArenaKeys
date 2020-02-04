@@ -85,8 +85,6 @@ function createList(list){
     });
 }
 
-createList({userId: 3, name: "Giochi Barbie!", notifyMe: 0, items: [{steamID: 10}]})
-
 //get gamesOffers given an array of steamIds
 function getItemsOffers(steamIds){
     return new Promise((resolve, reject) => {

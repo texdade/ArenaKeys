@@ -53,4 +53,4 @@ function isUserNoId(user){
     return user && (user['steamUserId'] || user['googleUserId']) && user['name'] && (user['steamProfileUrl'] || user['email'])
 }
 
-module.exports = {connection, logUpdateTable, isGameData, isGameDataPrice, areGameDataPrices, isList, isListNoId, isUser, isUserNoId};
+module.exports = {connection, isGameData, isGameDataPrice, areGameDataPrices, isGameDataAndOffers, isList, isListNoId, isUser, isUserNoId};

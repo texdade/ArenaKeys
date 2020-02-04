@@ -19,12 +19,10 @@ router.get('/videogame', (req, res) => {
     else if(name && typeof(name)==='string' && name.length > 1)
         fetchGamesData.getMatchingGamesPrices(name)
             .then(gamesDataPrice => {
-                console.log("FINISHED matching prices");
                 res.status(200).json(gamesDataPrice)
             })
             .catch(err => {
                 console.log(err);
-                console.log("FINISHED with errors matching prices");
                 res.status(404).json({})
             });
 

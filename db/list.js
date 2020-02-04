@@ -93,7 +93,6 @@ function addGame(listId, steamId){
                 console.log(error);
                 reject(error);
             }else{
-                console.log("Created entry for list "+ listId + " with game " + steamId);
                 resolve({
                     listId: listId,
                     steamID: steamId
@@ -113,7 +112,6 @@ function getGames(list){
                 console.log(error);
                 reject(error);
             }else{
-                console.log("Retrieved steamIds of list " + list['id']);
                 resolve(results)
             }
         });

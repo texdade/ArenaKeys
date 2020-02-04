@@ -10,7 +10,6 @@ function createUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl,
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Inserted new user ");
                     resolve(results["insertId"]);
                 }
             });
@@ -28,7 +27,6 @@ function getUser(id){
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Retrieved user with id: " + id);
                     resolve(results[0])
                 }
             });
@@ -45,7 +43,6 @@ function updateUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl,
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Updated user");
                     resolve(results.affectedRows);
                 }
             });
@@ -62,7 +59,6 @@ function deleteUser(id){
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    console.log("Deleted user");
                     resolve(results.affectedRows)
                 }
             });

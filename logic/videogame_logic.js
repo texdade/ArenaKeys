@@ -17,7 +17,8 @@ const timeToNewRefresh = (60*60*24) * 3; //refresh game prices if it has been th
 * */
 function getGamePrices(steamID){
     return new Promise((resolve, reject) => {
-        console.log("Finding offers for game with steamID " + steamID);
+        if(process.env.LOG)
+            console.log("Finding offers for game with steamID " + steamID);
         //for computational reason, we can't consider invalid steamID
         if(!steamID)
             reject("Invalid steamID");
@@ -27,7 +28,8 @@ function getGamePrices(steamID){
 
                 let refreshPrices = false;
 
-                console.log("Game prices last update on " + gameData['lastUpdate']);
+                if(process.env.LOG)
+                    console.log("Game prices last update on " + gameData['lastUpdate']);
 
                 if(!gameData['lastUpdate'])
                     refreshPrices = true;
@@ -128,7 +130,8 @@ function getGameBasicInfo(steamID){
 * */
 function getMatchingGamesPrices(name){
     return new Promise((resolve, reject) => {
-        console.log("Finding games prices for game with matching name " + name);
+        if(process.env.LOG)
+            console.log("Finding games prices for game with matching name " + name);
         //for computational reason, we can't consider name which length is less than 2 characters
         if(name.length < 2)
             reject("Invalid name");
@@ -136,8 +139,9 @@ function getMatchingGamesPrices(name){
         vgameHandler.getCachedMatchingGamesInfo(name)
             .then(gamesData => {//gamesData will contain all the data of the matching gamesName
 
-                console.log("Found the following nums of matching games: " + gamesData.length);
-                console.log(gamesData);
+                if(process.env.LOG)
+                    console.log("Found the following nums of matching games: " + gamesData.length);
+
                 //for computational reason, we can't consider more than 4 results
                 let gameOffersPromises = [];
                 for(let i=0; i<gamesData.length; i++) {
@@ -172,7 +176,8 @@ function getMatchingGamesPrices(name){
 function refreshGamePrices(gameData){
     let steamID = gameData['steamID'];
     let gameName = gameData['name'];
-    console.log("Refreshing prices from sellers for game " + gameName + "(" + steamID + ")");
+    if(process.env.LOG)
+        console.log("Refreshing prices from sellers for game " + gameName + "(" + steamID + ")");
 
     return new Promise((resolve, reject) => {
 
@@ -195,7 +200,8 @@ function refreshGamePrices(gameData){
                         price: parseFloat((results[0]['price'].substring(0,results[0]['price'].length-1)).replace(',','.'))
                     };
                 }
-                console.log("SteamGameDataPrice(" + steamID + ") = " + JSON.stringify(steamGameDataP));
+                if(process.env.LOG)
+                    console.log("SteamGameDataPrice(" + steamID + ") = " + JSON.stringify(steamGameDataP));
 
                 //cdkeys
                 if(results[1] && results[1]['price']){
@@ -208,7 +214,8 @@ function refreshGamePrices(gameData){
                     };
                 }
 
-                console.log("CDKeysGameDataPrice(" + steamID + ") = " + JSON.stringify(cdkeysGameDataP));
+                if(process.env.LOG)
+                    console.log("CDKeysGameDataPrice(" + steamID + ") = " + JSON.stringify(cdkeysGameDataP));
 
                 //hrkgame
                 if(results[2] && results[2]['price']){
@@ -221,7 +228,8 @@ function refreshGamePrices(gameData){
                     };
                 }
 
-                console.log("HRKGameDataPrice(" + steamID + ") = " + JSON.stringify(hrkGameDataP));
+                if(process.env.LOG)
+                    console.log("HRKGameDataPrice(" + steamID + ") = " + JSON.stringify(hrkGameDataP));
 
                 //gamivo
                 if(results[3] && results[3]['price']){
@@ -234,7 +242,8 @@ function refreshGamePrices(gameData){
                     };
                 }
 
-                console.log("GamivoGameDataPrice(" + steamID + ") = " + JSON.stringify(gamivoGameDataP));
+                if(process.env.LOG)
+                    console.log("GamivoGameDataPrice(" + steamID + ") = " + JSON.stringify(gamivoGameDataP));
 
                 insertUpdateGamePrices([steamGameDataP, cdkeysGameDataP, hrkGameDataP, gamivoGameDataP])
                     .then(() => {
@@ -281,11 +290,13 @@ function insertUpdateGamePrices(gamePrices){
                 let gameP = gamePrices[i];
                 if(utilities.isGameDataPrice(gameP)){
                     if(existences[i]){
-                        console.log("Updating " + JSON.stringify(gameP));
+                        if(process.env.LOG)
+                            console.log("Updating " + JSON.stringify(gameP));
                         refreshPromises.push(vgameHandler.modifyGamePrice(gameP));
 
                     }else {
-                        console.log("Inserting " + JSON.stringify(gameP));
+                        if(process.env.LOG)
+                            console.log("Inserting " + JSON.stringify(gameP));
                         refreshPromises.push(vgameHandler.addGamePrice(gameP));
                     }
                 }

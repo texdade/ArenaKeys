@@ -57,13 +57,18 @@ router.put('/user', (req, res) => {
     let email = req.body.email;
     let id = req.body.id;
 
-    if(!googleId && steamId){ //section for users logged with steam
-        manageUserData.updateUser({steamUserId: steamId, googleUserId: null, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
-            .then(userData => res.status(200).json(userData)) //return the modified user
-            .catch(err => res.status(404).json({}));
+    let updUser = {
+        steamUserId: steamId,
+        googleUserId: googleId,
+        id: id,
+        name: name,
+        imageLink: imageLink,
+        steamProfileUrl: steamProfileUrl,
+        email: email
+    };
 
-    }else if(googleId && !steamId){ //section for users logged with google
-        manageUserData.updateUser({steamUserId: null, googleUserId: googleId, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
+    if(googleId || steamId){ //section for users logged with steam
+        manageUserData.updateUser(updUser)
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
 

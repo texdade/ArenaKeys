@@ -2,7 +2,7 @@ const fetch = require("node-fetch-npm");
 
 const urlSingleGame = "https://store.steampowered.com/api/appdetails/?appids="; //incomplete url for single game info
 const urlAllGamesList = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";
-const urlSteamWishlist = "https://store.steampowered.com/wishlist/id/"
+const urlSteamWishlist = "https://store.steampowered.com/wishlist/id/";
 
 //invoke steam API for infos about the game
 function getAppDetail(steamID) {
@@ -15,7 +15,7 @@ function getDumpList(){
 }
 
 function getUserWishlist(userID){
-    url=urlSteamWishlist+userID+"/wishlistdata/?p=0";
+    let url = urlSteamWishlist+userID+"/wishlistdata/?p=0";
     return fetch(url);
 }
 
@@ -36,8 +36,20 @@ function getSingleGameInfo(steamID){
                             image: game[steamID]["data"]["header_image"], //link to image
                             description: game[steamID]["data"]["short_description"],
                             link: "https://store.steampowered.com/app/"+steamID, //link to steam store item
-                            price: game[steamID]["data"]["price_overview"]["final_formatted"] //price already formatted as string
+                            price: undefined
                         };
+
+                        if(game[steamID]["data"]["price_overview"] && game[steamID]["data"]["release_date"]["coming_soon"])//has still to be released
+                            resolve(gameInfo);
+
+                        if(game[steamID]["data"]["type"] !== "game") {//not a game
+                            gameInfo["discard"] = true;
+                            resolve(gameInfo);
+                        }
+
+                        if(game[steamID]["data"]["price_overview"])//steam doesn't sell it anymore
+                            gameInfo['price'] = game[steamID]["data"]["price_overview"]["final_formatted"]; //price already formatted as string;
+
                         //console.log(gameInfo);
                         resolve(gameInfo);
                     }

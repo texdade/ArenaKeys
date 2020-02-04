@@ -7,22 +7,6 @@ let connection = mysql.createConnection({
         database: 'bmjNX6on7f'
     });
 
-function logUpdateTable(tableName){
-    return new Promise((resolve, reject) => {
-
-        connection.query("UPDATE last_update SET dt_update = NOW() WHERE t_name = ?)",
-            [tableName],
-            (error, results, fields) =>{
-                if(error) {
-                    reject(error);
-                }else{
-                    resolve(null);
-                }
-
-            });
-    });
-}
-
 /*  Check validity of object gameData
 * */
 function isGameData(gameData){
@@ -33,6 +17,10 @@ function isGameData(gameData){
 * */
 function isGameDataPrice(gameDataP){
     return gameDataP && gameDataP['steamID'] && gameDataP['reseller'] && gameDataP['link'] && gameDataP['price'] && (gameDataP['availability'] !== undefined);
+}
+
+function isGameDataAndOffers(gameDataO){
+    return isGameData(gameDataO) && areGameDataPrices(gameDataO['offers']);
 }
 
 /*  Check validity of array gameDataPrices
@@ -57,4 +45,4 @@ function isListNoId(list){
     return list && list['userId'] && list['name'] && (list['notifyMe'] !== undefined) && Array.isArray(list['items']);
 }
 
-module.exports = {connection, logUpdateTable, isGameData, isGameDataPrice, areGameDataPrices, isList, isListNoId};
+module.exports = {connection, isGameData, isGameDataPrice, areGameDataPrices, isGameDataAndOffers, isList, isListNoId};

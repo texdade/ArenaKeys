@@ -10,10 +10,6 @@ const mysqlConnection = utilities.connection;
 function selectGamePrices(gameData){
     return new Promise((resolve, reject)=>{
 
-        if(!utilities.isGameData(gameData)){
-            reject("Invalid input format");
-        }
-
         mysqlConnection.query("SELECT reseller, link, availability, price FROM games_prices WHERE steam_id = ?",
             [gameData['steamID']],
             (error, results, fields) =>{
@@ -33,32 +29,10 @@ function selectGamePrices(gameData){
     });
 }
 
-/*  Check if game with such steamID sold by reseller is already in the table containing prices for different resellers
-* */
-function existPricesInfo(steamID, reseller){
-    return new Promise((resolve, reject) => {
-        mysqlConnection.query("SELECT COUNT(*) as counter FROM games_prices WHERE steam_id = ? AND reseller = ?",
-            [steamID, reseller],
-            (error, results, fields) => {
-
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(parseInt(results[0]['counter'])===1);
-                }
-
-            });
-    });
-}
-
 /*  Update gamePrice info
 * */
 function updateGamePrice(gamePrice){
     return new Promise((resolve, reject) => {
-
-        if(!utilities.isGameDataPrice(gamePrice)){
-            reject("Invalid input format");
-        }
 
         mysqlConnection.query("UPDATE games_prices SET link = ?, availability = ?, price = ? WHERE steam_id = ? AND reseller = ?",
             [gamePrice['link'], gamePrice['availability'], gamePrice['price'], gamePrice['steamID'], gamePrice['reseller']],
@@ -78,10 +52,6 @@ function updateGamePrice(gamePrice){
 function insertGamePrice(gamePrice){
     return new Promise((resolve, reject) => {
 
-        if(!utilities.isGameDataPrice(gamePrice)){
-            reject("Invalid input format");
-        }
-
         mysqlConnection.query("INSERT INTO games_prices(steam_id, reseller, link, availability, price) VALUES(?,?,?,?,?)",
             [gamePrice['steamID'], gamePrice['reseller'], gamePrice['link'], gamePrice['availability'], gamePrice['price']],
             (error, results, fields) =>{
@@ -95,4 +65,40 @@ function insertGamePrice(gamePrice){
     });
 }
 
-module.exports = {selectGamePrices, insertGamePrice, updateGamePrice, existPricesInfo};
+/*  Delete gamePrice info
+* */
+function deleteGamePrice(gamePrice){
+    return new Promise((resolve, reject) => {
+
+        mysqlConnection.query("DELETE FROM games_prices WHERE steam_id = ? AND reseller = ?",
+            [gamePrice['steamID'], gamePrice['reseller']],
+            (error, results, fields) =>{
+
+                if(error) {
+                    reject(error);
+                }else{
+                    resolve(results.affectedRows);
+                }
+            })
+    });
+}
+
+/*  Delete gamePrices info for a game
+* */
+function deleteGamePricesForGame(steamID){
+    return new Promise((resolve, reject) => {
+
+        mysqlConnection.query("DELETE FROM games_prices WHERE steam_id = ?",
+            [steamID],
+            (error, results, fields) =>{
+
+                if(error) {
+                    reject(error);
+                }else{
+                    resolve(results.affectedRows);
+                }
+            })
+    });
+}
+
+module.exports = {selectGamePrices, insertGamePrice, updateGamePrice, deleteGamePrice, deleteGamePricesForGame};

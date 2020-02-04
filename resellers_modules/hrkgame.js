@@ -113,7 +113,7 @@ function getMatchingGameInfo(gameName, steamID){
         getAllGamesInfo()
             .then(data => {
                 let bestIndex = -1;
-                let bestSimilarity = 0.65;
+                let bestSimilarity = parseFloat(process.env.STRING_SIMILARITY_THRESHOLD);
                 for(let i=0; i<data.length; i++){
                     if(steamID && data[i]['steamID'] && steamID === data[i]['steamID'])//found the exact game by ID
                         resolve(data[i]);

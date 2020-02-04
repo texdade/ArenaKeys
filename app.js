@@ -4,7 +4,7 @@
 //continously refresh data within the db
 const refreshGameAllDayLong = require('./logic/videogame_logic').refreshGamesDump;
 if(process.env.REFRESH)
-    refreshGameAllDayLong();
+    refreshGameAllDayLong(false);
 
 const express = require('express');
 const bodyParser = require('body-parser');

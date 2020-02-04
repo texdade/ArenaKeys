@@ -355,13 +355,74 @@ function refreshDumpRound(interval, LOG){
     });
 }
 
+//Add new games(steam_id + name) if not already present in the generic dump
+//try to insert the game every interval (most of the insert will just fail 'cause the game is already present from previous inserts)
+function refresh5GamesRandomDump(interval, LOG){
+    return new Promise((resolve, reject) => {
+        resellerHandler.getOfficialAppDump()
+            .then(list => {
+                let queryPerformed = 0;
+                let i = 0;
+                for(let i =0; i<list.length && i<5;i++){
+                    let game = list[parseInt(Math.random()*list.length)];
+                    setTimeout(() => {
+                        vgameHandler.insertGameInfo(game)
+                            .then(() => {
+                                if(LOG)
+                                    console.log("NEW GAME! Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
+
+                                queryPerformed++;
+
+                                getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    .then(() => {
+                                        if(queryPerformed === 5)
+                                            resolve(null);
+                                    })
+                                    .catch(()=>{
+                                        if(queryPerformed === 5)
+                                            resolve(null);
+                                    });//do nothing in case of success or failure (this is just a refresh procedure on a single game)
+
+
+                            })
+                            .catch(err => {
+                                if(LOG)
+                                    console.log(err.code + "\twhile inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
+
+                                getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    .then(() => {
+                                        if(queryPerformed === 5)
+                                            resolve(null);
+                                    })
+                                    .catch(()=>{
+                                        if(queryPerformed === 5)
+                                            resolve(null);
+                                    });//do nothing in case of success or failure (this is just a refresh procedure on a single game)
+
+                            });
+                    },i*interval);
+                    i++;
+                }
+
+            })
+
+            .catch(err => reject(err));
+    });
+}
+
 
 /*  Just continue to fetch data from the steam API dump e caching it into our dump
 * */
-function refreshGamesDump(){
-    refreshDumpRound(process.env.INTERVAL || 16000, process.env.LOG)//refresh dump trying to insert a new game every 16s (false to not have logs)
-        .then(() => refreshGamesDump())//just call it again
-        .catch(() => refreshGamesDump());//just call it again (even in case of error)
+function refreshGamesDump(sequential){
+    let refreshP;
+    if(sequential)
+        refreshP = refreshDumpRound(process.env.INTERVAL || 16000, process.env.LOG);
+    else
+        refreshP = refresh5GamesRandomDump(process.env.INTERVAL || 16000, process.env.LOG);
+
+    refreshP//refresh dump trying to insert a new game every 16s (false to not have logs)
+        .then(() => refreshGamesDump(sequential))//just call it again
+        .catch(() => refreshGamesDump(sequential));//just call it again (even in case of error)
 }
 
 module.exports = {getGamePrices, getMatchingGamesPrices, refreshGamesDump};

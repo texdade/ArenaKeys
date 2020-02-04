@@ -3,12 +3,9 @@
 *   & different resellers apis
 * */
 
-const vgameHandler = require('../adapters/db_adapters/videogame_adapter');
+const vgameHandler = require('../adapters/db_adapters/videogame_adapter');//handle videogame cached data
+const resellerHandler = require('../adapters/resellers_adapter');//handle resellers fetch data
 
-const steamFetchModule = require('../resellers_modules/steam');
-const hrkgameFetchModule = require('../resellers_modules/hrkgame');
-const gamivoFetchModule = require('../resellers_modules/gamivo');
-const cdkeysFetchModule = require('../resellers_modules/cdkeys');
 const utilities = require('../db/utilities');
 
 // time in order to consider last update of the considered game prices too much old
@@ -30,7 +27,7 @@ function getGamePrices(steamID){
 
                 let refreshPrices = false;
 
-                console.log("Game last update on " + gameData['lastUpdate']);
+                console.log("Game prices last update on " + gameData['lastUpdate']);
 
                 if(!gameData['lastUpdate'])
                     refreshPrices = true;
@@ -94,7 +91,7 @@ function getGameBasicInfo(steamID){
             else {
                 console.log("game basic info for game " + steamID + "  needs refresh");
                 //game misses some basic data
-                steamFetchModule.getSingleGameInfo(steamID)
+                resellerHandler.getGameBasicInfo(steamID, null, "Steam")
                     .then(gameDataFetch => {
                         console.log(gameDataFetch);
 
@@ -175,14 +172,14 @@ function getMatchingGamesPrices(name){
 function refreshGamePrices(gameData){
     let steamID = gameData['steamID'];
     let gameName = gameData['name'];
-    console.log("Refreshing prices from seller for game " + gameName + "(" + steamID + ")");
+    console.log("Refreshing prices from sellers for game " + gameName + "(" + steamID + ")");
 
     return new Promise((resolve, reject) => {
 
-        let promiseSteam = steamFetchModule.getSingleGameInfo(steamID);
-        let promiseCDkeys = cdkeysFetchModule.getMatchingGameInfo(gameName, steamID);
-        let promiseHRKgame = hrkgameFetchModule.getMatchingGameInfo(gameName, steamID);
-        let promiseGamivo = gamivoFetchModule.getMatchingGameInfo(gameName, steamID);
+        let promiseSteam = resellerHandler.getGamePriceInfo(steamID, gameName, "Steam");
+        let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
+        let promiseHRKgame = resellerHandler.getGamePriceInfo(steamID, gameName, "HRKGame");
+        let promiseGamivo = resellerHandler.getGamePriceInfo(steamID, gameName, "Gamivo");
 
         Promise.all([promiseSteam, promiseCDkeys, promiseHRKgame, promiseGamivo])
             .then(results => {
@@ -308,7 +305,7 @@ function insertUpdateGamePrices(gamePrices){
 //try to insert the game every interval (most of the insert will just fail 'cause the game is already present from previous inserts)
 function refreshDumpRound(interval, LOG){
     return new Promise((resolve, reject) => {
-        steamFetchModule.getAllGamesList()
+        resellerHandler.getOfficialAppDump()
             .then(list => {
                 let queryPerformed = 0;
                 let i = 0;
@@ -320,12 +317,22 @@ function refreshDumpRound(interval, LOG){
                                     console.log("NEW GAME! Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
 
                                 queryPerformed++;
+
+                                getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    .then(() => {})
+                                    .catch(()=>{});//do nothing in case of success or failure (this is just a refresh procedure on a single game)
+
                                 if(queryPerformed === list.length)
                                     resolve(null);
                             })
                             .catch(err => {
                                 if(LOG)
                                     console.log(err.code + "\twhile inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
+
+                                getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    .then(() => {})
+                                    .catch(()=>{});//do nothing in case of success or failure (this is just a refresh procedure on a single game)
+
                             });
                     },i*interval);
                     i++;
@@ -341,7 +348,7 @@ function refreshDumpRound(interval, LOG){
 /*  Just continue to fetch data from the steam API dump e caching it into our dump
 * */
 function refreshGamesDump(){
-    refreshDumpRound(16000, false)//refresh dump trying to insert a new game every 16s (false to not have logs)
+    refreshDumpRound(process.env.INTERVAL || 16000, process.env.LOG)//refresh dump trying to insert a new game every 16s (false to not have logs)
         .then(() => refreshGamesDump())//just call it again
         .catch(() => refreshGamesDump());//just call it again (even in case of error)
 }

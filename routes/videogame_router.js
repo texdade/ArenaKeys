@@ -13,10 +13,10 @@ router.get('/videogame', (req, res) => {
 
     if(steamID)
         fetchGamesData.getGamePrices(steamID)
-            .then(gameDataPrice => res.status(200).json(gameDataPrice))
+            .then(gameDataPrice => res.status(200).json([gameDataPrice]))//return an array of a single element to be consistent wrt type of response
             .catch(err => res.status(404).json({}));
 
-    else if(name && name.length > 1)
+    else if(name && typeof(name)==='string' && name.length > 1)
         fetchGamesData.getMatchingGamesPrices(name)
             .then(gamesDataPrice => {
                 console.log("FINISHED matching prices");
@@ -27,6 +27,9 @@ router.get('/videogame', (req, res) => {
                 console.log("FINISHED with errors matching prices");
                 res.status(404).json({})
             });
+
+    else if(name)
+        res.status(400).send("Bad request. \"name\" has to be a string of at least 2 characters!");
 
     else
         res.status(400).send("Bad request. One of the parameters: \"steamID\" or \"name\" is necessary!");

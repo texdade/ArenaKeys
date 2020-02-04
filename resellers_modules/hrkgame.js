@@ -57,8 +57,6 @@ function getAllGamesInfo(){
                                 availability: result['item']['g:availability'][0], //availability
                                 steamID: result['item']['steam_appid'][0], //steamID WE DON'T HAVE IT :-(
                                 category: result['item']['g:google_product_category'][0], //category (useless here.... just google id for videogames)
-                                
-                                //TODO ask Tex for the followings
                                 description: result['item']['description'][0], //description 
                                 publishers: result['item']['publishers'][0], //publishers
                                 developers: result['item']['developers'][0], //developers
@@ -98,45 +96,11 @@ function getSingleGameInfo(steamID){
                         break;
                     }
                 }
+                resolve(null);
             })
 
             .catch(err => reject(err));
     });
 }
 
-
-//returns the price of the games with a matching name in proper formatted json, if steamID is present give priority to it
-function getMatchingGameInfo(gameName, steamID){
-    return new Promise((resolve, reject) => {
-        const diff = (a,b) => (a.split(b).join('')).length; //returns the differences in terms of letters by string a and string b
-        gameName = gameName.toLowerCase();
-        getAllGamesInfo()
-            .then(data => {
-                let bestIndex = -1;
-                let bestSimilarity = parseFloat(process.env.STRING_SIMILARITY_THRESHOLD);
-                for(let i=0; i<data.length; i++){
-                    if(steamID && data[i]['steamID'] && steamID === data[i]['steamID'])//found the exact game by ID
-                        resolve(data[i]);
-
-                    if(data[i]['name']) {
-                        let dataName = data[i]['name'].toLowerCase();
-                        let similarity = stringSimilarity.compareTwoStrings(gameName, dataName);
-                        
-                        if(similarity > bestSimilarity){
-                            bestSimilarity = similarity;
-                            bestIndex = i;
-                        }
-                    }
-
-                }
-                if(bestIndex > 0)
-                    resolve(data[bestIndex]);
-                else
-                    resolve(null);//not founded
-            })
-
-            .catch(err => reject(err));
-    });
-}
-
-module.exports = {getAllGamesInfo, getSingleGameInfo, getMatchingGameInfo};
+module.exports = {getAllGamesInfo, getSingleGameInfo};

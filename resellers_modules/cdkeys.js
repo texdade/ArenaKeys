@@ -65,39 +65,4 @@ function getSingleGameInfo(steamID){
     });
 }
 
-
-//returns the price of the games with a matching name in proper formatted json, if steamID is present give priority to it
-function getMatchingGameInfo(gameName, steamID){
-    return new Promise((resolve, reject) => {
-        const diff = (a,b) => (a.split(b).join('')).length; //returns the differences in terms of letters by string a and string b
-        gameName = gameName.toLowerCase();
-        getAllGamesInfo()
-            .then(data => {
-                let bestIndex = -1;
-                let bestSimilarity = parseFloat(process.env.STRING_SIMILARITY_THRESHOLD);
-                for(let i=0; i<data.length; i++){
-                    if(steamID && data[i]['steamID'] && steamID === data[i]['steamID'])//found the exact game by ID
-                        resolve(data[i]);
-
-                    if(data[i]['name']) {
-                        let dataName = data[i]['name'].toLowerCase();
-                        let similarity = stringSimilarity.compareTwoStrings(gameName, dataName);
-                        
-                        if(similarity > bestSimilarity){
-                            bestSimilarity = similarity;
-                            bestIndex = i;
-                        }
-                    }
-
-                }
-                if(bestIndex > 0)
-                    resolve(data[bestIndex]);
-                else
-                    resolve(null);//not founded
-            })
-
-            .catch(err => reject(err));
-    });
-}
-
-module.exports = {getAllGamesInfo, getSingleGameInfo, getMatchingGameInfo};
+module.exports = {getAllGamesInfo, getSingleGameInfo};

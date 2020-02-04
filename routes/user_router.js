@@ -32,11 +32,11 @@ router.post('/user', (req, res) => {
     let email = req.body.email;
 
     if(googleId == undefined){ //section for users logged with steam
-        manageUserData.createUser(steamId, null, name, imageLink, steamProfileUrl, email)
+        manageUserData.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
     }else if(steamId == undefined){ //section for users logged with google
-        manageUserData.createUser(null, googleId, name, imageLink, steamProfileUrl, email)
+        manageUserData.createUser({steamId: null, googleId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
     }else{ //this should be impossible, but you never know!
@@ -51,13 +51,14 @@ router.put('/user', (req, res) => {
     let imageLink = req.body.imageLink;
     let steamProfileUrl = req.body.steamProfileUrl;
     let email = req.body.email;
+    let id = req.body.id;
 
     if(googleId == undefined){ //section for users logged with steam
-        manageUserData.updateUser(steamId, null, name, imageLink, steamProfileUrl, email)
+        manageUserData.updateUser({steamUserId: steamId, googleUserId: null, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
     }else if(steamId == undefined){ //section for users logged with google
-        manageUserData.updateUser(null, googleId, name, imageLink, steamProfileUrl, email)
+        manageUserData.updateUser({steamUserId: null, googleUserId: googleId, id: id, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
     }else{ //this should be impossible, but you never know!

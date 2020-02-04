@@ -1,19 +1,10 @@
-const userCRUD = require('../db/user');
+const userHandler = require('../adapters/db_adapters/user_adapter');
 
 function getUser(id){
     return new Promise((resolve, reject) => {
-        userCRUD.getUser(id).then(userData => {
+        userHandler.getUser(id).then(userData => {
             if(userData != undefined){
-                let jsonUser = {
-                    steamUserId: userData['steamUserId'],
-                    googleUserId: userData["googleUserId"],
-                    name: userData["name"],
-                    imageLink: userData["imageLink"],
-                    id: userData["id"], //internal id for our db
-                    steamProfileUrl: userData["steamProfileUrl"],
-                    email: userData["email"]
-                }
-                resolve(jsonUser);
+                resolve(userData);
             } else {
                 reject("404");
             }
@@ -21,20 +12,14 @@ function getUser(id){
     });
 }
 
-function createUser(steamId, googleId, name, imageLink, steamProfileUrl, email){
+function createUser(user){
     return new Promise((resolve, reject) => {
-        userCRUD.createUser(steamId, googleId, name, imageLink, steamProfileUrl, email).then(userId => {
+        userHandler.createUser(user).then(createdUser => {
+            userId = createdUser["id"];
+
             if(userId != undefined){
-                let jsonUser = {
-                    steamUserId: steamId,
-                    googleUserId: googleId,
-                    name: name,
-                    imageLink: imageLink,
-                    id: userId, //internal id for our db
-                    steamProfileUrl: steamProfileUrl,
-                    email: email
-                }
-                resolve(jsonUser);
+                user["id"]=userId;
+                resolve(user);
             } else {
                 reject("400");
             }
@@ -42,34 +27,19 @@ function createUser(steamId, googleId, name, imageLink, steamProfileUrl, email){
     });
 }
 
-function updateUser(steamId, googleId, name, imageLink, steamProfileUrl, email){
+function updateUser(user){
     return new Promise((resolve, reject) => {
-        userCRUD.updateUser(steamId, googleId, name, imageLink, steamProfileUrl, email).then(function(){
-            userCRUD.getUser(id).then(userData => {
-                if(userData != undefined){
-                    let jsonUser = {
-                        steamUserId: userData['steamUserId'],
-                        googleUserId: userData["googleUserId"],
-                        name: userData["name"],
-                        imageLink: userData["imageLink"],
-                        id: userData["id"], //internal id for our db
-                        steamProfileUrl: userData["steamProfileUrl"],
-                        email: userData["email"]
-                    }
-                    resolve(jsonUser);
-                } else {
-                    reject("404");
-                }
-            }).catch(err => reject(err));
+        userHandler.updateUser(user).then(userData => {
+            resolve(userData);
         }).catch(err => reject(err));
     });
 }
 
 function deleteUser(id){
     return new Promise((resolve, reject) => {
-        userCRUD.deleteUser(id).then(function(){
+        userHandler.deleteUser(id).then(userData => {
             if(userData != undefined){
-                resolve(id);
+                resolve(userData);
             } else {
                 reject("400");
             }
@@ -77,4 +47,4 @@ function deleteUser(id){
     });
 }
 
-module.exports = {getUser, createUser};
+module.exports = {getUser, createUser, updateUser, deleteUser};

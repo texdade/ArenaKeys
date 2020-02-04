@@ -57,4 +57,12 @@ function isListNoId(list){
     return list && list['userId'] && list['name'] && (list['notifyMe'] !== undefined) && Array.isArray(list['items']);
 }
 
-module.exports = {connection, logUpdateTable, isGameData, isGameDataPrice, areGameDataPrices, isList, isListNoId};
+function isUser(user){
+    return isUserNoId(user) && user['id']
+}
+
+function isUserNoId(user){
+    return user && (user['steamUserId'] || user['googleUserId']) && user['name'] && (user['steamProfileUrl'] || user['email'])
+}
+
+module.exports = {connection, logUpdateTable, isGameData, isGameDataPrice, areGameDataPrices, isList, isListNoId, isUser, isUserNoId};

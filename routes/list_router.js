@@ -30,20 +30,18 @@ router.post('/userlist', (req, res) => {
 
     if(!googleId && steamId){ //section for users logged with steam
         promiseUserData = manageUserData.getUser(steamId);
-
     }else if(googleId && !steamId){ //section for users logged with google
         promiseUserData = manageUserData.getUser(googleId);
-
     }else{
         res.status(403).json({});
     }
 
     promiseUserData.
-    then(userData => { //get the user id from the steam id
-        manageListData.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
-            res.status(201).json(newList);
-        });
-    })
+        then(userData => { //get the user id from the steam id
+            manageListData.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
+                res.status(201).json(newList);
+            });
+        })
         .catch(err => res.status(400).json({}));
 
 });
@@ -184,7 +182,5 @@ router.delete('/userlist/:id', (req, res) => {
         })
         .catch(err => res.status(404).json({}));
 });
-
-
 
 module.exports = router;

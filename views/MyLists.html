@@ -6,13 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <script src="https://kit.fontawesome.com/834387bfd8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="icons/css/all.min.css"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">  
     <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
     
     <link rel="stylesheet" href="css/arena-keys.css">
 
-    <title>SDE_Project</title>
+    <title>ArenaKeys</title>
   </head>
   <body>
 
@@ -25,9 +25,6 @@
           </li>
           <li class="nav-item active">
               <a class="nav-link" href="#">My Lists<span class="sr-only">(current)</span></a>
-          </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="NewList.html">New List<span class="sr-only">(current)</span></a>
           </li>
           <!--li class="nav-item">
               <a class="nav-link disabled" href="#">Disabled</a>
@@ -53,7 +50,79 @@
 
     <div class="row m-5">
     </div>
-    
+    <div class="row">
+      <div class="col-md-8">
+        <h1>My Lists</h1>
+      </div> 
+      <div class="col-md-4" align="right">   
+        <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-placement="top" data-target="#newListModal" title="Add new list"><i class="fas fa-plus"></i></button>
+        <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" align="left">
+                <div class="form-group row">
+                  <label for="listName" class="col-sm-3 col-form-label">List Name:</label>
+                  <div class="col-sm-9">
+                    <input type="text" class="form-control" id="listName">
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Create List</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-dark btn-lg" data-toggle="modal" data-target="#steamListModal"><i class="fab fa-steam"></i> &nbsp; Import Steam Wishlist</button>
+        <div class="modal fade" id="steamListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Import Steam Wishlist</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body" align="left">
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8" align="center">
+                      <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                    </div>
+                    <div class="col-md-2"></div>
+                  </div><p></p>
+                  <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8" align="center">
+                      <p>OR</p>
+                    </div>  
+                    <div class="col-md-2"></div>  
+                  </div>
+                  <div class="row">
+                    <label for="accountLink" class="col-sm-4 col-form-label">Other account link:</label>
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" id="accountLink">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Create List</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>
     <div class="">
       <div class="accordion" id="accordionExample">
         <div class="card">
@@ -294,7 +363,5 @@
     <script src="data_template.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-  </div>
   </body>
 </html>

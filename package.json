@@ -19,8 +19,12 @@
   "homepage": "https://github.com/texdade/SDE_project#readme",
   "dependencies": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "body-parser": "^1.19.0",
     "dotenv": "^8.2.0",
+=======
+    "@popperjs/core": "^2.0.5",
+>>>>>>> fixed UI issues and added local sources
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "google-auth-library": "^5.9.2",

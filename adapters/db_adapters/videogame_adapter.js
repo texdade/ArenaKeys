@@ -183,8 +183,8 @@ function getCachedMatchingGamesInfo(name){
         steamDumpDAO.getMatchingGamesBasicInfo(name).then(gamesInfoFetched => {
             let gamesInfo = [];
             let similarityThreshold = parseFloat(process.env.STRING_SIMILARITY_THRESHOLD);
-            for(let gameDataSelect of gamesInfoFetched)
-                if(myCompareTwoStrings(name, gameDataSelect['name']) > similarityThreshold)
+            for (let gameDataSelect of gamesInfoFetched){
+                if (myCompareTwoStrings(name, gameDataSelect['name']) > similarityThreshold)
                     gamesInfo.push({
                         steamID: gameDataSelect['steam_id'],
                         name: gameDataSelect['name'],
@@ -192,8 +192,13 @@ function getCachedMatchingGamesInfo(name){
                         image: gameDataSelect['image_link'],
                         lastUpdate: gameDataSelect['last_update']
                     });
+            }
 
-            resolve(gamesInfo);
+            if(process.env.LOCAL)//on local return all the results
+                resolve(gamesInfo);
+
+            else//remotely just the ones with the highest matching
+                resolve(extractBetterMatching(name, gamesInfo, process.env.MAX_TO_EXTRACT || 5));
         })
             .catch(err => reject(err));
     });
@@ -209,6 +214,28 @@ function myCompareTwoStrings(name1, name2){
     name2 = name2.toLowerCase();
 
     return stringSimilarity.compareTwoStrings(name1, name2);
+}
+
+/*  Extract just the games info having the higher name matching with name
+* */
+function extractBetterMatching(name, gamesInfo, maxToExtract){
+    let gamesInfoExtracted = [];
+    for(let gameInfo of gamesInfo){
+        if(gamesInfoExtracted.length < maxToExtract)
+            gamesInfoExtracted.push(gameInfo);
+
+        else{//already filled the extracted array so we need eventually to swap the element with one having a smaller similarity value
+            for(let i=0; i<maxToExtract; i++){
+                let similarity1 = myCompareTwoStrings(name, gamesInfoExtracted[i]['name']);//similarity with name of the temp chosen element
+                let similarity2 = myCompareTwoStrings(name, gameInfo['name']);
+                if(similarity2 > similarity1){
+                    gamesInfoExtracted[i] = gameInfo;
+                    break;
+                }
+            }
+        }
+    }
+    return gamesInfoExtracted;
 }
 
 module.exports = {  getCachedGamePrices, existPricesInfo, modifyGamePrice, addGamePrice, deleteGamePrices,

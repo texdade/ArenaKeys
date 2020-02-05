@@ -33,8 +33,6 @@ router.post('/user', (req, res) => {
     let steamProfileUrl = req.body.steamProfileUrl;
     let email = req.body.email;
 
-    console.log({steamUserId: steamId, googleUserId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email});
-
     if(!googleId && steamId){ //section for users logged with steam
         manageUserData.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
@@ -57,7 +55,7 @@ router.put('/user', (req, res) => {
     let imageLink = req.body.imageLink;
     let steamProfileUrl = req.body.steamProfileUrl;
     let email = req.body.email;
-    let id = req.body.id;
+    let id = parseInt(req.body.id);
 
     let updUser = {
         steamUserId: steamId,

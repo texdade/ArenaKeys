@@ -1,0 +1,927 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: "ArenaKeys"
+  description: ArenaKeys is a service that allows users to look for their favourite games at the lowest price!
+  license:
+    name: MIT
+    url: https://github.com/apiaryio/polls-api/blob/master/LICENSE
+host: gamekeys-arena.herokuapp.com
+basePath: /
+schemes:
+- http
+consumes:
+- application/json
+produces:
+- application/json
+- text/plain
+securityDefinitions:
+  Bearer:
+    in: header
+    type: apiKey
+    name: Authorization
+tags:
+  - name: Authentication
+  - name: User Management
+  - name: User List Management
+  - name: Videogame
+  
+paths:
+  
+  '/auth/google':
+    get:
+      tags:
+        - Authentication
+      summary: Authentication with Google
+      description: This call manages the authentication process of a user through the usage of a Google account. The response gives back a token to identify the user and check if he is correctly authenticated through the session defined by the same token.
+      responses:
+        200:
+          description: Successful
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+              token:
+                type: string
+  '/auth/steam':
+    get:
+      tags:
+        - Authentication
+      summary: Authentication with Steam
+      description: This call manages the authentication process of a user through the usage of a Steam account. The response gives back a token to identify the user and check if he is correctly authenticated through the session defined by the same token.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+              token:
+                type: string
+  '/steam/user':
+    get:
+      summary: Login with Steam
+      description: This call gets the user's data once logged into the system with Steam.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to. 
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        '400':
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    post:
+      summary: First Steam login
+      description: This call creates the user if it doesn't exist (and therefore if he never logged in before).
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to. 
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that will be used to create the user for the first time.
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    put:
+      summary: Edit User
+      description: This call is used to edit the user's personal information.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to. 
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that can be modified.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    delete:
+      summary: Delete User
+      description: This call is used to delete a user and all the related information such as personal data and lists.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: false
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that to be deleted.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/google/user':
+    get:
+      summary: Login with Google
+      description: This call gets the user's data once logged into the system with Google.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: false
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        '400':
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    post:
+      summary: First Google login
+      description: This call creates the user if it doesn't exist (and therefore if he never logged in before).
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that will be used to create the user for the first time.
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    put:
+      summary: Edit User
+      description: This call is used to edit the user's personal information.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that can be modified.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    delete:
+      summary: Delete User
+      description: This call is used to delete a user and all the related information such as personal data and lists.
+      tags:
+        - User Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: user
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/userObj'
+        description: the user object contains all the user information that to be deleted.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              user:
+                type: object
+                $ref: '#/definitions/userObj'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/steam/userlist':
+    get:
+      summary: Get all user's lists
+      description: This call returns all the lists that have been created by the steam-logged user.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - in: header
+        name: Authorization
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: '#/definitions/list'
+                description: this array contains all the lists of a user.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    post:
+      summary: Create a list
+      description: This call creates and returns a list of games chosen by the logged user.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/listNoId'
+        description: the list has all the games that the logged user has inserted
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/steam/userlist/{id}':
+    get:
+      summary: Get a list given the id
+      description: This call returns the list of a steam-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - in: header
+        name: Authorization
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the requested list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    put:
+      summary: Edit a list given the id
+      description: This call modifies and returns list of a steam-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+        description: this object contains the list name and all the games in it.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    delete:
+      summary: Delete a list given the id
+      description: This call deletes and returns the list of a steam-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+        description: this object contains the list name and all the games in it.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/google/userlist':
+    get:
+      summary: Get all user's lists
+      description: This call returns all the lists that have been created by the google-logged user.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - in: header
+        name: Authorization
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: array
+                items:
+                  $ref: '#/definitions/list'
+                description: this array contains all the lists of a user.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    post:
+      summary: Create a list
+      description: This call creates and returns a list of games chosen by the logged user. 
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/listNoId'
+        description: the list has all the games that the logged user has inserted
+      responses:
+        201:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/google/userlist/{id}':
+    get:
+      summary: Get a list given the id
+      description: This call returns the list of a google-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - in: header
+        name: Authorization
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: query
+        name: access_token
+        type: string
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    put:
+      summary: Edit a list given the id
+      description: This call modifies and returns the list of a google-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+        description: this object contains the list name and all the games in it.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+    delete:
+      summary: Delete a list given the id
+      description: This call deletes and returns the list of a google-logged user given its id.
+      tags:
+        - User List Management
+      security:
+        - Bearer: [<token>]
+      parameters:
+      - name: Authorization
+        in: header
+        type: string
+        required: true
+        description: The authorization token is used to identify the user and check to which data he has access to.
+      - name: list
+        in: body
+        required: true
+        schema:
+          $ref: '#/definitions/list'
+        description: this object contains the list name and all the games in it.
+      - in: path
+        name: id
+        type: integer
+        required: true
+        description: the id of the list
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              list:
+                type: object
+                $ref: '#/definitions/list'
+                description: this object contains the list name and all the games in it.
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
+  '/videogame':
+    get:
+      summary: Find one or more games
+      description: This call allows to look for one or more games given the steamID of the game or its name
+      tags:
+        - Videogame
+      parameters:
+      - name: steamID
+        in: query
+        type: integer
+        required: false
+        description: the steamID of the game
+      - name: name
+        in: query
+        type: string
+        required: false
+        description: the name of the game
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            properties:
+              game:
+                type: array
+                items:
+                  $ref: '#/definitions/gameOffer'
+                description: this array contains all the games found given the steamID or the name
+definitions:
+  userObj:
+    title: User Object
+    type: object
+    properties:
+      name: 
+        type: string
+      email: 
+        type: string
+      imageLink: 
+        type: string
+      steamUserId: 
+        type: integer
+      googleUserId:
+        type: string
+      steamProfileUrl:
+        type: string
+      lists:
+        type: array
+        items:
+          $ref: '#/definitions/list'
+    required:
+      - name
+      - email
+      - imageLink
+      - lists
+  list:
+    title: list
+    type: object
+    properties:
+      id:
+        type: integer
+      name:
+        type: string
+      notifyMe:
+        type: boolean
+      items: 
+        type: array
+        items:
+          $ref: '#/definitions/listItem'
+    required:
+      - id
+      - name
+      - notifyMe
+      - items
+  listNoId:
+    title: List with no id
+    type: object
+    properties:
+      name:
+        type: string
+      notifyMe:
+        type: boolean
+      items: 
+        type: array
+        items:
+          $ref: '#/definitions/listItem'
+    required:
+      - name
+      - notifyMe
+      - items
+  listItem:
+    title: listItem
+    type: object
+    properties:
+      steamID:
+        type: integer
+      name:
+        type: string
+      priceNotifier:
+        type: boolean
+      imageLink:
+        type: string
+      description:
+        type: string
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/offerItem'
+    required:
+      - name
+      - priceNotifier
+      - imageLink
+      - offers
+  gameOffer:
+    title: Game Offer
+    type: object
+    properties:
+      steamID:
+        type: integer
+      name:
+        type: string
+      imageLink:
+        type: string
+      description:
+        type: string
+      lastUpdate:
+        type: string
+      offers:
+        type: array
+        items:
+          $ref: '#/definitions/offerItem'
+    required:
+      - steamID
+      - name
+      - imageLink
+      - offers
+  offerItem:
+    title: Offer Item
+    type: object
+    properties:
+      reseller:
+        type: string
+      price:
+        type: number
+      link:
+        type: string
+      availability:
+        type: boolean
+    required:
+      - reseller
+      - price
+      - link
+      - availability
+  ResponseStatus:
+    type: object
+    description: Response status code, with a better explanation of what could be the possible causes of the error
+    properties:
+      status:
+        type: number
+        default: 200
+      code:
+        type: string
+        default: OK
+      msg:
+        type: string
+        description: Additional string attached to the status in order to understand better the nature of the error

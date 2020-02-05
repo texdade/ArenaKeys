@@ -1,0 +1,13 @@
+#CDKEYS
+https://adm.cdkeys.com/feeds/cdkeys_affiliate_feed_eur.txt
+
+#HRK Games
+HRK Games - https://www.hrkgame.com/en/hotdeals/xml-feed/?key=F546F-DFRWE-DS3FV&cur=EUR
+
+#GAMIVO
+Gamivo - http://www.gamivo.com/feed/eur/en/feed.xml
+
+#STEAM
+Steam (api per wishlist) - https://store.steampowered.com/wishlist/id/texdade1/wishlistdata/?p=0
+Steam (api singolo gioco) - https://store.steampowered.com/api/appdetails/?appids=9050
+Steam (dump in JSON) - http://api.steampowered.com/ISteamApps/GetAppList/v0002/

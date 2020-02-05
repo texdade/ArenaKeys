@@ -1,10 +1,11 @@
 {
   "name": "sde_project",
   "version": "1.0.0",
-  "description": "",
+  "description": "GameArena KeyComparator",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node -r dotenv/config server.js"
   },
   "repository": {
     "type": "git",
@@ -17,9 +18,24 @@
   },
   "homepage": "https://github.com/texdade/SDE_project#readme",
   "dependencies": {
-    "@popperjs/core": "^2.0.5",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.0.1",
+    "express": "^4.17.1",
+    "google-auth-library": "^5.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "node-cache": "^5.1.0",
     "node-fetch-npm": "^2.0.2",
-    "papaparse": "^5.1.1"
+    "papaparse": "^5.1.1",
+    "passport": "^0.4.1",
+    "passport-google-oauth": "^2.0.0",
+    "passport-http-bearer": "^1.0.1",
+    "passport-steam": "^1.0.12",
+    "string-similarity": "^4.0.1",
+    "util": "^0.12.1",
+    "xml2js": "^0.4.23",
+    "xmldom": "^0.2.1",
+    "xpath": "0.0.27"
   }
 }

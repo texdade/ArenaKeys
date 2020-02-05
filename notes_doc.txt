@@ -1,0 +1,158 @@
+REST calls
+
+
+(1) require token in query param (access_token=<token>)
+(2) require token in header (Authorization: Bearer <token>)
+
+for each description (input); (output)
+
+AUTHENTICATION:
+GET
+auth/google
+	description: 
+		(); 
+		({
+			user: userObj,
+			token: string
+		});
+
+GET
+auth/steam
+	description:
+		(); 
+		({
+			user: userObj,
+			token: string
+		});
+
+USER:
+POST (2)
+steam/user  google/user
+	description:
+		(userObj);
+		(userObj 201 : {} 400); //bad request 400
+
+GET (1-2)
+steam/user  google/user
+	description:
+		();
+		(userObj 200 : {} 404); 
+PUT (2)
+google/user steam/user
+	description:
+		(userObj);
+		(userObj 200 :  {} 400 : {} 404); //404 if it's not your profile or does not exist, 400 if the object is not appropriately formatted
+
+DELETE (2)
+google/user  steam/user
+	description:
+		();
+		(userObj 200 : {} 404); //404 if it's not your profile or does not exist, return deleted object
+
+USERLIST:
+GET (1-2)
+google/userlist/:id + steam/userlist/:id
+	description:
+		();
+		(list 200 : {} 404);
+
+GET (1-2)
+google/userlist + steam/userlist
+	description:
+		();
+		([list] 200);
+
+POST (2)
+google/userlist + steam/userlist
+	description:
+		(listNoId);
+		(list 201 : {} 400); // return list with id
+
+PUT (2)
+google/userlist/:id + steam/userlist/:id
+	description:
+		(list);
+		(list 200 : {} 400 : {} 404);
+
+DELETE (2)
+google/userlist/:id + steam/userlist/:id
+	description:
+		();
+		(list 200 : {} 404);
+
+
+VIDEOGAME:
+GET
+/videogame?steamID=""
+	description:
+		()
+		(gameOffer 200 : {} 404)
+GET
+/videogame?name=""
+	description
+		()
+		([gameOffer] 200)
+
+
+
+
+DEFINITIONS
+
+userObj{
+	name:
+	email:
+	imageLink:
+	steamUserId:
+	googleUserId:
+	steamProfileUrl:
+	lists:[
+		list
+	]
+}
+
+list{
+	id:
+	name:
+	notifyMe:
+	items: [listItem]
+}
+
+listNoId{
+	name:
+	notifyMe:
+	items: [listItem]
+}
+
+listItem{
+	steamID:
+	name:
+	priceNotifier:
+	imageLink:
+	description:
+	offers:[
+		offerItem
+	]
+}
+
+gameOffer{
+	steamID:
+	name:
+	imageLink:
+	description:
+	lastUpdate:
+	offers:[
+		offerItem
+	]
+}
+
+
+offerItem:{
+	reseller:
+	price:
+	link:
+	availability:
+}
+
+ERRORS:
+/google/userlist 503 Service Unavailable
+/videogame?name= 503 Service Unavailable

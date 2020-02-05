@@ -6,12 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!-- Bootstrap CSS -->
-    <script src="https://kit.fontawesome.com/834387bfd8.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="icons/css/all.min.css"></script>
     <link rel="stylesheet" href="css/bootstrap.min.css">  
     <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
     <link rel="stylesheet" href="css/arena-keys.css">
 
-    <title>SDE_Project</title>
+    <title>ArenaKeys</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -23,119 +23,14 @@
           <li class="nav-item active">
               <a class="nav-link" href="MyLists.html">My Lists<span class="sr-only">(current)</span></a>
           </li>
-          <li class="nav-item active">
-              <a class="nav-link" href="#">New List<span class="sr-only">(current)</span></a>
-          </li>
           <!--li class="nav-item">
               <a class="nav-link disabled" href="#">Disabled</a>
           </li-->
       </ul>
       <form class="ml-auto mr-1">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#LoginModal">
-          Login
-        </button>
-        <div class="modal fade" id="LoginModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sign in</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="inputEmail" class="col-form-label">Email:</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
-                  </div>
-                  <div><p></p></div>
-                  <div class="form-group">
-                    <label for="inputPassword" class="col-form-label">Password:</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                  </div>
-                </form>
-              </div>
-              <div class="row">
-                <div class="col-md-12" align="center">
-                  <p>OR SIGN IN WITH</p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6" align="center">
-                  <button class="btn btn-primary"><i class="fab fa-google"></i> &nbsp; Google</button><div><p></p></div>
-                </div>
-                <div class="col-md-6" align="center">
-                  <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Steam</button>
-                </div>
-              </div>
-              <div><p></p></div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Login</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#RegisterModal">
-          Sign up
-        </button>
-        <div class="modal fade" id="RegisterModal" tabindex="-1" role="dialog" aria-labelledby="LoginModalLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Sign up</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                <form>
-                  <div class="form-group">
-                    <label for="inputUsername" class="col-form-label">Username:</label>
-                    <input type="text" class="form-control" id="inputUsername" placeholder="Username">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputFirstName" class="col-form-label">First Name:</label>
-                    <input type="text" class="form-control" id="inputUsername" placeholder="First Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputLastName" class="col-form-label">Last Name:</label>
-                    <input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputEmail" class="col-form-label">Email:</label>
-                    <input type="email" class="form-control" id="inputEmail" placeholder="Enter email">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputPassword" class="col-form-label">Password:</label>
-                    <input type="password" class="form-control" id="inputPassword" placeholder="Password">
-                  </div>
-                  <div class="form-group">
-                    <label for="inputConfirmPassword" class="col-form-label">Confirm Password:</label>
-                    <input type="password" class="form-control" id="inputConfirmPassword" placeholder="Confirm Password">
-                  </div>
-                </form>
-              </div>
-              <div class="row offset-4">
-                <p>OR SIGN UP WITH:</p>
-              </div>
-              <div class="row offset-1">
-                <div class="col-md-6" align="center">
-                  <button class="btn btn-primary">Google</button>
-                </div>
-                <div class="col-md-6">
-                  <button class="btn btn-primary">Steam</button>
-                </div>
-              </div>
-              <div><p></p></div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Register</button>
-              </div>
-            </div>
-          </div>
+        <div class="bg-dark text-white">Login with:&nbsp;
+          <button class="btn btn-primary"><i class="fab fa-google"></i> &nbsp; Google</button>
+          <button class="btn btn-dark border-light"><i class="fab fa-steam"></i> &nbsp; Steam</button>
         </div>
       </form>
     </nav>
@@ -156,7 +51,7 @@
         <div class="col-12 col-sm-8 col-lg-12">
           <div class="row">
             <div class="col-sm-11">
-              <h6 class="light">Results</h6>
+              <h5 class="light">Results</h4>
             </div>
             <!--div class="col-sm-1">
               <div class="dropdown">
@@ -178,25 +73,85 @@
                   <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
                   Game 1
               </div>
-              Steam price: 16€<br>
-              Best price: 8€
+              <div align="center">
+                Steam price: 16€<br>
+                Best price: 8€ <br><br>
+                <!--button type="button" class="btn btn-primary"><i class="fas fa-plus"></i></button-->
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #1</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #2</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #3</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #4</a>
+                  </div>
+                </div>
+              </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">
               <div class="image-parent">
                   <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
                   Game 2
               </div>
-              Steam price: 16€<br>
-              Best price: 8€
+              <div align="center">
+                Steam price: 16€<br>
+                Best price: 8€ <br><br>
+                <!--button type="button" class="btn btn-primary"><i class="fas fa-plus"></i></button-->
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #1</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #2</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #3</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #4</a>
+                  </div>
+                </div>
+              </div>
             </li>
             <li class="list-group-item d-flex justify-content-between align-items-center">  
               <div class="image-parent">
                   <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
                   Game 3
               </div>
-              Steam price: 16€<br>
-              Best price: 8€
+              <div align="center">
+                Steam price: 16€<br>
+                Best price: 8€ <br><br>
+                <!--button type="button" class="btn btn-primary"><i class="fas fa-plus"></i></button-->
+                <div class="dropdown">
+                  <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #1</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #2</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #3</a>
+                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#addGameModal">List #4</a>
+                  </div>
+                </div>
+              </div>
             </li>
+            <div class="modal fade" id="addGameModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" align="left">
+                    Game added with success!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </ul>
         </div>
       </div>
@@ -212,8 +167,7 @@
     <script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
     <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
     <script src="../data_template.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
   </body>
 </html>

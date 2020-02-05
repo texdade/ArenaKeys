@@ -1,81 +1,91 @@
-
 <!doctype html>
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-  <!-- Bootstrap CSS -->
-  <script src="https://kit.fontawesome.com/834387bfd8.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="css/bootstrap.min.css">  
-  <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
-  <link rel="stylesheet" href="css/arena-keys.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="icons/css/all.min.css"></script>
+    <link rel="stylesheet" href="css/bootstrap.min.css">  
+    <link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/arena-keys.css">
 
-  <title>SDE_Project</title>
-</head>
-<body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="index.html">ArenaKeys</a>
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-          <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="MyLists.html">My Lists<span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item active">
-        <a class="nav-link" href="NewList.html">New List<span class="sr-only">(current)</span></a>
-      </li>
-      <!--li class="nav-item">
-        <a class="nav-link disabled" href="#">Disabled</a>
-      </li-->
-    </ul>
-  
-    <form class="ml-auto mr-1">
-        <div class="btn-group">
-            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <i class="fas fa-user"></i>
-            </button>
-            <div class="dropdown-menu dropdown-menu-right">
-                <a class="dropdown-item" href="#" type="button"><i class="fas fa-info-circle"></i>&nbsp;Account Info</a>
-                <button class="dropdown-item" type="button"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
-            </div>
-        </div>
-    </form>
-  </nav>
+    <title>ArenaKeys</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="index.html">ArenaKeys</a>
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+            <a class="nav-link" href="index.html">Home<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="MyLists.html">My Lists<span class="sr-only">(current)</span></a>
+        </li>
+        <!--li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li-->
+      </ul>
+    
+      <form class="ml-auto mr-1">
+          <div class="btn-group">
+              <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="fas fa-user"></i>
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                  <a class="dropdown-item" href="#" type="button"><i class="fas fa-info-circle"></i>&nbsp;Account Info</a>
+                  <button class="dropdown-item" type="button"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
+              </div>
+          </div>
+      </form>
+    </nav>
 
-  <div id="bg"></div>  
-  <div class="container" style="min-height: 100%;">
-    <div class="row m-5">
-    </div>
-    <div class="md-form active-pink active-pink-2 mb-3 mt-0">
-      <div class="jumbotron">
-        <h1>Edit User Info</h1>
-        <hr class="my-4">
-        <form>
-            <div class="form-group">
-                <label for="emailFormControlInput1">Email address:</label>
-                <input type="email" class="form-control" id="emailFormControlInput1" placeholder="name@example.com">
+    <div id="bg"></div>  
+    <div class="container" style="min-height: 100%;">
+      <div class="row m-5">
+      </div>
+      <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+        <div class="jumbotron">
+          <h1>Edit User Info</h1>
+          <hr class="my-4">
+          <form>
+              <div class="form-group">
+                  <label for="emailFormControlInput1">Email address:</label>
+                  <input type="email" class="form-control" id="emailFormControlInput1" placeholder="name@example.com">
+              </div>
+              <div class="form-group">
+                  <label for="emailFormControlInput1">Steam account link:</label>
+                  <input type="text" class="form-control" id="accountLink" placeholder="http://example.com">
+              </div>
+              <div align="center">
+                  <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#deleteModal">Confirm</button>
+                  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body" align="left">
+                            Are you sure?
+                        </div>
+                        <div class="modal-footer">    
+                            <button type="button" class="btn btn-primary">Confirm</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div align="center">
+                <button type="submit" class="btn btn-danger mb-2">Delete account</button>
             </div>
-            <div class="form-group">
-                <label for="passwordFormControlInput1">Password:</label>
-                <input type="password" class="form-control" id="emailFormControlInput1" placeholder="Password">
-            </div>
-            <div class="form-group">
-                <label for="firstNameFormControlInput1">First Name:</label>
-                <input type="text" class="form-control" id="firstNameFormControlInput1" placeholder="Mario">
-            </div>
-            <div class="form-group">
-                <label for="lastNameFormControlInput1">Last Name:</label>
-                <input type="text" class="form-control" id="lastNameFormControlInput1" placeholder="Rossi">
-            </div>
-            <div align="center">
-                <button type="submit" class="btn btn-primary mb-2">Confirm</button>
-            </div>
-        </form>
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          </form>
+          <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
-                <div class="modal-content">
+              <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Done</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -88,31 +98,24 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
       </div>
-      <!--div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-        </div>
-        <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="selector">
-      </div-->
     </div>
-  </div>
 
-  <footer class="page-footer font-small blue">
-    <div class="footer-copyright text-center">© 2020 Copyright:
-      <a href="https://mdbootstrap.com/education/bootstrap/">SDE_Project</a>
-    </div>
-  </footer>  
-  <!-- Optional JavaScript -->
-  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-  <script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
-  <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
-  <script src="../data_template.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-</body>
+    <footer class="page-footer font-small blue">
+      <div class="footer-copyright text-center">© 2020 Copyright:
+        <a href="https://mdbootstrap.com/education/bootstrap/">SDE_Project</a>
+      </div>
+    </footer>  
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="jquery-ui-1.12.1.custom/external/jquery/jquery.js"></script>
+    <script src="jquery-ui-1.12.1.custom/jquery-ui.min.js"></script>
+    <script src="../data_template.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="js/bootstrap.min.js"></script>
+  </body>
 </html>

@@ -46,11 +46,11 @@ function isListNoId(list){
 }
 
 function isUser(user){
-    return isUserNoId(user) && user['id']
+    return isUserNoId(user) && user['id'];
 }
 
 function isUserNoId(user){
-    return user && (user['steamUserId'] || user['googleUserId']) && user['name'] && (user['steamProfileUrl'] || user['email'])
+    return user && (user['steamUserId'] || user['googleUserId']) && user['name'] && (user['steamProfileUrl'] || user['email']);
 }
 
 module.exports = {connection, isGameData, isGameDataPrice, areGameDataPrices, isGameDataAndOffers, isList, isListNoId, isUser, isUserNoId};

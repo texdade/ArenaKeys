@@ -3,10 +3,21 @@ const Parser = require('papaparse');
 const stringSimilarity = require("string-similarity");
 
 const url = "https://adm.cdkeys.com/feeds/cdkeys_affiliate_feed_eur.txt";
- 
+
+const NodeCache = require( "node-cache" );
+const mcache = new NodeCache();
+
+const cacheKey = 'cdkeysCache';
+const cacheDuration = process.env.CACHE_DUR || 60 * 60 * 24;
+
 //raw dump of reseller's db
 function getDump() {
-    return fetch(url);
+    let cachedData = mcache.get(cacheKey);
+    if(!cachedData)
+        return fetch(url);
+    else{
+        return new Promise((resolve) => resolve(cachedData));
+    }
 }
 
 //returns info of all games in proper formatted json
@@ -16,7 +27,21 @@ function getAllGamesInfo(){
         getDump()
         
         .then(res => {
-                res.text().then(text => {
+                let textPromise;
+
+                let cachedData = mcache.get(cacheKey);
+
+                if(!cachedData)
+                    textPromise = res.text();
+                else
+                    textPromise = new Promise(resolve => resolve(res));
+
+                textPromise.then(text => {
+
+                    if(!cachedData){
+                        mcache.set(cacheKey, text, cacheDuration); //cached gamivo dump locally
+                    }
+
                     let result = Parser.parse(text); //NOTE: no need to specify delimiters/newlines because autodetects
                     
                     let games = [];

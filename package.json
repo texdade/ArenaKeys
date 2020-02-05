@@ -25,6 +25,7 @@
     "google-auth-library": "^5.9.2",
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
+    "node-cache": "^5.1.0",
     "node-fetch-npm": "^2.0.2",
     "papaparse": "^5.1.1",
     "passport": "^0.4.1",

@@ -4,10 +4,21 @@ const dom = require("xmldom").DOMParser;
 const xml2js = require("xml2js");
 
 const url = "https://www.gamivo.com/feed/eur/en/feed.xml";
- 
+
+const NodeCache = require( "node-cache" );
+const mcache = new NodeCache();
+
+const cacheKey = 'gamivoCache';
+const cacheDuration = process.env.CACHE_DUR || 60 * 60 * 24; //a day by default
+
 //raw dump of reseller's db
 function getDump() {
-    return fetch(url);
+    let cachedData = mcache.get(cacheKey);
+    if(!cachedData)
+        return fetch(url);
+    else{
+        return new Promise((resolve) => resolve(cachedData));
+    }
 }
 
 //returns the info of all games in proper formatted json
@@ -17,8 +28,21 @@ function getAllGamesInfo(){
         
         getDump()
             .then(res => {
-                res.text().then(text => {
-                    
+                let textPromise;
+
+                let cachedData = mcache.get(cacheKey);
+
+                if(!cachedData)
+                    textPromise = res.text();
+                else
+                    textPromise = new Promise(resolve => resolve(res));
+
+                textPromise.then(text => {
+
+                    if(!cachedData){
+                        mcache.set(cacheKey, text, cacheDuration); //cached gamivo dump locally
+                    }
+
                     let doc = new dom().parseFromString(text, 'text/xml');
                     let result = xpath.evaluate(
                         "/rss/channel/item",            // xpathExpression

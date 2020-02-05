@@ -1,7 +1,7 @@
 const fetch = require("node-fetch-npm");
 
 const urlSingleGame = "https://store.steampowered.com/api/appdetails/?appids="; //incomplete url for single game info
-const urlAllGamesList = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";
+const urlAllGamesList = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";//TODO change to v0002 if it restarts to answer again (in case you need to remove ['app'] in for)
 const urlSteamWishlist = "https://store.steampowered.com/wishlist/id/";
 
 //invoke steam API for infos about the game

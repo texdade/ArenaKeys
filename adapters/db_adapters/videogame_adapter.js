@@ -208,18 +208,7 @@ function myCompareTwoStrings(name1, name2){
     name1 = name1.toLowerCase();
     name2 = name2.toLowerCase();
 
-    let best_similarity = 0;
-    for(let i=0; i<name2.length; i++){
-        for(let j=i+1; j<name2.length; j++){
-            let temp_similarity = stringSimilarity.compareTwoStrings(name1, name2.substring(i,j));
-            if(temp_similarity > process.env.STRING_SIMILARITY_THRESHOLD)
-                return temp_similarity;
-            else if(temp_similarity > best_similarity)
-                best_similarity = temp_similarity;
-        }
-    }
-
-    return best_similarity;
+    return stringSimilarity.compareTwoStrings(name1, name2);
 }
 
 module.exports = {  getCachedGamePrices, existPricesInfo, modifyGamePrice, addGamePrice, deleteGamePrices,

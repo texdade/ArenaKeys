@@ -42,7 +42,7 @@ paths:
             properties:
               user:
                 type: object
-                $ref: '#/definitions/userObj'
+                $ref: '#/definitions/googleUserAuth'
               token:
                 type: string
   '/auth/steam':
@@ -59,12 +59,12 @@ paths:
             properties:
               user:
                 type: object
-                $ref: '#/definitions/userObj'
+                $ref: '#/definitions/steamUserAuth'
               token:
                 type: string
   '/steam/user':
     get:
-      summary: Login with Steam
+      summary: Access with Steam account
       description: This call gets the user's data once logged into the system with Steam.
       tags:
         - User Management
@@ -98,7 +98,7 @@ paths:
               responseStatus:
                 $ref: '#/definitions/ResponseStatus'
     post:
-      summary: First Steam login
+      summary: First access with Steam account
       description: This call creates the user if it doesn't exist (and therefore if he never logged in before).
       tags:
         - User Management
@@ -114,7 +114,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/userObj'
+          $ref: '#/definitions/steamUserAuth'
         description: the user object contains all the user information that will be used to create the user for the first time.
       responses:
         201:
@@ -211,7 +211,7 @@ paths:
                 $ref: '#/definitions/ResponseStatus'
   '/google/user':
     get:
-      summary: Login with Google
+      summary: Access with Google account
       description: This call gets the user's data once logged into the system with Google.
       tags:
         - User Management
@@ -245,7 +245,7 @@ paths:
               responseStatus:
                 $ref: '#/definitions/ResponseStatus'
     post:
-      summary: First Google login
+      summary: First access with Google account
       description: This call creates the user if it doesn't exist (and therefore if he never logged in before).
       tags:
         - User Management
@@ -261,7 +261,7 @@ paths:
         in: body
         required: true
         schema:
-          $ref: '#/definitions/userObj'
+          $ref: '#/definitions/googleUserAuth'
         description: the user object contains all the user information that will be used to create the user for the first time.
       responses:
         201:
@@ -419,8 +419,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -459,8 +460,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -500,8 +502,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -548,8 +551,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         404:
           description: Not Found
@@ -621,8 +625,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -661,8 +666,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -702,8 +708,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         400:
           description: Bad Request
@@ -750,8 +757,9 @@ paths:
             type: object
             properties:
               list:
-                type: object
-                $ref: '#/definitions/list'
+                type: array
+                items:
+                  $ref: '#/definitions/list'
                 description: this object contains the list name and all the games in it.
         404:
           description: Not Found
@@ -763,19 +771,15 @@ paths:
   '/videogame':
     get:
       summary: Find one or more games
-      description: This call allows to look for one or more games given the steamID of the game or its name
+      description: This call allows to look for one or more games given the name
       tags:
         - Videogame
       parameters:
-      - name: steamID
-        in: query
-        type: integer
-        required: false
-        description: the steamID of the game
       - name: name
         in: query
         type: string
-        required: false
+        minLength: 2
+        required: true
         description: the name of the game
       responses:
         200:
@@ -788,20 +792,41 @@ paths:
                 items:
                   $ref: '#/definitions/gameOffer'
                 description: this array contains all the games found given the steamID or the name
+  '/videogame/{steamID}':
+    get:
+      summary: Find a specific game
+      description: This call allows to look for a specific game given its steamID
+      tags:
+        - Videogame
+      parameters:
+      - name: steamID
+        in: path
+        type: integer
+        required: true
+        description: the game identifier
+      responses:
+        200:
+          description: Success
+          schema:
+            type: object
+            $ref: '#/definitions/gameOffer'
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              responseStatus:
+                $ref: '#/definitions/ResponseStatus'
 definitions:
-  userObj:
-    title: User Object
+  steamUserAuth:
+    title: Steam User
     type: object
     properties:
-      name: 
-        type: string
-      email: 
-        type: string
-      imageLink: 
-        type: string
-      steamUserId: 
+      steamUserId:
         type: integer
-      googleUserId:
+      name:
+        type: string
+      imageLink:
         type: string
       steamProfileUrl:
         type: string
@@ -809,11 +834,42 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/list'
+  googleUserAuth:
+    title: Google User
+    type: object
+    properties:
+      googleUserId:
+        type: integer
+      name:
+        type: string
+      email:
+        type: string
+      imageLink:
+        type: string
+      lists:
+        type: array
+        items:
+          $ref: '#/definitions/list'
+  userObj:
+    title: User Object
+    type: object
+    properties:
+      steamUserId:
+        type: string
+      googleUserId:
+        type: string
+      name:
+        type: string
+      imageLink:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
     required:
       - name
-      - email
       - imageLink
-      - lists
+      - id
   list:
     title: list
     type: object

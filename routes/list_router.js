@@ -12,7 +12,7 @@ router.post('/userlist', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
     let listName = req.body.name;
-    let notifyMe = req.body.notifyMe;
+    let notifyMe = (req.body.notifyMe && (parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
     let games = req.body.items;
 
     if(!listName){
@@ -97,7 +97,7 @@ router.get('/userlist/:id', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            manageListData.getList(userData['id'], listId).then(list => { //and return the list
+            manageListData.getList(listId, userData['id']).then(list => { //and return the list
                 if(userData['id'] === list['userId'])
                     res.status(200).json(list);
                 else
@@ -113,7 +113,7 @@ router.put('/userlist/:id', (req, res) => {
     let steamId = req.user.steamUserId;
 
     let listName = req.body.name;
-    let notifyMe = req.body.notifyMe;
+    let notifyMe = (req.body.notifyMe && (parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
     let games = req.body.items;
 
     let listId = req.params.id;
@@ -146,6 +146,11 @@ router.put('/userlist/:id', (req, res) => {
         then(userData => { //get the user id from the steam id
             manageListData.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
                 res.status(200).json(updList);
+            }).catch(err => {
+                if(parseInt(err) >=400 && parseInt(err) <500)
+                    res.status(parseInt(err)).json({});
+                else
+                    res.status(500).send(err)
             });
         })
         .catch(err => res.status(400).json({}));
@@ -176,9 +181,14 @@ router.delete('/userlist/:id', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            manageListData.deleteList(userData['id'], listId).then(list => { //and return the deleted list
+            manageListData.deleteList(listId, userData['id']).then(list => { //and return the deleted list
                 res.status(200).json(list);
-            }).catch(err => res.status(500).send(err));
+            }).catch(err => {
+                if(parseInt(err) >=400 && parseInt(err) <500)
+                    res.status(parseInt(err)).json({});
+                else
+                    res.status(500).send(err)
+            });
         })
         .catch(err => res.status(404).json({}));
 });

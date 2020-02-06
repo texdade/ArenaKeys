@@ -18,6 +18,9 @@ function getListsByUser(userId){
     return new Promise((resolve, reject) => {
         listDAO.getListsByUser(userId)
             .then(lists => {
+                if(!lists)
+                    reject(400);
+
                 let fetchedLists = [];
                 for(let l of lists)
                     fetchedLists.push({
@@ -38,6 +41,10 @@ function getList(listId, userId){
     return new Promise((resolve, reject) => {
         listDAO.getList(listId, userId)
             .then(list => {
+                if(!list)
+                    reject(404  );
+
+
                 resolve({
                     id: list['id'],
                     name: list['name'],
@@ -80,25 +87,36 @@ function deleteList(list){
 }
 
 //adding game to a list
-function addGame(list, steamId){
+function addGame(list, listItem){
     return new Promise((resolve, reject) => {
-        listDAO.addGame(list['id'], steamId)
+        listDAO.addGame(list['id'], listItem["steamID"], listItem['notifyPrice'])
             .then(newListItemRow => {
-                resolve(newListItemRow['steamID']);
+                resolve(newListItemRow['steam_id']);
+            })
+            .catch(err => reject(err));
+    });
+}
+
+//update game price notify list
+function updPriceNotifier(list, listItem){
+    return new Promise((resolve, reject) => {
+        listDAO.updGame(list['id'], listItem["steamID"], listItem['notifyPrice'])
+            .then(affectedRows => {
+                resolve(affectedRows > 0);
             })
             .catch(err => reject(err));
     });
 }
 
 //get all games ids for a list
-function getGamesIds(list){
+function getGames(list){
     return new Promise((resolve, reject) => {
         listDAO.getGames(list)
             .then(gameListRows => {
-                let steamIds = [];
+                let games = [];
                     for(let row of gameListRows)
-                        steamIds.push(row['steam_id']);
-                resolve(steamIds);
+                        games.push({steamID: row['steam_id'], notifyPrice: row['notify_price']});
+                resolve(games);
             })
             .catch(err => reject(err));
     });
@@ -118,5 +136,5 @@ function deleteGame(list, listItem){
     });
 }
 
-module.exports = {createList, getList, getListsByUser, updateList, deleteList, addGame, getGamesIds, deleteGame};
+module.exports = {createList, getList, getListsByUser, updateList, deleteList, addGame, updPriceNotifier, getGames, deleteGame};
 

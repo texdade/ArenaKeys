@@ -83,10 +83,10 @@ function deleteList(id, userId){
     });
 }
 
-function addGame(listId, steamId){
+function addGame(listId, steamId, notifyPrice){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("INSERT INTO user_list_items(list_id, steam_id) VALUES(?,?)",
-        [listId, steamId],
+        mysqlConnection.query("INSERT INTO user_list_items(list_id, steam_id, notify_price) VALUES(?,?,?)",
+        [listId, steamId, notifyPrice],
         (error, results, fields) =>{
             if(error) {
                 console.log("ERROR while creating entry for list "+ listId + " with game " + steamId);
@@ -102,9 +102,28 @@ function addGame(listId, steamId){
     });
 }
 
+function updGame(listId, steamId, notifyPrice){
+    return new Promise((resolve, reject) => {
+        mysqlConnection.query("UPDATE user_list_items SET notify_price = ? WHERE list_id = ? AND steam_id = ?",
+            [notifyPrice, listId, steamId],
+            (error, results, fields) =>{
+                if(error) {
+                    console.log("ERROR while creating entry for list "+ listId + " with game " + steamId);
+                    console.log(error);
+                    reject(error);
+                }else{
+                    resolve({
+                        listId: listId,
+                        steamID: steamId
+                    });
+                }
+            });
+    });
+}
+
 function getGames(list){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("SELECT steam_id FROM user_list_items WHERE list_id = ?",
+        mysqlConnection.query("SELECT steam_id, notify_price FROM user_list_items WHERE list_id = ?",
         [list['id']],
         (error, results, fields) =>{
             if(error) {
@@ -134,4 +153,4 @@ function deleteGame(listId, steamId){
     });
 }
 
-module.exports = {createList, getListsByUser, getList, updateList, deleteList, addGame, getGames, deleteGame}
+module.exports = {createList, getListsByUser, getList, updateList, deleteList, addGame, updGame, getGames, deleteGame};

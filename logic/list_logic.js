@@ -11,7 +11,7 @@ function getLists(userId){
                 let userListsP = [];
 
                 for(let listData of listsData)
-                    userListsP.push(getList(userId, listData['id']));
+                    userListsP.push(getList(listData['id'],userId));
 
                 Promise.all(userListsP).then(userLists => resolve(userLists)).catch(err => reject(err));
 
@@ -23,17 +23,18 @@ function getLists(userId){
 }
 
 //here just a single list is requested => filter it by id
-function getList(userId, listId){
+function getList(listId, userId){
     return new Promise((resolve, reject) => {
         listHandler.getList(listId, userId).then(listData => {
             if(utilities.isList(listData)){
 
-                listHandler.getGamesIds(listData)
-                    .then(steamIds => {
-
-                        getItemsOffers(steamIds)//update offers for the list
+                listHandler.getGames(listData)
+                    .then(listGames => {
+                        listData['items'] = listGames;
+                        getItemsOffers(extractSteamIds(listData))//update offers for the list
                             .then(itemsOffers => {
-                                listData['items'] = itemsOffers;
+                                listData['items'] = addPriceNotify(itemsOffers, listGames);//add price notify values
+
                                 resolve(listData);
                             })
                             .catch(err => reject(err));
@@ -58,15 +59,16 @@ function createList(list){
 
                 if(listId !== undefined){
                     let insertedGamesP = [];
-                    //insert game in the list
-                    for(let listItem of list['items'])
-                        insertedGamesP.push(listHandler.addGame(list, listItem['steamID']));
 
-                    Promise.all(insertedGamesP).then(steamIds => {
-                        console.log(steamIds);
-                        getItemsOffers(steamIds)
+                    let listItems = list['items'];
+                    //insert game in the list
+                    for(let listItem of listItems)
+                        insertedGamesP.push(listHandler.addGame(list, listItem));
+
+                    Promise.all(insertedGamesP).then(() => {
+                        getItemsOffers(extractSteamIds(list))
                             .then(itemsOffers => {
-                                list['items'] = itemsOffers;
+                                list['items'] = addPriceNotify(itemsOffers, listItems);//add price notify values
                                 resolve(list);
                             })
                             .catch(err => reject(err));
@@ -114,10 +116,28 @@ function extractSteamIds(list){
         return [];
 }
 
+/*  Add priceNotify value to each item in listItems (by fetching it from a correspondent list listItemsPriceNotify)
+* */
+function addPriceNotify(listItems, listItemsPriceNotify){
+    if( listItems && listItemsPriceNotify &&
+        Array.isArray(listItems) && Array.isArray(listItemsPriceNotify) &&
+        listItems.length !== listItemsPriceNotify.length
+    )
+        return null;
+
+    for(let i=0; i<listItems.length; i++){
+        if(listItems[i]['steamID'] !== listItemsPriceNotify[i]['steamID'])
+            return null;
+        else
+            listItems[i]['notifyPrice'] = listItemsPriceNotify[i]['notifyPrice'];
+    }
+    return listItems;
+}
+
 //delete a single list (also userId is passed for security reason)
-function deleteList(userId, listId){
+function deleteList(listId, userId){
     return new Promise((resolve, reject) => {
-        listHandler.getList(listId, userId).then(listData => {
+        getList(listId, userId).then(listData => {
             if(utilities.isList(listData)){
                 if(listData['userId'] === userId)
                     listHandler.deleteList(listData).then(listData => resolve(listData)).catch(err => reject(err));
@@ -133,9 +153,10 @@ function deleteList(userId, listId){
 //update a single list
 function updateList(list){
     return new Promise((resolve, reject) => {
-
+        console.log(list);
         if(utilities.isList(list)){
-            listHandler.getList(list['id'], list['userId']).then(listData => {//security check
+            getList(list['id'], list['userId']).then(listData => {//security check
+                console.log(listData);
                 if (listData['userId'] === list['userId']){
                     listData['name'] = list['name'];
                     listData['notifyMe'] = list['notifyMe'];
@@ -153,10 +174,14 @@ function updateList(list){
                     for(let gameAdd of gamesToAdd)
                         updPromises.push(listHandler.addGame(listData, gameAdd));
 
+                    let gamesToUpd = gamesToUpdInUpdate(listData['items'],list['items']);//modify every game which does appear in the old list, but has new priceNotify value
+                    for(let gameUpd of gamesToUpd)
+                        updPromises.push(listHandler.updPriceNotifier(listData, gameUpd));
+
                     Promise.all(updPromises)
                         .then(() => {
                             //recover all newly updated and refresh info about the list
-                            getList(listData['userId'], listData['id']).then(updatedList => resolve(updatedList)).catch(err => reject(err));
+                            getList(listData['id'],listData['userId']).then(updatedList => resolve(updatedList)).catch(err => reject(err));
                         })
                         .catch(err => reject(err));
 
@@ -202,6 +227,30 @@ function gamesToAddInUpdate(oldItems, newItems){
             result.push(newIt);
     }
     return result;
+}
+
+
+//given two list of items, return the one which appears in the second one and in the first one with different value of priceNotify
+function gamesToUpdInUpdate(oldItems, newItems){
+    let result = [];
+    for(let newIt of newItems){
+        for(let oldIt of oldItems){
+            if( oldIt['steamID'] === newIt['steamID'] && differentNotifyPrice(oldIt, newIt)){
+                result.push(newIt);
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+//compare two notifyPrice value in it1 & in it2: return true if one of them is different from the other
+function differentNotifyPrice(it1, it2){
+    return  (isNaN(parseFloat(it1['notifyPrice'])) && !isNaN(parseFloat(it2['notifyPrice'])))
+            ||
+            (isNaN(parseFloat(it1['notifyPrice'])) && !isNaN(parseFloat(it2['notifyPrice'])))
+            ||
+            (parseFloat(it1['notifyPrice']) !== parseFloat(it2['notifyPrice']));
 }
 
 

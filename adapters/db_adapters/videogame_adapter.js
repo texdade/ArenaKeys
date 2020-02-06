@@ -194,12 +194,8 @@ function getCachedMatchingGamesInfo(name){
                     });
             }
 
-            //TODO solve this problem (returning the top 5 matches in heroku 'cause of better performances)
-            if(process.env.LOCAL)//on local return all the results
-                resolve(gamesInfo);
-
-            //else//remotely just the ones with the highest matching
-                //resolve(extractBetterMatching(name, gamesInfo,  5));
+            //
+            resolve(extractBetterMatching(name, gamesInfo,  parseInt(process.env.MAX_TO_EXTRACT) || 5));
         })
             .catch(err => reject(err));
     });
@@ -221,11 +217,10 @@ function myCompareTwoStrings(name1, name2){
 * */
 function extractBetterMatching(name, gamesInfo, maxToExtract){
     let gamesInfoExtracted = [];
-    console.log("Starting from " + JSON.stringify(gamesInfo));
-    for(let gameInfo of gamesInfo){
-        if(gamesInfoExtracted.length < maxToExtract)
-            gamesInfoExtracted.push(gameInfo);
 
+    for(let gameInfo of gamesInfo) {
+        if (gamesInfoExtracted.length < maxToExtract)
+            gamesInfoExtracted.push(gameInfo);
         else{//already filled the extracted array so we need eventually to swap the element with one having a smaller similarity value
             for(let i=0; i<maxToExtract; i++){
                 let similarity1 = myCompareTwoStrings(name, gamesInfoExtracted[i]['name']);//similarity with name of the temp chosen element
@@ -237,8 +232,6 @@ function extractBetterMatching(name, gamesInfo, maxToExtract){
             }
         }
     }
-
-    console.log("Extracting " + JSON.stringify(gamesInfoExtracted));
 
     return gamesInfoExtracted;
 }

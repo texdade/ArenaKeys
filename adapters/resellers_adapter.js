@@ -39,7 +39,12 @@ function getGameData(steamID, name, reseller){
             gameDataPromise = new Promise((resolve1, reject1) => reject1(null));
         }
 
-        gameDataPromise.then(data => {console.log(data);resolve(data)}).catch(err => reject(err));
+        gameDataPromise.then(data => {
+            if(process.env.LOG)
+                console.log(data);
+
+            resolve(data)
+        }).catch(err => reject(err));
 
     });
 }

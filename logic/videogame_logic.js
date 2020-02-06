@@ -15,7 +15,7 @@ const timeToNewRefresh = (60*60*24) * 3; //refresh game prices if it has been th
 *   Get an object representing all the possibilities in terms of game offers for the game having steamID
 /*  Perform the actual computation in order to get game data & offers (with eventual refresh of data )
 * */
-function getGamePrices(steamID){
+function getGame(steamID, details, offers){
     return new Promise((resolve, reject) => {
         if(process.env.LOG)
             console.log("Finding offers for game with steamID " + steamID);
@@ -31,35 +31,45 @@ function getGamePrices(steamID){
                 if(process.env.LOG)
                     console.log("Game prices last update on " + gameData['lastUpdate']);
 
-                if(!gameData['lastUpdate'])
-                    refreshPrices = true;
+                if(!offers && !details) //just matching games name
+                    resolve({steamID: gameData['steamID'], name: gameData['name']});
                 else{
-                    let lastUpd = (new Date(gameData['lastUpdate']));
-                    lastUpd.setSeconds(lastUpd.getSeconds() + timeToNewRefresh);
-                    if(lastUpd < new Date())
+                    if(!gameData['lastUpdate'])
                         refreshPrices = true;
+                    else{
+                        let lastUpd = (new Date(gameData['lastUpdate']));
+                        lastUpd.setSeconds(lastUpd.getSeconds() + timeToNewRefresh);
+                        if(lastUpd < new Date())
+                            refreshPrices = true;
+                    }
+
+                    let collectPricesPromise;
+
+                    if(refreshPrices && offers)//need to refresh prices from sellers
+                        collectPricesPromise = refreshGamePrices(gameData);
+                    else
+                        collectPricesPromise = new Promise((res2)=> res2 (null));
+
+                    collectPricesPromise
+                        .then(()=>{
+                            vgameHandler.getCachedGamePrices(gameData)
+                                .then(gameDataPrices => {
+                                    if(refreshPrices)
+                                        gameDataPrices['lastUpdate'] = new Date();//just updated
+
+                                    if(!details){//details not requested
+                                        gameDataPrices['image'] = null;
+                                        gameDataPrices['description'] = null;
+                                        gameDataPrices['lastUpdate'] = null;
+                                    }
+
+                                    resolve(gameDataPrices)
+                                })
+                                .catch(err => reject(err));
+                        })
+
+                        .catch(err => reject(err));
                 }
-
-                let collectPricesPromise;
-
-                if(refreshPrices)//need to refresh prices from sellers
-                    collectPricesPromise = refreshGamePrices(gameData);
-                else
-                    collectPricesPromise = new Promise((res2)=> res2 (null));
-
-                collectPricesPromise
-                    .then(()=>{
-                        vgameHandler.getCachedGamePrices(gameData)
-                            .then(gameDataPrices => {
-                                if(refreshPrices)
-                                    gameDataPrices['lastUpdate'] = new Date();//just updated
-
-                                resolve(gameDataPrices)
-                            })
-                            .catch(err => reject(err));
-                    })
-
-                    .catch(err => reject(err));
 
             })
 
@@ -91,11 +101,14 @@ function getGameBasicInfo(steamID){
                 });
 
             else {
-                console.log("game basic info for game " + steamID + "  needs refresh");
+
+                if(process.env.LOG)
+                    console.log("game basic info for game " + steamID + "  needs refresh");
                 //game misses some basic data
                 resellerHandler.getGameBasicInfo(steamID, null, "Steam")
                     .then(gameDataFetch => {
-                        console.log(gameDataFetch);
+                        if(process.env.LOG)
+                            console.log(gameDataFetch);
 
                         if(gameDataFetch['discard']){//not a game
                             vgameHandler.deleteGameInfo(gameDataFetch).then(()=>reject(404)).catch(()=>reject(404));
@@ -110,8 +123,8 @@ function getGameBasicInfo(steamID){
 
                             //update the data on hosted db
                             vgameHandler.updateGameInfo(gameData, null)
-                                .then(() => (console.log("Updated game general info with steamID: " + steamID)))
-                                .catch((err) => (console.log("Failed to update game general info with steamID: " + steamID + "\n" + err)));
+                                .then(() => { if(process.env.LOG) {console.log("Updated game general info with steamID: " + steamID);}})
+                                .catch((err) => { if(process.env.LOG) {console.log("Failed to update game general info with steamID: " + steamID + "\n" + err);}});
 
                             resolve(gameData);
                         }
@@ -128,7 +141,7 @@ function getGameBasicInfo(steamID){
 *   Get an object representing all the possibilities in terms of game offers for the games having a matching steamName
 *  Perform the actual computation in order to get game data & offers (with eventual refresh of data )
 * */
-function getMatchingGamesPrices(name){
+function getMatchingGames(name, details, offers){
     return new Promise((resolve, reject) => {
         if(process.env.LOG)
             console.log("Finding games prices for game with matching name " + name);
@@ -142,28 +155,38 @@ function getMatchingGamesPrices(name){
                 if(process.env.LOG)
                     console.log("Found the following nums of matching games: " + gamesData.length);
 
-                //for computational reason, we can't consider more than 4 results
-                let gameOffersPromises = [];
-                for(let i=0; i<gamesData.length; i++) {
-                    gameOffersPromises.push(new Promise(resolve => {
-                        getGamePrices(gamesData[i]['steamID'])
-                            .then(gameOffers => resolve(gameOffers))
-                            .catch(gameNotFound => resolve(404));
-                    }));
+                if(!offers && !details){//just matching games name
+                    let result = [];
+                    for(let game of gamesData)
+                        result.push({steamID: game['steamID'], name: game['name']});
+                    resolve(result);
 
+                }else{ //also offers and/or details
+
+                    //for computational reason, we can't consider more than 4 results
+                    let gameOffersPromises = [];
+                    for(let i=0; i<gamesData.length; i++) {
+                        gameOffersPromises.push(new Promise(resolve => {
+                            getGame(gamesData[i]['steamID'], details, offers)
+                                .then(gameOffers => resolve(gameOffers))
+                                .catch(gameNotFound => resolve(404));
+                        }));
+
+                    }
+
+                    Promise.all(gameOffersPromises)
+                        .then(gamesOffers => {
+                            //console.log("Extracted games offers " + JSON.stringify(gamesOffers));
+                            let gamesOffersFinal = [];
+                            for(let goff of gamesOffers)
+                                if(goff['steamID'])//there could be some 404 for trailers, DLCs and we don't want them in the result
+                                    gamesOffersFinal.push(goff);
+
+                            resolve(gamesOffersFinal);
+                        })
+                        .catch(err => {console.log(err);reject(err)});
                 }
 
-                Promise.all(gameOffersPromises)
-                    .then(gamesOffers => {
-                        //console.log("Extracted games offers " + JSON.stringify(gamesOffers));
-                        let gamesOffersFinal = [];
-                        for(let goff of gamesOffers)
-                            if(utilities.isGameDataAndOffers(goff))
-                                gamesOffersFinal.push(goff);
-
-                        resolve(gamesOffersFinal);
-                    })
-                    .catch(err => {console.log(err);reject(err)});
             })
 
             .catch(err => reject(err));
@@ -303,7 +326,11 @@ function insertUpdateGamePrices(gamePrices){
             }
 
             Promise.all(refreshPromises)
-                .then(() => {console.log("insertUpdate for game steam_id = " + steamID + " terminated"); resolve(null);})
+                .then(() => {
+                    if(process.env.LOG)
+                        console.log("insertUpdate for game steam_id = " + steamID + " terminated");
+                    resolve(null);
+                })
                 .catch(err => {console.log(err);reject(err)});
         })
 
@@ -314,32 +341,32 @@ function insertUpdateGamePrices(gamePrices){
 
 //Add new games(steam_id + name) if not already present in the generic dump
 //try to insert the game every interval (most of the insert will just fail 'cause the game is already present from previous inserts)
-function refresh16GamesRandomDump(interval, LOG){
+function refresh16GamesRandomDump(interval){
     return new Promise((resolve, reject) => {
-        if(LOG)
+        if(process.env.LOG)
             console.log("Starting new batch of silent refresh of 16 elements");
         resellerHandler.getOfficialAppDump()
             .then(list => {
                 let promises = [];
                 for(let i =0; i<list.length && i<16;i++){
                     let game = list[parseInt(Math.random()*list.length)];
-                    if(LOG)
+                    if(process.env.LOG)
                         console.log("Selected game " + JSON.stringify(game));
                     promises.push(new Promise(resolvePro => {
                         setTimeout(() => {
                             vgameHandler.insertGameInfo(game)
                                 .then(() => {
-                                    if(LOG)
+                                    if(process.env.LOG)
                                         console.log("NEW GAME! Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
 
-                                    getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    getGame(game['steamID'], true, true)//to refresh all data regarding this game (info & prices from different resellers)
                                         .then(() => resolvePro(null)).catch(()=>resolvePro(null));//do nothing in case of success or failure (this is just a refresh procedure on a single game)
                                 })
                                 .catch(err => {
-                                    if(LOG)
+                                    if(process.env.LOG)
                                         console.log(err.code + "\twhile inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
 
-                                    getGamePrices(game['steamID'])//to refresh all data regarding this game (info & prices from different resellers)
+                                    getGame(game['steamID'], true, true)//to refresh all data regarding this game (info & prices from different resellers)
                                         .then(() => resolvePro(null)).catch(()=>resolvePro(null));//do nothing
 
                                 });
@@ -360,9 +387,9 @@ function refresh16GamesRandomDump(interval, LOG){
     TODO check if it crash 'cause of a strange ramification with multiple calls of the following function
 * */
 function refreshGamesDump(){
-    refresh16GamesRandomDump(process.env.INTERVAL || 16000, process.env.LOG)//refresh dump trying to insert a new game every 16s (false to not have logs)
+    refresh16GamesRandomDump(process.env.INTERVAL || 16000)//refresh dump trying to insert a new game every 16s (false to not have logs)
         .then(() => {{console.log("Restart refresh process");refreshGamesDump();}})//just call it again
         .catch(() => {console.log("Restart refresh process");refreshGamesDump();});//just call it again (even in case of error)
 }
 
-module.exports = {getGamePrices, getMatchingGamesPrices, refreshGamesDump};
+module.exports = {getGame, getMatchingGames, refreshGamesDump};

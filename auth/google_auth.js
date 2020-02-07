@@ -68,6 +68,9 @@ const registerGoogleAuth = app => {
             failureRedirect: '/auth/google'
         }),
         function(req, res) {
+
+            res.cookie('token', req.user.token);
+
             res.json({
                 user: {
                     googleUserId: req.user.profile.id,

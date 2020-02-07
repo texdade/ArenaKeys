@@ -1,0 +1,22 @@
+<!doctype html>
+<html>
+    <%- include('head'); -%>
+    <body>
+        <%- include('navbar', {n: name}); -%>
+        <div id="bg"></div>  
+            <div class="container" style="min-height: 100%;">
+                <div class="row m-5">
+                </div>
+                <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+                    <h1 align="center">ArenaKeys</h1>
+                    <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    </div>
+                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="selector">
+                </div>
+            </div>
+        </div>
+        <%- include('footer'); -%>
+    </body>
+</html>

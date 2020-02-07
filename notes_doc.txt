@@ -153,6 +153,14 @@ offerItem:{
 	availability:
 }
 
-ERRORS:
+{
+    "steamUserId": null,
+    "googleUserId": "105932694181154014318",
+    "name": "Mouslim Fatnassi",
+    "imageLink": "https://lh3.googleusercontent.com/a-/AAuE7mDSsxLmxcmDlyZHMWsryaxChx2d5iUtvYYl0bH3Ew",
+    "email": "mouslim97@gmail.com",
+    "id": 16
+}
+
 /google/userlist 503 Service Unavailable
 /videogame?name= 503 Service Unavailable

@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+    <%- include('head'); -%>
+    <body>
+        <%- include('navbar', {n: name}); -%>
+        <div id="bg"></div>  
+        <div class="container" style="min-height: 100%;">
+          <div class="row m-5">
+          </div>
+          <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+            <div class="jumbotron">
+              <h1>Edit User Info</h1>
+              <hr class="my-4">
+              <form>
+                  <div class="form-group">
+                      <label for="emailFormControlInput1">Email address:</label>
+                      <input type="email" class="form-control" id="emailFormControlInput1" placeholder="name@example.com">
+                  </div>
+                  <div class="form-group">
+                      <label for="emailFormControlInput1">Steam account link:</label>
+                      <input type="text" class="form-control" id="accountLink" placeholder="http://example.com">
+                  </div>
+                  <div align="center">
+                      <button class="btn btn-primary mb-2" data-toggle="modal" data-target="#deleteModal">Confirm</button>
+                      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body" align="left">
+                                Are you sure?
+                            </div>
+                            <div class="modal-footer">    
+                                <button type="button" class="btn btn-primary">Confirm</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                  <div align="center">
+                    <button type="submit" class="btn btn-danger mb-2">Delete account</button>
+                </div>
+              </form>
+              <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" align="left">
+                        User data edited with success!
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <%- include('footer'); -%>
+    </body>
+</html>

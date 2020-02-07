@@ -1,8 +1,15 @@
 const fetch = require("node-fetch-npm");
 
 const urlSingleGame = "https://store.steampowered.com/api/appdetails/?appids="; //incomplete url for single game info
-const urlAllGamesList = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";//TODO change to v0002 if it restarts to answer again (in case you need to remove ['app'] in for)
-const urlSteamWishlist = "https://store.steampowered.com/wishlist/id/";
+const urlAllGamesListv2 = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";
+const urlAllGamesListv1 = "http://api.steampowered.com/ISteamApps/GetAppList/v0001/";
+const urlSteamWishlist = "https://store.steampowered.com/wishlist/profiles/";
+
+const NodeCache = require( "node-cache" );
+const mcache = new NodeCache();
+
+const cacheDumpKey = 'steamDumpCache';
+const cacheDuration = process.env.CACHE_DUR || 60 * 60;
 
 //invoke steam API for infos about the game
 function getAppDetail(steamID) {
@@ -10,8 +17,11 @@ function getAppDetail(steamID) {
 }
 
 //invoke fetching of the whole list with steamID + name of the game
-function getDumpList(){
-    return fetch(urlAllGamesList);
+function getDumpList(v1, v2){
+    if(v1)
+        return fetch(urlAllGamesListv1);
+    else
+        return fetch(urlAllGamesListv2);
 }
 
 function getUserWishlist(userID){
@@ -64,23 +74,55 @@ function getSingleGameInfo(steamID){
 //returns whole list of steamID, game title
 function getAllGamesList(){
     return new Promise((resolve, reject)=>{
-        getDumpList()
-           .then(res => {
-                res.json().then(gamesList => {
-                    let games = [];
-                    for(let game of gamesList['applist']['apps']){
-                        games.push(
-                            {
-                                steamID: game['appid'],
-                                name: game['name']
-                            }
-                        );
-                    } 
-                    resolve(games);
-               });
-            })
+        let cachedData = mcache.get(cacheDumpKey);
+        if(cachedData)
+            resolve(cachedData);
+        else{
 
-           .catch(err => reject(err));
+            getDumpList(false, true)
+                .then(res => {
+                    res.json().then(gamesList => {
+                        let games = [];
+                        for (let game of gamesList['applist']['apps']) {
+                            games.push(
+                                {
+                                    steamID: game['appid'],
+                                    name: game['name']
+                                }
+                            );
+                        }
+
+                        if (games.length > 0) {
+                            mcache.set(cacheDumpKey, games, cacheDuration);//caching dump
+                            resolve(games);
+                        }else { //call v001 if the list is still empty (sometimes v0002 answers with empty body)
+                            getDumpList(true, false)
+                                .then(res => {
+                                    res.json().then(gamesList => {
+
+                                        games = [];
+
+                                        for (let game of gamesList['applist']['apps']['app']) {
+                                            games.push(
+                                                {
+                                                    steamID: game['appid'],
+                                                    name: game['name']
+                                                }
+                                            );
+                                        }
+                                        mcache.set(cacheDumpKey, games, cacheDuration);//caching dump
+                                        resolve(games);
+                                    }).catch(err => reject(err));
+
+                                })
+                                .catch(err => reject(err));
+                        }
+                    })
+
+                        .catch(err => reject(err));
+                })
+                .catch(err => reject(err));
+        }
     });
 }
 

@@ -58,6 +58,11 @@ function getAllGamesInfo(){
                     while (node) {
                         //console.log(node.toString());
                         xml2js.parseString(node.toString(), function(err, result){
+                            if(err) {
+                                reject(err);
+                                mcache.del(cacheKey);
+                            }
+
                             let game = {
                                 internalID: result['item']['g:id'][0]['_'],
                                 name: result['item']['title'][0], //name

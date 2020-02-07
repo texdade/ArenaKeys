@@ -272,8 +272,7 @@ function refreshGamePrices(gameData){
                     .then(() => {
 
                         //log last_update in steam_games
-                        vgameHandler.updateGameInfo(gameData, true);
-                        resolve(null);
+                        vgameHandler.updateGameInfo(gameData, true).then(()=>resolve(null)).catch(err =>reject(err));
                     })
                     .catch((err) => reject(err))
 
@@ -339,57 +338,21 @@ function insertUpdateGamePrices(gamePrices){
     });
 }
 
-//Add new games(steam_id + name) if not already present in the generic dump
-//try to insert the game every interval (most of the insert will just fail 'cause the game is already present from previous inserts)
-function refresh16GamesRandomDump(interval){
-    return new Promise((resolve, reject) => {
-        if(process.env.LOG)
-            console.log("Starting new batch of silent refresh of 16 elements");
-        resellerHandler.getOfficialAppDump()
-            .then(list => {
-                let promises = [];
-                for(let i =0; i<list.length && i<16;i++){
-                    let game = list[parseInt(Math.random()*list.length)];
-                    if(process.env.LOG)
-                        console.log("Selected game " + JSON.stringify(game));
-                    promises.push(new Promise(resolvePro => {
-                        setTimeout(() => {
-                            vgameHandler.insertGameInfo(game)
-                                .then(() => {
-                                    if(process.env.LOG)
-                                        console.log("NEW GAME! Inserted " + game['name'] + " (id = " + game['steamID'] + ")");
-
-                                    getGame(game['steamID'], true, true)//to refresh all data regarding this game (info & prices from different resellers)
-                                        .then(() => resolvePro(null)).catch(()=>resolvePro(null));//do nothing in case of success or failure (this is just a refresh procedure on a single game)
-                                })
-                                .catch(err => {
-                                    if(process.env.LOG)
-                                        console.log(err.code + "\twhile inserting "+ game['name'] + " (id = " + game['steamID'] + ")");
-
-                                    getGame(game['steamID'], true, true)//to refresh all data regarding this game (info & prices from different resellers)
-                                        .then(() => resolvePro(null)).catch(()=>resolvePro(null));//do nothing
-
-                                });
-                        },i*interval);
-                    }));
-                }
-
-                Promise.all(promises).then(()=>resolve(null)).catch(()=>resolve(null));//just go on, nothing we're intereseted in (this is supposed to be a background process)
-
-            })
-
-            .catch(err => reject(err));
-    });
-}
-
-
-/*  Just continue to fetch data from the steam API dump e caching it into our dump
-    TODO check if it crash 'cause of a strange ramification with multiple calls of the following function
+/*  Wrapper function for high-level logic processes in order to get the raw official dump with all apps
 * */
-function refreshGamesDump(){
-    refresh16GamesRandomDump(process.env.INTERVAL || 16000)//refresh dump trying to insert a new game every 16s (false to not have logs)
-        .then(() => {{console.log("Restart refresh process");refreshGamesDump();}})//just call it again
-        .catch(() => {console.log("Restart refresh process");refreshGamesDump();});//just call it again (even in case of error)
+function getOfficialAppDump(){
+    return new Promise((resolve, reject) => {
+        resellerHandler.getOfficialAppDump().then(data => resolve(data)).catch(err => reject(err));
+    })
 }
 
-module.exports = {getGame, getMatchingGames, refreshGamesDump};
+/*  Wrapper function for high-level logic processes in order to insert a new game in the db
+* */
+function insertGameInfo(game){
+    return new Promise((resolve, reject) => {
+        vgameHandler.insertGameInfo(game).then(data => resolve(data)).catch(err => reject(err));
+    })
+}
+
+
+module.exports = {getGame, getMatchingGames, getOfficialAppDump, insertGameInfo};

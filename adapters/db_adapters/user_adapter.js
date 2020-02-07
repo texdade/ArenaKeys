@@ -1,6 +1,31 @@
 const userDAO = require('../../db/user');
 const utilities = require('../../db/utilities');
 
+function getUsers(){
+    return new Promise((resolve, reject) => {
+        userDAO.getUsers()
+            .then(usersData => {
+                if(usersData){
+                    let users = [];
+                    for(let userData of usersData)
+                        users.push({
+                            steamUserId: userData['steamUserId'],
+                            googleUserId: userData["googleUserId"],
+                            name: userData["name"],
+                            imageLink: userData["imageLink"],
+                            id: userData["id"], //internal id for our db
+                            steamProfileUrl: userData["steamProfileUrl"],
+                            email: userData["email"]
+                        });
+                    resolve(users);
+                }else{
+                    reject(400);
+                }
+            })
+            .catch(err => reject(err));
+    });
+}
+
 function getUser(userId){
     return new Promise((resolve, reject) => {
         userDAO.getUser(userId)
@@ -76,4 +101,4 @@ function deleteUser(userId){
     });
 }
 
-module.exports = {createUser, getUser, updateUser, deleteUser};
+module.exports = {createUser, getUser, getUsers, updateUser, deleteUser};

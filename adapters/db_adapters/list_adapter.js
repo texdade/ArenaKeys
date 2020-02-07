@@ -98,9 +98,9 @@ function addGame(list, listItem){
 }
 
 //update game price notify list
-function updPriceNotifier(list, listItem){
+function updGame(list, listItem){
     return new Promise((resolve, reject) => {
-        listDAO.updGame(list['id'], listItem["steamID"], listItem['notifyPrice'])
+        listDAO.updGame(list['id'], listItem["steamID"], listItem['notifyPrice'], listItem['notified'])
             .then(affectedRows => {
                 resolve(affectedRows > 0);
             })
@@ -115,7 +115,7 @@ function getGames(list){
             .then(gameListRows => {
                 let games = [];
                     for(let row of gameListRows)
-                        games.push({steamID: row['steam_id'], notifyPrice: row['notify_price']});
+                        games.push({steamID: row['steam_id'], notifyPrice: row['notify_price'], notified: row['notified']});
                 resolve(games);
             })
             .catch(err => reject(err));
@@ -136,5 +136,5 @@ function deleteGame(list, listItem){
     });
 }
 
-module.exports = {createList, getList, getListsByUser, updateList, deleteList, addGame, updPriceNotifier, getGames, deleteGame};
+module.exports = {createList, getList, getListsByUser, updateList, deleteList, addGame, updGame, getGames, deleteGame};
 

@@ -16,6 +16,23 @@ function createUser(steamUserId, googleUserId, name, imageLink, steamProfileUrl,
     });
 }
 
+//return all users infos
+function getUsers(){
+    return new Promise((resolve, reject) => {
+        mysqlConnection.query("SELECT * FROM users",
+            [],
+            (error, results, fields) =>{
+                if(error) {
+                    console.log("ERROR while retrieving users");
+                    console.log(error);
+                    reject(new Error(error));
+                }else{
+                    resolve(results);
+                }
+            });
+    });
+}
+
 //return user infos taking either steam id or google id
 function getUser(id){
     return new Promise((resolve, reject) => {
@@ -27,7 +44,7 @@ function getUser(id){
                     console.log(error);
                     reject(new Error(error));
                 }else{
-                    resolve(results[0])
+                    resolve(results[0]);
                 }
             });
     });
@@ -65,4 +82,4 @@ function deleteUser(id){
     });
 }
 
-module.exports = {createUser, getUser, updateUser, deleteUser};
+module.exports = {createUser, getUser, getUsers, updateUser, deleteUser};

@@ -61,7 +61,11 @@ function getAllGamesInfo(){
                         //console.log(node.toString());
                         xml2js.parseString(node.toString(), function(err, result){
                             //console.log(result);
-                            
+                            if(err) {
+                                reject(err);
+                                mcache.del(cacheKey);
+                            }
+
                             let shippingObj = {
                                 price: result['item']['g:shipping'][0]['g:price'][0],
                                 weight:result['item']['g:shipping_weight'][0]

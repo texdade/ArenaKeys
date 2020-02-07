@@ -29,18 +29,21 @@ const smtpTransport = nodemailer.createTransport({
     }});
 
 function sendMail(to, subject, text){
-    const mailOptions = {
-        from: "devisdalmoro@gmail.com",
-        to: email,
-        subject: subject,
-        generateTextFromHTML: true,
-        html: "<p>" + text + "</p>"
-    };
+    if(to && subject && text){
 
-    smtpTransport.sendMail(mailOptions, (error, response) => {
-        error ? console.log(error) : console.log(response);
-        smtpTransport.close();
-    });
+        const mailOptions = {
+            from: "devisdalmoro@gmail.com",
+            to: to,
+            subject: subject,
+            generateTextFromHTML: true,
+            html: "<div>" + text + "</div>"
+        };
+
+        smtpTransport.sendMail(mailOptions, (error, response) => {
+            error ? console.log(error) : console.log(response);
+            smtpTransport.close();
+        });
+    }
 }
 
 module.exports = sendMail;

@@ -85,7 +85,7 @@ function deleteList(id, userId){
 
 function addGame(listId, steamId, notifyPrice){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("INSERT INTO user_list_items(list_id, steam_id, notify_price) VALUES(?,?,?)",
+        mysqlConnection.query("INSERT INTO user_list_items(list_id, steam_id, notify_price, notified) VALUES(?,?,?,0)",
         [listId, steamId, notifyPrice],
         (error, results, fields) =>{
             if(error) {
@@ -102,10 +102,10 @@ function addGame(listId, steamId, notifyPrice){
     });
 }
 
-function updGame(listId, steamId, notifyPrice){
+function updGame(listId, steamId, notifyPrice, notified){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("UPDATE user_list_items SET notify_price = ? WHERE list_id = ? AND steam_id = ?",
-            [notifyPrice, listId, steamId],
+        mysqlConnection.query("UPDATE user_list_items SET notify_price = ?, notified = ? WHERE list_id = ? AND steam_id = ?",
+            [notifyPrice, notified, listId, steamId],
             (error, results, fields) =>{
                 if(error) {
                     console.log("ERROR while creating entry for list "+ listId + " with game " + steamId);
@@ -123,7 +123,7 @@ function updGame(listId, steamId, notifyPrice){
 
 function getGames(list){
     return new Promise((resolve, reject) => {
-        mysqlConnection.query("SELECT steam_id, notify_price FROM user_list_items WHERE list_id = ?",
+        mysqlConnection.query("SELECT steam_id, notify_price, notified FROM user_list_items WHERE list_id = ?",
         [list['id']],
         (error, results, fields) =>{
             if(error) {

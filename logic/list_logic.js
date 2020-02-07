@@ -93,7 +93,7 @@ function getItemsOffers(steamIds){
         let pricesP = [];
 
         for(let steamId of steamIds)
-            pricesP.push(gamePrices.getGamePrices(steamId));//refresh all data if needed
+            pricesP.push(gamePrices.getGame(steamId, true, true));//refresh all data if needed
 
         Promise.all(pricesP)
             .then(gamesPrices => resolve(gamesPrices))
@@ -128,8 +128,10 @@ function addPriceNotify(listItems, listItemsPriceNotify){
     for(let i=0; i<listItems.length; i++){
         if(listItems[i]['steamID'] !== listItemsPriceNotify[i]['steamID'])
             return null;
-        else
+        else {
             listItems[i]['notifyPrice'] = listItemsPriceNotify[i]['notifyPrice'];
+            listItems[i]['notified'] = listItemsPriceNotify[i]['notified'];
+        }
     }
     return listItems;
 }
@@ -174,9 +176,9 @@ function updateList(list){
                     for(let gameAdd of gamesToAdd)
                         updPromises.push(listHandler.addGame(listData, gameAdd));
 
-                    let gamesToUpd = gamesToUpdInUpdate(listData['items'],list['items']);//modify every game which does appear in the old list, but has new priceNotify value
+                    let gamesToUpd = gamesToUpdPriceNotifier(listData['items'],list['items']);//modify every game which does appear in the old list, but has new priceNotify and/or notified value
                     for(let gameUpd of gamesToUpd)
-                        updPromises.push(listHandler.updPriceNotifier(listData, gameUpd));
+                        updPromises.push(listHandler.updGame(listData, gameUpd));
 
                     Promise.all(updPromises)
                         .then(() => {
@@ -230,12 +232,12 @@ function gamesToAddInUpdate(oldItems, newItems){
 }
 
 
-//given two list of items, return the one which appears in the second one and in the first one with different value of priceNotify
-function gamesToUpdInUpdate(oldItems, newItems){
+//given two list of items, return the one which appears in the second one and in the first one with different value of priceNotify and/or notified
+function gamesToUpdPriceNotifier(oldItems, newItems){
     let result = [];
     for(let newIt of newItems){
         for(let oldIt of oldItems){
-            if( oldIt['steamID'] === newIt['steamID'] && differentNotifyPrice(oldIt, newIt)){
+            if( oldIt['steamID'] === newIt['steamID'] && (differentNotifyPrice(oldIt, newIt) || oldIt['notified'] !== newIt['notified'])){
                 result.push(newIt);
                 break;
             }

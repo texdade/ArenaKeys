@@ -1,5 +1,17 @@
 const userHandler = require('../adapters/db_adapters/user_adapter');
 
+function getAllUsers(){
+    return new Promise((resolve, reject) => {
+        userHandler.getUsers().then(usersData => {
+            if(usersData){
+                resolve(usersData);
+            } else {
+                reject(400);
+            }
+        }).catch(err => reject(err));
+    });
+}
+
 function getUser(id){
     return new Promise((resolve, reject) => {
         userHandler.getUser(id).then(userData => {
@@ -61,4 +73,4 @@ function deleteUser(id){
     });
 }
 
-module.exports = {getUser, createUser, updateUser, deleteUser};
+module.exports = {getAllUsers, getUser, createUser, updateUser, deleteUser};

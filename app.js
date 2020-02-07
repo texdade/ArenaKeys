@@ -1,13 +1,19 @@
 /*  GameArena KeyComparator App
 */
 
-//continously refresh data within the db
-const refreshGameAllDayLong = require('./logic/videogame_logic').refreshGamesDump;
+//continuously refresh data and prices of games (adding also new one) in the db
+const refreshGameAllDayLong = require('./process_centric_services/refreshGameDataPrice').refreshGamesDump;
 if(process.env.REFRESH)
     refreshGameAllDayLong();
 
+//continuously check for deals which interest our users and eventually notify them
+const emailNotifier = require('./process_centric_services/email_notifier').checkPricesForNotifier;
+if(process.env.EMAIL_NOTIFIER)
+    emailNotifier();
+
 const express = require('express');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 //const {auth, protect} = require('./auth/all_auth');
 const gProtect = require('./auth/google_auth').protect;
 const sProtect = require('./auth/steam_auth').protect;
@@ -23,6 +29,8 @@ sAuth(app);
 //middlewares
 app.use(express.static('views'));// folder in which to put the static files (html, css, js client)
 app.use(bodyParser.json({limit: '50mb'})); // read json
+
+app.use(cookieParser());
 
 //middlewares (just for the widget)
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'})); // read form enctype data

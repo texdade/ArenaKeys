@@ -1,0 +1,313 @@
+<!doctype html>
+<html>
+    <%- include('head'); -%>
+    <body>
+        <%- include('navbar', {n: name}); -%>
+        <div id="bg"></div>
+    
+        <div class="container" style="min-height: 100%;">
+
+            <div class="row m-5">
+            </div>
+            <div class="row">
+            <div class="col-md-8">
+                <h1>My Lists</h1>
+            </div> 
+            <div class="col-md-4" align="right">   
+                <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-placement="top" data-target="#newListModal" title="Add new list"><i class="fas fa-plus"></i></button>
+                <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" align="left">
+                        <div class="form-group row">
+                        <label for="listName" class="col-sm-3 col-form-label">List Name:</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="listName">
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Create List</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+                <button class="btn btn-dark btn-lg" data-toggle="modal" data-target="#steamListModal"><i class="fab fa-steam"></i> &nbsp; Import Steam Wishlist</button>
+                <div class="modal fade" id="steamListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Import Steam Wishlist</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" align="left">
+                        <div class="form-group">
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" align="center">
+                            <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                            </div>
+                            <div class="col-md-2"></div>
+                        </div><p></p>
+                        <div class="row">
+                            <div class="col-md-2"></div>
+                            <div class="col-md-8" align="center">
+                            <p>OR</p>
+                            </div>  
+                            <div class="col-md-2"></div>  
+                        </div>
+                        <div class="row">
+                            <label for="accountLink" class="col-sm-4 col-form-label">Other account link:</label>
+                            <div class="col-sm-8">
+                            <input type="text" class="form-control" id="accountLink">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">Create List</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            </div>
+        </div>
+            <div class="">
+            <div class="accordion" id="accordionExample">
+                <div class="card">
+                <div class="card-header" id="heading1">
+                    <h5 class="mb-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse1" aria-expanded="true" aria-controls="collapse1">
+                            List #1
+                        </button>
+                        </div>
+                        <div class="col-md-2" align="right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash"></i></button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body" align="left">
+                                Are you sure to delete this list?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger">Yes</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </div>
+                    </h5>
+                </div>
+                <div id="collapse1" class="collapse show" aria-labelledby="heading1" data-parent="#accordionExample">
+                    <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
+                            Game 1
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
+                            Game 2
+                        </div> 
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>  
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">  
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
+                            Game 3
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    </ul>
+                </div>
+                </div>
+                <div class="card">
+                <div class="card-header" id="heading2">
+                    <h5 class="mb-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                            List #2
+                        </button>
+                        </div>
+                        <div class="col-md-2" align="right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash"></i></button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body" align="left">
+                                Are you sure to delete this list?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger">Yes</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </div>
+                    </h5>
+                </div>
+                <div id="collapse2" class="collapse" aria-labelledby="heading2" data-parent="#accordionExample">
+                    <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
+                            Game 1
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
+                            Game 2
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">  
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
+                            Game 3
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    </ul>
+                </div>
+                </div>
+                <div class="card">
+                <div class="card-header" id="heading3">
+                    <h5 class="mb-0">
+                    <div class="row">
+                        <div class="col-md-10">
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse3" aria-expanded="true" aria-controls="collapse3">
+                            List #3
+                        </button>
+                        </div>
+                        <div class="col-md-2" align="right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"><i class="fas fa-trash"></i></button>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body" align="left">
+                                Are you sure to delete this list?
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger">Yes</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                        </div>
+                    </div>
+                    </h5>
+                </div>
+                <div id="collapse3" class="collapse" aria-labelledby="heading3" data-parent="#accordionExample">
+                    <ul class="list-group">
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
+                            Game 1
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
+                            Game 2
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">  
+                        <div class="image-parent">
+                            <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
+                            Game 3
+                        </div>
+                        <div align="center">
+                        Steam price: 16€<br>
+                        Best price: 8€ <br><br>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></span></button>
+                        </div>
+                    </li>
+                    </ul>
+                </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-5">
+        </div>
+        <%- include('footer'); -%>
+    </body>
+</html>

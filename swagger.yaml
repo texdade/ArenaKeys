@@ -781,6 +781,18 @@ paths:
         minLength: 2
         required: true
         description: the name of the game
+      - name: details
+        in: query
+        type: boolean
+        required: false
+        default: true
+        description: shows or hides useful information about a game such as the image, the description and the last update
+      - name: offers
+        in: query
+        type: boolean
+        required: false
+        default: true
+        description: shows or hides data related to the game offers 
       responses:
         200:
           description: Success
@@ -804,6 +816,18 @@ paths:
         type: integer
         required: true
         description: the game identifier
+      - name: details
+        in: query
+        type: boolean
+        required: false
+        default: true
+        description: shows or hides useful information about a game such as the image, the description and the last update
+      - name: offers
+        in: query
+        type: boolean
+        required: false
+        default: true
+        description: shows or hides data related to the game offers 
       responses:
         200:
           description: Success
@@ -880,6 +904,7 @@ definitions:
         type: string
       notifyMe:
         type: boolean
+        default: true
       items: 
         type: array
         items:

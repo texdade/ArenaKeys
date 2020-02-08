@@ -4,13 +4,9 @@
     <body>
         <!-- Include a different navbar based on the fact that the user is logged in or not-->
         <% if(user){ %>
-            <%- 
-                include('navbar', user); 
-            -%>
+            <%- include('navbar', user); -%>
         <% } else { %>
-            <%- 
-                include('navbar_anonymous'); 
-            -%>
+            <%- include('navbar_anonymous'); -%>
         <% } %>
         <div id="bg"></div>  
             <div class="container" style="min-height: 100%;">

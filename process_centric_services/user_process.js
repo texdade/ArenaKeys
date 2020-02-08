@@ -53,7 +53,7 @@ function createNewUser(user, token){
         newUserPromise
             .then(fetched => {
                 let status = fetched.status;
-                console.log(status);
+                
                 fetched.json()
                     .then(user => {
                         if(parseInt(status) === 201 && utilities.isUser(user))
@@ -67,4 +67,39 @@ function createNewUser(user, token){
     });
 }
 
-module.exports = {tryGetUserInfo, createNewUser};
+function updateUser(user, token){
+    return new Promise((resolve, reject) => {
+        let options = {
+            method: 'put',
+            body:    JSON.stringify(user),
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+        }
+
+        let updatedUserPromise;
+
+        if(user["steamUserId"])
+            updatedUserPromise = fetch(apiBaseUrl+'/steam/user', options);
+        else if (user["googleUserId"])
+            updatedUserPromise = fetch(apiBaseUrl+'/google/user', options);
+        else {
+            reject(400);
+        }
+
+        updatedUserPromise
+            .then(fetched => {
+                let status = fetched.status;
+
+                fetched.json()
+                    .then(user => {
+                        if(parseInt(status) === 200 && utilities.isUser(user))
+                            resolve(user);
+                        else//could be a 400, 401, 404
+                            reject(status);
+
+                    }).catch(err => reject(err));
+            })
+            .catch(err => reject(err));
+    });
+}
+
+module.exports = {tryGetUserInfo, createNewUser, updateUser};

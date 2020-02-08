@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+    <%- include('head'); -%>
+    <body>
+      <%- include('navbar'); -%>
+      <div id="bg"></div>  
+      <div class="container" style="min-height: 100%;">
+        <div class="row m-5">
+        </div>
+        <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+          <div class="jumbotron">
+            <h1>Edit User Info</h1>
+            <hr class="my-4" />
+            <form method="PUT" action="/user">
+              <div class="form-group">
+                    <label for="emailFormControlInput1">Email address:</label>
+                    <input type="email" class="form-control" id="emailTxt" value="<%= user.email %>">
+              </div>
+              <div class="alert alert-success d-none" id="successUpdAlert" role="alert">Email updated successfully</div>
+              <div class="alert alert-danger d-none" id="errorUpdAlert" role="alert">Invalid email</div>
+              <div class="alert alert-success d-none" id="successDltAlert" role="alert">User deleted successfully</div>
+              <div align="center">
+                <button type="button" class="btn btn-primary mb-2" id="editBtn">Confirm</button>
+              </div>
+            </form>
+            <div align="center">
+              <button class="btn btn-danger mb-2" data-toggle="modal" data-target="#deleteModal">Delete account</button>
+              <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body" align="left">
+                      Are you sure?
+                    </div>
+                    <div class="modal-footer">    
+                      <button type="button" id="deleteBtn" class="btn btn-primary" data-dismiss="modal">Confirm</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!--div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLabel">Done</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="modal-body" align="left">
+                    User data edited with success!
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div-->
+        </div>
+      </div>
+      <%- include('footer'); -%>
+    </body>
+    <%- include('generic_js') -%>
+
+    <script>
+        let user = {
+          steamUserId: ("<%= user.steamUserId%>" == "")? null: "<%= user.steamUserId%>",
+          googleUserId: ("<%= user.googleUserId%>" == "")? null: "<%= user.googleUserId%>",
+          id: <%= user.id %>,
+          email: "<%= user.email %>",
+          name: "<%= user.name %>",
+          imageLink: "<%= user.imageLink %>",
+          steamProfileUrl: "<%= user.steamProfileUrl %>"
+        };
+
+      $("#editBtn").click(function(e) {
+        $("#successUpdAlert").addClass('d-none');
+        $("#errorAlert").addClass('d-none');
+        $("#successDltAlert").addClass('d-none');
+
+        let gToken;
+        let sToken;
+
+        $.each(document.cookie.split(/; */), function()  {
+          let splitCookie = this.split('=');
+          if(splitCookie[0] === 'gToken')
+            gToken = splitCookie[1];
+          else if(splitCookie[0] === 'sToken')
+            sToken = splitCookie[1];
+        });
+
+        let url;
+        if(gToken)
+          url = "/google/user";
+        else if(sToken)
+          url = "/steam/user";
+
+        if(validateEmail($('#emailTxt').val())){
+          user["email"]=$('#emailTxt').val();
+
+          $.ajax({
+            url: url,
+            type: 'PUT',
+            headers: {
+              "Authorization": "Bearer "+(gToken || sToken),
+              "Content-Type": "application/json"
+            },
+            data: JSON.stringify(user),
+            success: function(data) {
+              console.log(data);
+              $("#successAlert").removeClass('d-none');
+            }
+          });
+        } else {
+          $("#errorAlert").removeClass('d-none');
+        }
+      });
+
+      $("#deleteBtn").click(function(e) {
+        let gToken;
+        let sToken;
+
+        $.each(document.cookie.split(/; */), function()  {
+          let splitCookie = this.split('=');
+          if(splitCookie[0] === 'gToken')
+            gToken = splitCookie[1];
+          else if(splitCookie[0] === 'sToken')
+            sToken = splitCookie[1];
+        });
+
+        let url;
+        if(gToken)
+          url = "/google/user";
+        else if(sToken)
+          url = "/steam/user";
+
+        if(gToken || sToken){
+          $.ajax({
+            url: url,
+            type: 'DELETE',
+            headers: {
+              "Authorization": "Bearer " + (gToken || sToken),
+              "Content-Type": "application/json"
+            },
+            success: function(data) {
+              $("#successDltAlert").removeClass('d-none');
+              //TODO - remove token cookies
+            }
+          });
+        }
+      });
+
+      function validateEmail(email){
+        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
+          return (true)
+        }
+        return (false)
+      }
+    </script>
+</html>

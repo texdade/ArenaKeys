@@ -4,8 +4,8 @@
 const express = require('express');
 const router = express.Router();
 
-const manageListData = require('../logic/list_logic');
-const manageUserData = require('../logic/user_logic');
+const listLogic = require('../logic/list_logic');
+const userLogic = require('../logic/user_logic');
 
 //create a new list and (eventually) populates it with games
 router.post('/userlist', (req, res) => {
@@ -29,16 +29,16 @@ router.post('/userlist', (req, res) => {
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
-        promiseUserData = manageUserData.getUser(steamId);
+        promiseUserData = userLogic.getUser(steamId);
     }else if(googleId && !steamId){ //section for users logged with google
-        promiseUserData = manageUserData.getUser(googleId);
+        promiseUserData = userLogic.getUser(googleId);
     }else{
         res.status(403).json({});
     }
 
     promiseUserData.
         then(userData => { //get the user id from the steam id
-            manageListData.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
+            listLogic.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
                 res.status(201).json(newList);
             });
         })
@@ -54,10 +54,10 @@ router.get('/userlist', (req, res) => {
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
-        promiseUserData = manageUserData.getUser(steamId);
+        promiseUserData = userLogic.getUser(steamId);
 
     }else if(googleId && !steamId){ //section for users logged with google
-        promiseUserData = manageUserData.getUser(googleId);
+        promiseUserData = userLogic.getUser(googleId);
 
     }else{
         res.status(403).json({});
@@ -65,7 +65,7 @@ router.get('/userlist', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            manageListData.getLists(userData["id"]).then(lists => { //and return all the lists associated with him
+            listLogic.getLists(userData["id"]).then(lists => { //and return all the lists associated with him
                 res.status(200).json(lists);
             }).catch(err => res.status(500).send(err));
         })
@@ -86,10 +86,10 @@ router.get('/userlist/:id', (req, res) => {
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
-        promiseUserData = manageUserData.getUser(steamId);
+        promiseUserData = userLogic.getUser(steamId);
 
     }else if(googleId && !steamId){ //section for users logged with google
-        promiseUserData = manageUserData.getUser(googleId);
+        promiseUserData = userLogic.getUser(googleId);
 
     }else{
         res.status(403).json({});
@@ -97,7 +97,7 @@ router.get('/userlist/:id', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            manageListData.getList(listId, userData['id']).then(list => { //and return the list
+            listLogic.getList(listId, userData['id']).then(list => { //and return the list
                 if(userData['id'] === list['userId'])
                     res.status(200).json(list);
                 else
@@ -133,10 +133,10 @@ router.put('/userlist/:id', (req, res) => {
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
-        promiseUserData = manageUserData.getUser(steamId);
+        promiseUserData = userLogic.getUser(steamId);
 
     }else if(googleId && !steamId){ //section for users logged with google
-        promiseUserData = manageUserData.getUser(googleId);
+        promiseUserData = userLogic.getUser(googleId);
 
     }else{
         res.status(403).json({});
@@ -144,7 +144,7 @@ router.put('/userlist/:id', (req, res) => {
 
     promiseUserData.
         then(userData => { //get the user id from the steam id
-            manageListData.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
+            listLogic.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
                 res.status(200).json(updList);
             }).catch(err => {
                 if(parseInt(err) >=400 && parseInt(err) <500)
@@ -170,10 +170,10 @@ router.delete('/userlist/:id', (req, res) => {
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
-        promiseUserData = manageUserData.getUser(steamId);
+        promiseUserData = userLogic.getUser(steamId);
 
     }else if(googleId && !steamId){ //section for users logged with google
-        promiseUserData = manageUserData.getUser(googleId);
+        promiseUserData = userLogic.getUser(googleId);
 
     }else{
         res.status(403).json({});
@@ -181,7 +181,7 @@ router.delete('/userlist/:id', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            manageListData.deleteList(listId, userData['id']).then(list => { //and return the deleted list
+            listLogic.deleteList(listId, userData['id']).then(list => { //and return the deleted list
                 res.status(200).json(list);
             }).catch(err => {
                 if(parseInt(err) >=400 && parseInt(err) <500)

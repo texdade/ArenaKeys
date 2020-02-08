@@ -44,6 +44,7 @@ const websiteRouter = require('./routes/website_router'); //testing website engi
 const videogameRouter = require('./routes/videogame_router'); //router for getting videogame data
 const userRouter = require('./routes/user_router'); //router for getting user data
 const listRouter = require('./routes/list_router'); //router for getting user data
+const steamWishListRouter = require('./routes/steam_wishlist_router');//routes for getting steam wishlist data
 
 //set up routers for latest version app
 app.use('/', genericRouter);
@@ -64,5 +65,8 @@ app.use('/google', gProtect(), userRouter);
 //set up router for list data
 app.use('/steam', sProtect(), listRouter);
 app.use('/google', gProtect(), listRouter);
+
+//ste up router for steam wishlist
+app.use('/', steamWishListRouter);
 
 module.exports = app;

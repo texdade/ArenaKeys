@@ -4,19 +4,19 @@
 const express = require('express');
 const router = express.Router();
 
-const manageUserData = require('../logic/user_logic');
+const userLogic = require('../logic/user_logic');
 
 router.get('/user', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
 
     if(!googleId && steamId){ //section for users logged with steam
-        manageUserData.getUser(steamId)
+        userLogic.getUser(steamId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
-        manageUserData.getUser(googleId)
+        userLogic.getUser(googleId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
 
@@ -34,12 +34,12 @@ router.post('/user', (req, res) => {
     let email = req.body.email;
 
     if(!googleId && steamId){ //section for users logged with steam
-        manageUserData.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
+        userLogic.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
-        manageUserData.createUser({steamUserId: null, googleUserId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
+        userLogic.createUser({steamUserId: null, googleUserId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
             .then(userData => res.status(201).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
 
@@ -68,7 +68,7 @@ router.put('/user', (req, res) => {
     };
 
     if(googleId || steamId){ //section for users logged with steam
-        manageUserData.updateUser(updUser)
+        userLogic.updateUser(updUser)
             .then(userData => res.status(200).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
 
@@ -82,12 +82,12 @@ router.delete('/user', (req, res) => {
     let steamId = req.user.steamUserId;
 
     if(!googleId && steamId){ //section for users logged with steam
-        manageUserData.deleteUser(steamId)
+        userLogic.deleteUser(steamId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
-        manageUserData.deleteUser(googleId)
+        userLogic.deleteUser(googleId)
             .then(userData => res.status(200).json(userData))
             .catch(err => res.status(404).json({}));
 

@@ -1,4 +1,5 @@
 const listHandler = require('../adapters/db_adapters/list_adapter');
+const steamListAdapter = require('../adapters/steam_wishlist_adapter');
 const gamePrices = require('./videogame_logic');
 const utilities = require('../db/utilities');
 
@@ -45,6 +46,26 @@ function getList(listId, userId){
                 reject(404);
             }
         }).catch(err => reject(err));
+    });
+}
+
+/*  Given the steam user ID retrieve his/her wishlist formatted following the standard of our
+* */
+function getSteamWishList(steamUserId){
+    return new Promise((resolve, reject) => {
+        if(steamUserId && /^\d+$/.test(steamUserId)){//contains just digits
+
+            steamListAdapter.getWishList(steamUserId).then(wishlist => {
+                getItemsOffers(extractSteamIds(wishlist)).then(gamePrices => {
+                    wishlist['items'] = gamePrices;
+                    resolve(wishlist);
+                }).catch(err => reject(err));
+
+            }).catch(err => reject(err));
+
+        }else
+            reject(400);
+
     });
 }
 
@@ -256,4 +277,4 @@ function differentNotifyPrice(it1, it2){
 }
 
 
-module.exports = {getLists, getList, createList, deleteList, updateList};
+module.exports = {getLists, getList, createList, deleteList, updateList, getSteamWishList};

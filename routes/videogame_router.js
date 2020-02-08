@@ -5,7 +5,7 @@
 const express = require('express');
 const router = express.Router();
 
-const fetchGamesData = require('../logic/videogame_logic');
+const videogameLogic = require('../logic/videogame_logic');
 
 router.get('/videogame', (req, res) => {
     let name = req.query.name;
@@ -20,7 +20,7 @@ router.get('/videogame', (req, res) => {
         details = false;
 
     if(name && typeof(name)==='string' && name.length > 1)
-        fetchGamesData.getMatchingGames(name, details, offers)
+        videogameLogic.getMatchingGames(name, details, offers)
             .then(gamesDataPrice => {
                 res.status(200).json(gamesDataPrice)
             })
@@ -50,7 +50,7 @@ router.get('/videogame/:id', (req, res) => {
         details = false;
 
     if(steamID)
-        fetchGamesData.getGame(steamID, details, offers)
+        videogameLogic.getGame(steamID, details, offers)
             .then(gameDataPrice => res.status(200).json([gameDataPrice]))//return an array of a single element to be consistent wrt type of response
             .catch(err => res.status(404).json({}));
     else

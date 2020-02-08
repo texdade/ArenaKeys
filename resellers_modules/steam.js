@@ -25,7 +25,7 @@ function getDumpList(v1, v2){
 }
 
 function getUserWishlist(userID){
-    let url = urlSteamWishlist+userID+"/wishlistdata/?p=0";
+    let url = urlSteamWishlist+userID+"/wishlistdata";
     return fetch(url);
 }
 
@@ -132,22 +132,9 @@ function getUserSteamWishlist(userID){
         getUserWishlist(userID)
             .then(res => {
                 res.json().then(gameList => {
-                    let wishlist = [];
-                    let wishlistIDs = Object.keys(gameList); //get all steamIDs from wishlist in order to navigate it
-                    wishlistIDs.forEach(id => {
-                        if(!gameList[id]["is_free_game"]){ //if game is not free (we can't sell free things)
-                            if(!gameList[id]["subs"].length<1){ //if the game currently has a price, which is contained in an array in "subs"
-                                let game={
-                                    steamID: id,
-                                    name: gameList[id]["name"],
-                                    price: gameList[id]["subs"]["0"]["price"]
-                                };
-                                wishlist.push(game);
-                            }
-                        }
-                    });
-                    resolve(wishlist);
-                });
+                    resolve(gameList);
+
+                }).catch(err => reject(err));
             })
             .catch(err => reject(err));
     });

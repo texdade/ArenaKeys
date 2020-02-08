@@ -2,12 +2,20 @@
 <html>
     <%- include('head'); -%>
     <body>
-        <%- include('navbar'); -%>
+        <!-- Include a different navbar based on the fact that the user is logged in or not-->
+        <% if(user){ %>
+            <%- 
+                include('navbar', user); 
+            -%>
+        <% } else { %>
+            <%- 
+                include('navbar_anonymous'); 
+            -%>
+        <% } %>
         <div id="bg"></div>  
             <div class="container" style="min-height: 100%;">
                 <div class="row m-5">
                 </div>
-                <button id="gLoginBtn">Google Login</button>
                 <div class="md-form active-pink active-pink-2 mb-3 mt-0">
                     <h1 align="center">ArenaKeys</h1>
                     <div class="input-group mb-3">
@@ -22,88 +30,5 @@
     </body>
 
     <%- include('generic_js') -%>
-    <script>
-        let apiBaseURL = 'https://gamekeys-arena.herokuapp.com';
-        if(window.location.hostname != 'gamekeys-arena.herokuapp.com')
-            apiBaseURL = 'http://localhost:3000';
-
-        $("#gLoginBtn").click(function(e) {
-            e.preventDefault();
-
-            let w = 500;
-            let h = 400;
-            let left = (screen.width/2)-(w/2);
-            let top = (screen.height/2)-(h/2);
-
-            //open new popup window in the centre of the screen
-            let loginWindow = window.open(apiBaseURL+'/auth/google', 'newwindow', 'width=' + w + ', height = ' + h + ',left = ' + left + ',top = ' + top);
-            let loginSuccess = false;
-
-            setInterval(()=>{//check every 200ms if the token exist and in that case close the popup window
-                $.each(document.cookie.split(/; */), function()  {
-                    let splitCookie = this.split('=');
-                    if(splitCookie[0] === 'token' && !loginSuccess){
-                        loginSuccess = true;
-                        loginWindow.close();
-                        window.location.replace(apiBaseURL);
-                    }
-                });
-            }, 200);
-
-        });
-    </script>
-
-    <script>
-        
-        let temporaryHints;
-        
-        $( "#searchBar" ).keyup(() => {
-           console.log("" + $( "#searchBar" ).val());
-            $( "#searchBar" ).autocomplete({
-                
-                source: function( request, response ) {
-                    $.ajax({
-                    url: apiBaseURL+"/videogame?name="+$( "#searchBar" ).val()+"&details=false&offers=false",
-                    dataType: "json",
-                    success: function( data ) {
-                        
-                        temporaryHints = data;
-                        
-                        let hints = [];
-                        for(let hint of data)
-                            hints.push(hint['name']);
-
-                        response( hints );
-                    }
-                    });
-                },
-
-                select: function( event, ui ) {
-                    console.log( ui.item ?
-                    "Selected: " + ui.item.label :
-                    "Nothing selected, input was " + this.value);
-
-                    let steamID;
-
-                    for(let hint of temporaryHints)
-                        if(hint['name'] === ui.item.label){
-                            steamID = hint['steamID'];
-                            break;
-                        }
-                    
-                    console.log("Found game with steamID " + steamID); //TODO redirect
-                },
-                open: function() {
-                    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-                },
-                close: function() {
-                    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-                }
-                
-            }); 
-        });
-        /*
-        */
-
-    </script>
+    <script type="text/javascript" src="/js/auth_client.js"></script>
 </html>

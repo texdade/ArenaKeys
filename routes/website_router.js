@@ -2,27 +2,35 @@
 *
 *
 */
-const videoGameLogic = require('../process_centric_services/price_checker');
+const userProcess = require('../process_centric_services/user_process');
 const express = require('express');
 const router = express.Router();
 
+const utilities = require('../db/utilities');
+
 //extracting info of user, passing access_token as a string query parameter "localhost:3000/secret?access_token = <token>"
 router.get('/', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
+    let gToken = req.cookies['gToken'];
+    let sToken = req.cookies['sToken'];
+    let userBaseInfo = req.cookies['userInfo'];
 
-    console.log(req.cookies);
-    let input = {
-        
-    };
-
-    let output = {
-
-    };
-    res.render('index', vgObj);
+    userProcess.tryGetUserInfo(gToken, sToken)
+        .then( userInfo => res.render('index', {user: userInfo, err: null}))
+        .catch(err => {
+            if(parseInt(err) === 404 && userBaseInfo && utilities.isUserNoId(userBaseInfo)){
+                userProcess.createNewUser(userBaseInfo, gToken || sToken).then(user => { 
+                    res.render('index', {user: user, err: null});
+                }).catch(err => res.render('index', {user: null, err: err}));
+            }else{
+                res.clearCookie('gToken');
+                res.clearCookie('sToken');
+                res.render('index', {user: null, err: err});
+            }
+        });
+    
 });
 
 router.get('/gameSearch', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //stringa nome gioco   
     };
@@ -107,7 +115,6 @@ router.get('/gameSearch', (req, res) => {
 });
 
 router.get('/addGame', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //id del gioco e id della lista dove verrà aggiunto
     }
@@ -119,7 +126,6 @@ router.get('/addGame', (req, res) => {
 });
 
 router.get('/lists', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //user token o id
     }
@@ -332,7 +338,6 @@ router.get('/lists', (req, res) => {
 });
 
 router.get('/lists/:id/delete', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //id della lista da eliminare
     }
@@ -344,13 +349,11 @@ router.get('/lists/:id/delete', (req, res) => {
 });
 
 router.get('/performAuthGoogle', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     
     res.render('index', vgObj);
 });
 
 router.get('/editList', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //id della lista da modificare
     }
@@ -432,7 +435,6 @@ router.get('/editList', (req, res) => {
 });
 
 router.get('/editList/edit', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         //lista modificata da inserire nel db + id lista
     }
@@ -444,7 +446,6 @@ router.get('/editList/edit', (req, res) => {
 });
 
 router.get('/user', (req, res) => {
-    let vgObj = videoGameLogic.getGameOffer('');
     let input = {
         // user token o id
     }

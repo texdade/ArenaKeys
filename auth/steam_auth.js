@@ -91,16 +91,22 @@ const registerSteamAuth = app => {
                 { expiresIn: '2h' },
                 (err, token) => {
                     if (err) throw err;
+                    
+                    let userInfo = {
+                        googleUserId: undefined,
+                        steamUserId: user.id,
+                        name: user.displayName,
+                        email: undefined,
+                        imageLink: user.photos[2].value,
+                        steamProfileUrl: user['_json'].profileurl,
+                        lists: []
+                    };
+        
+                    res.cookie('userInfo', userInfo);
+                    res.cookie('sToken', token);     
+                                   
                     res.json({
-                        user: {
-                            googleUserId: undefined,
-                            steamUserId: user.id,
-                            name: user.displayName,
-                            email: undefined,
-                            imageLink: user.photos[2].value,
-                            steamProfileUrl: user['_json'].profileurl,
-                            lists: []
-                        },
+                        user: userInfo,
                         token,
                     });
                 }

@@ -68,19 +68,22 @@ const registerGoogleAuth = app => {
             failureRedirect: '/auth/google'
         }),
         function(req, res) {
+            
+            let userInfo = {
+                googleUserId: req.user.profile.id,
+                steamUserId: undefined,
+                name: req.user.profile.displayName,
+                email: req.user.profile.emails[0].value,
+                imageLink: req.user.profile.photos[0].value,
+                steamProfileUrl: undefined,
+                lists: []
+            };
 
-            res.cookie('token', req.user.token);
+            res.cookie('gToken', req.user.token);
+            res.cookie('userInfo', userInfo);
 
             res.json({
-                user: {
-                    googleUserId: req.user.profile.id,
-                    steamUserId: undefined,
-                    name: req.user.profile.displayName,
-                    email: req.user.profile.emails[0].value,
-                    imageLink: req.user.profile.photos[0].value,
-                    steamProfileUrl: undefined,
-                    lists: []
-                },
+                user: userInfo,
                 token: req.user.token
             });
         }

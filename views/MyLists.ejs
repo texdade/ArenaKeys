@@ -114,7 +114,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <button type="button" class="btn btn-success"><i class="fas fa-edit"></i></button>
+                                            <button type="button" class="btn btn-success" href="/editList"><i class="fas fa-edit"></i></button>
                                         </div>
                                     </div>
                                 </h5>
@@ -125,15 +125,12 @@
                                         <li class="list-group-item">
                                             <div class="row align-items-center">
                                                 <div class="col-md-5">
+                                                    <b><%= listsResult[i].items[j].name %></b><br>
                                                     <div class="image-parent">
-                                                        <img src="<%= listsResult[i].items[j].image %>" class="img-fluid" alt="quixote">
+                                                        <img src="<%= listsResult[i].items[j].image %>" class="img-fluid" alt="quixote">&nbsp;
                                                     </div>
                                                 </div>
                                                 <div class="col-md-5">
-                                                    <b><%= listsResult[i].items[j].name %></b><br>
-                                                    <p class="text-justify"><%= listsResult[i].items[j].description %></p>
-                                                </div>
-                                                <div class="col-md-2" align="center">
                                                     <% for(let k=0; k<listsResult[i].items[j].offers.length; k++) { %>
                                                         <% if (listsResult[i].items[j].offers[k].reseller === "Steam") { %>
                                                             <button class="btn btn-dark btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="white-space:nowrap;">
@@ -142,7 +139,6 @@
                                                         <% } else if (listsResult[i].items[j].offers[k].reseller === "Gamivo") { %>
                                                             <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#BF353D;white-space:nowrap;">
                                                                 <i class="icon-play" style="background-image : url(logos/gamivo-logo-single.png);"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
-                                                                <!--img src="logos/gamivo-logo-single.png" style="width:15%;height:15%"-->
                                                             </button>
                                                         <% } else if (listsResult[i].items[j].offers[k].reseller === "HRK") { %>
                                                             <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#EF4125;white-space:nowrap;">
@@ -154,6 +150,8 @@
                                                             </button>    
                                                         <% } %>
                                                     <% } %>
+                                                </div>
+                                                <div class="col-md-2" align="center">
                                                     <p></p><button type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                                 </div> 
                                             </div>

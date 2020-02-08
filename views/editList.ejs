@@ -19,7 +19,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                     </div>
-                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="selector">
+                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="searchBar">
                 </div>
             </div>
             <div class="row">
@@ -29,15 +29,12 @@
                             <li class="list-group-item">
                                 <div class="row align-items-center">
                                     <div class="col-md-4">
+                                        <b><%= list[0].items[i].name %></b><br>
                                         <div class="image-parent">
                                             <img src="<%= list[0].items[i].image %>" class="img-fluid" alt="quixote">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
-                                        <b><%= list[0].items[i].name %></b><br>
-                                        <p class="text-justify"><%= list[0].items[i].description %></p>
-                                    </div>
-                                    <div class="col-md-4" align="center">
                                         <% for(let j=0; j<list[0].items[i].offers.length; j++) { %>
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
@@ -46,6 +43,8 @@
                                                 <input readonly type="text" class="form-control" id="staticPrice" value="&euro;&nbsp;<%= list[0].items[i].offers[j].price %>">
                                             </div>
                                         <% } %>
+                                    </div>
+                                    <div class="col-md-4" align="center">
                                         <form class="form-group row">
                                             <div class="col-md-7" align="left"><p>Notify me when the price is below:</p></div>
                                             <div class="col-md-5 align-self-center">
@@ -95,5 +94,6 @@
         </div>
         <%- include('footer'); -%>
     </body>
-    <%- include('generic_js') -%>
+    <%- include('generic_js') -%>   
+    <script type="text/javascript" src="/js/search_bar_hints.js"></script>
 </html>

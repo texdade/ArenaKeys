@@ -111,7 +111,24 @@ router.get('/gameSearch', (req, res) => {
             "name": "Va"
         }
     ]
-    res.render('gameListResult', {searchResults: output, userLists: userLists});
+    let gToken = req.cookies['gToken'];
+    let sToken = req.cookies['sToken'];
+    let userBaseInfo = req.cookies['userInfo'];
+
+    userProcess.tryGetUserInfo(gToken, sToken)
+        .then( userInfo => res.render('gameListResult', {user: userInfo, err: null, searchResults: output, userLists: userLists}))
+        .catch(err => {
+            if(parseInt(err) === 404 && userBaseInfo && utilities.isUserNoId(userBaseInfo)){
+                userProcess.createNewUser(userBaseInfo, gToken || sToken).then(user => { 
+                    res.render('gameListResult', {user: user, err: null, searchResults: output, userLists: userLists});
+                }).catch(err => res.render('gameListResult', {user: null, err: err, searchResults: output, userLists: userLists}));
+            }else{
+                res.clearCookie('gToken');
+                res.clearCookie('sToken');
+                res.render('gameListResult', {user: null, err: err, searchResults: output, userLists: userLists});
+            }
+        });
+    //res.render('gameListResult', {searchResults: output, userLists: userLists});
 });
 
 router.get('/addGame', (req, res) => {

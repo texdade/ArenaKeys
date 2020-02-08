@@ -27,31 +27,83 @@ router.get('/gameSearch', (req, res) => {
         //stringa nome gioco   
     };
 
-    let output = {
-            "steamID": "10",
-            "name": "Counter-Strike",
-            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
-            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
-            "lastUpdate": "2020-02-04T19:14:44.000Z",
-            "offers": [
+    let output =
+            [
                 {
                     "steamID": "10",
-                    "reseller": "Gamivo",
-                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
-                    "availability": 1,
-                    "price": 7.87
+                    "name": "Counter-Strike",
+                    "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                    "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                    "lastUpdate": "2020-02-04T19:14:44.000Z",
+                    "offers": [
+                        {
+                            "steamID": "10",
+                            "reseller": "Gamivo",
+                            "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                            "availability": 1,
+                            "price": 7.87
+                        },
+                        {
+                            "steamID": "10",
+                            "reseller": "Steam",
+                            "link": "https://store.steampowered.com/app/10",
+                            "availability": 1,
+                            "price": 8.19
+                        }
+                    ]
                 },
                 {
                     "steamID": "10",
-                    "reseller": "Steam",
-                    "link": "https://store.steampowered.com/app/10",
-                    "availability": 1,
-                    "price": 8.19
+                    "name": "Counter-Strike",
+                    "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                    "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                    "lastUpdate": "2020-02-04T19:14:44.000Z",
+                    "offers": [
+                        {
+                            "steamID": "10",
+                            "reseller": "Gamivo",
+                            "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                            "availability": 1,
+                            "price": 7.87
+                        },
+                        {
+                            "steamID": "10",
+                            "reseller": "Steam",
+                            "link": "https://store.steampowered.com/app/10",
+                            "availability": 1,
+                            "price": 8.19
+                        },
+                        {
+                            "steamID": "10",
+                            "reseller": "HRK",
+                            "link": "https://store.steampowered.com/app/10",
+                            "availability": 1,
+                            "price": 8.19
+                        },
+                        {
+                            "steamID": "10",
+                            "reseller": "CDKeys",
+                            "link": "https://store.steampowered.com/app/10",
+                            "availability": 1,
+                            "price": 8.19
+                        }
+                    ]
                 }
-            ]
-    };
+            ];
 
-    res.render('gameListResult', output);
+    //servirebbe anche la lista delle liste associate all'utente
+    let userLists = [
+        {
+            "name": "Ciao"
+        }, 
+        {
+            "name": "Come"
+        },
+        { 
+            "name": "Va"
+        }
+    ]
+    res.render('gameListResult', {searchResults: output, userLists: userLists});
 });
 
 router.get('/addGame', (req, res) => {
@@ -72,33 +124,211 @@ router.get('/lists', (req, res) => {
         //user token o id
     }
     
-    let output = {
-        "list": [
-            {
-                "id": -100000000,
-                "name": "",
-                "notifyMe": false,
-                "items": [
-                    {
-                    "name": "",
-                    "priceNotifier": false,
-                    "imageLink": "",
-                    "offers": [
+    let output = 
+            [
+                {
+                    "id": 123,
+                    "name": "Ciao",
+                    "notifyMe": false,
+                    "items": [
                         {
-                        "reseller": "",
-                        "price": -100000000,
-                        "link": "",
-                        "availability": false
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
+                        },
+                        {
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "HRK",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "CDKeys",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
                         }
-                    ],
-                    "steamID": -100000000,
-                    "description": ""
-                    }
-                ]
-            }
-        ]
-    }
-    res.render('MyLists', vgObj);
+                    ]
+                },
+                {
+                    "id": 124,
+                    "name": "Come",
+                    "notifyMe": false,
+                    "items": [
+                        {
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
+                        },
+                        {
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "HRK",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "CDKeys",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": 125,
+                    "name": "Va",
+                    "notifyMe": false,
+                    "items": [
+                        {
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
+                        },
+                        {
+                            "steamID": "10",
+                            "name": "Counter-Strike",
+                            "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                            "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                            "lastUpdate": "2020-02-04T19:14:44.000Z",
+                            "offers": [
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Gamivo",
+                                    "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                    "availability": 1,
+                                    "price": 7.87
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "Steam",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "HRK",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                },
+                                {
+                                    "steamID": "10",
+                                    "reseller": "CDKeys",
+                                    "link": "https://store.steampowered.com/app/10",
+                                    "availability": 1,
+                                    "price": 8.19
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+    res.render('MyLists', {listsResult : output});
 });
 
 router.get('/lists/:id/delete', (req, res) => {
@@ -124,37 +354,81 @@ router.get('/editList', (req, res) => {
     let input = {
         //id della lista da modificare
     }
-
-    let output = {
-        //la pagina viene caricata con lista con i dati vecchi che ora saranno modificati
-        "list": [
+    
+    //la pagina viene caricata con lista con i dati vecchi che ora saranno modificati
+    let output =
+        [
             {
-                "id": -100000000,
-                "name": "",
+                "id": 123,
+                "name": "Ciao",
                 "notifyMe": false,
                 "items": [
                     {
-                        "name": "",
-                        "priceNotifier": false,
-                        "imageLink": "",
+                        "steamID": "10",
+                        "name": "Counter-Strike",
+                        "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                        "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                        "lastUpdate": "2020-02-04T19:14:44.000Z",
                         "offers": [
                             {
-                                "reseller": "",
-                                "price": -100000000,
-                                "link": "",
-                                "availability": false
+                                "steamID": "10",
+                                "reseller": "Gamivo",
+                                "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                "availability": 1,
+                                "price": 7.87
+                            },
+                            {
+                                "steamID": "10",
+                                "reseller": "Steam",
+                                "link": "https://store.steampowered.com/app/10",
+                                "availability": 1,
+                                "price": 8.19
                             }
-                        ],
-                        "steamID": -100000000,
-                        "description": ""
+                        ]
+                    },
+                    {
+                        "steamID": "10",
+                        "name": "Counter-Strike",
+                        "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
+                        "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
+                        "lastUpdate": "2020-02-04T19:14:44.000Z",
+                        "offers": [
+                            {
+                                "steamID": "10",
+                                "reseller": "Gamivo",
+                                "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
+                                "availability": 1,
+                                "price": 7.87
+                            },
+                            {
+                                "steamID": "10",
+                                "reseller": "Steam",
+                                "link": "https://store.steampowered.com/app/10",
+                                "availability": 1,
+                                "price": 8.19
+                            },
+                            {
+                                "steamID": "10",
+                                "reseller": "HRK",
+                                "link": "https://store.steampowered.com/app/10",
+                                "availability": 1,
+                                "price": 8.19
+                            },
+                            {
+                                "steamID": "10",
+                                "reseller": "CDKeys",
+                                "link": "https://store.steampowered.com/app/10",
+                                "availability": 1,
+                                "price": 8.19
+                            }
+                        ]
                     }
                 ]
             }
         ]
 
-        //lista aggiornata + boolean che indica la modifica avvenuta con successo o meno
-    }
-    res.render('EditList', vgObj);
+    //lista aggiornata + boolean che indica la modifica avvenuta con successo o meno
+    res.render('EditList', {list : output});
 });
 
 router.get('/editList/edit', (req, res) => {
@@ -178,19 +452,23 @@ router.get('/user', (req, res) => {
         /*i vecchi dati che l'utente ha inserito 
         (in questo caso può cambiare solo l'email e il link dell'account di Steam che serve in caso volesse importare sempre le liste
         da un altro account rispetto a quello con cui è loggato)*/
+        "name": "",
+        "imageLink": "",
+        "id": -100000000,
+        "steamUserId": "",
+        "googleUserId": "",
+        "email": "foo@example.com"
     }
-    res.render('EditUser', vgObj);
+    res.render('EditUser', {user : output});
 });
 
-router.get('/user/:id/edit', (req, res) => {
+router.get('/user/edit', (req, res) => {
     let vgObj = videoGameLogic.getGameOffer('');
     let input = {
-        // user token o id
+        // nuovi dati da modificare
     }
     let output = {
-        /*i vecchi dati che l'utente ha inserito 
-        (in questo caso può cambiare solo l'email e il link dell'account di Steam che serve in caso volesse importare sempre le liste
-        da un altro account rispetto a quello con cui è loggato)*/
+        //success message se la modifica è andata a buon fine
     }
     res.render('EditUser', vgObj);
 });

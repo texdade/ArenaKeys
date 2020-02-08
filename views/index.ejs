@@ -2,7 +2,7 @@
 <html>
     <%- include('head'); -%>
     <body>
-        <%- include('navbar', {n: name}); -%>
+        <%- include('navbar'); -%>
         <div id="bg"></div>  
             <div class="container" style="min-height: 100%;">
                 <div class="row m-5">
@@ -14,7 +14,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
                     </div>
-                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="selector">
+                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="searchBar">
                 </div>
             </div>
         </div>
@@ -51,5 +51,59 @@
             }, 200);
 
         });
+    </script>
+
+    <script>
+        
+        let temporaryHints;
+        
+        $( "#searchBar" ).keyup(() => {
+           console.log("" + $( "#searchBar" ).val());
+            $( "#searchBar" ).autocomplete({
+                
+                source: function( request, response ) {
+                    $.ajax({
+                    url: apiBaseURL+"/videogame?name="+$( "#searchBar" ).val()+"&details=false&offers=false",
+                    dataType: "json",
+                    success: function( data ) {
+                        
+                        temporaryHints = data;
+                        
+                        let hints = [];
+                        for(let hint of data)
+                            hints.push(hint['name']);
+
+                        response( hints );
+                    }
+                    });
+                },
+
+                select: function( event, ui ) {
+                    console.log( ui.item ?
+                    "Selected: " + ui.item.label :
+                    "Nothing selected, input was " + this.value);
+
+                    let steamID;
+
+                    for(let hint of temporaryHints)
+                        if(hint['name'] === ui.item.label){
+                            steamID = hint['steamID'];
+                            break;
+                        }
+                    
+                    console.log("Found game with steamID " + steamID); //TODO redirect
+                },
+                open: function() {
+                    $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+                },
+                close: function() {
+                    $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+                }
+                
+            }); 
+        });
+        /*
+        */
+
     </script>
 </html>

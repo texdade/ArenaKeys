@@ -2,7 +2,7 @@
 <html>
     <%- include('head'); -%>
     <body>
-        <%- include('navbar', {n: name}); -%>
+        <%- include('navbar'); -%>
         <div id="bg"></div>  
         <div class="container" style="min-height: 100%;">
             <div class="row m-5">
@@ -13,7 +13,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="basic-addon1">List Name</span>
                     </div>
-                    <input class="form-control" type="text">
+                    <input class="form-control" type="text" value="<%= list[0].name %>">
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -25,155 +25,43 @@
             <div class="row">
                 <div class="col-12 col-sm-8 col-lg-12">
                     <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="image-parent">
-                                <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/don_quixote.jpg" class="img-fluid" alt="quixote">
-                                Game 1
-                            </div>
-                            <div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Steam price:</p>
-                                    </div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="16">
-                                        </div>
-                                    </div>   
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Best price:</p>
-                                    </div> 
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="8">
-                                        </div>
-                                    </div>  
-                                </div>
-                                <form class="form-group row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right"><p>Notify me when the price is below:</p></div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" id="staticPrice" placeholder="10">
-                                            <button class="btn btn-primary"><i class="fas fa-bell"></i></button>
+                        <% for(let i=0; i<list[0].items.length; i++) { %>
+                            <li class="list-group-item">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4">
+                                        <div class="image-parent">
+                                            <img src="<%= list[0].items[i].image %>" class="img-fluid" alt="quixote">
                                         </div>
                                     </div>
-                                </form>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="image-parent">
-                                <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/as_I_lay.jpg" class="img-fluid" alt="lay">
-                                Game 2
-                            </div>
-                            <div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Steam price:</p>
+                                    <div class="col-md-4">
+                                        <b><%= list[0].items[i].name %></b><br>
+                                        <p class="text-justify"><%= list[0].items[i].description %></p>
                                     </div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
+                                    <div class="col-md-4" align="center">
+                                        <% for(let j=0; j<list[0].items[i].offers.length; j++) { %>
+                                            <div class="input-group mb-3">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text" id="basic-addon2"><%= list[0].items[i].offers[j].reseller %></span>
+                                                </div>
+                                                <input readonly type="text" class="form-control" id="staticPrice" value="&euro;&nbsp;<%= list[0].items[i].offers[j].price %>">
                                             </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="16">
-                                        </div>
-                                    </div>   
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Best price:</p>
-                                    </div> 
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
+                                        <% } %>
+                                        <form class="form-group row">
+                                            <div class="col-md-7" align="left"><p>Notify me when the price is below:</p></div>
+                                            <div class="col-md-5 align-self-center">
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="staticPrice" placeholder="10">
+                                                    <button class="btn btn-primary"><i class="fas fa-bell"></i></button>
+                                                </div>
                                             </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="8">
-                                        </div>
-                                    </div>  
-                                </div>
-                                <form class="form-group row">
-                                    <!--label for="staticPrice" class="sr-only">Notify me when the price is below: </label-->
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right"><p>Notify me when the price is below:</p></div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" id="staticPrice" placeholder="10">
-                                            <button class="btn btn-primary"><i class="fas fa-bell"></i></button>
-                                        </div>
+                                        </form>   
                                     </div>
-                                </form>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div class="image-parent">
-                                <img src="https://s3.eu-central-1.amazonaws.com/bootstrapbaymisc/blog/24_days_bootstrap/things_fall_apart.jpg" class="img-fluid" alt="things">
-                                Game 3
-                            </div>
-                            <div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Steam price:</p>
-                                    </div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="16">
-                                        </div>
-                                    </div>   
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right">
-                                        <p>Best price:</p>
-                                    </div> 
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input readonly type="text" class="form-control" id="staticPrice" value="8">
-                                        </div>
-                                    </div>  
-                                </div>
-                                <form class="form-group row">
-                                    <!--label for="staticPrice" class="sr-only">Notify me when the price is below: </label-->
-                                    <div class="col-md-5"></div>
-                                    <div class="col-md-4" align="right"><p>Notify me when the price is below:</p></div>
-                                    <div class="col-md-3 align-self-center">
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control" id="staticPrice" placeholder="10">
-                                            <button class="btn btn-primary"><i class="fas fa-bell"></i></button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
+                            </li>
+                        <% } %>
                     </ul>
                     <div class="row m-2">
                     </div>
@@ -207,4 +95,5 @@
         </div>
         <%- include('footer'); -%>
     </body>
+    <%- include('generic_js') -%>
 </html>

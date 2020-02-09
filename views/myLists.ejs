@@ -1,0 +1,231 @@
+<!doctype html>
+    <%- include('head'); -%>
+    <body>
+        <%- include('navbar'); -%>
+        <div id="bg"></div>
+
+        <div class="container" style="min-height: 100%;">
+
+            <div class="row m-5">
+            </div>
+            <div class="row">
+                <div class="col-md-8">
+                    <h1>My Lists</h1>
+                </div>
+                <div class="col-md-4" align="right">
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-placement="top" data-target="#newListModal" title="Add new list"><i class="fas fa-plus"></i></button>
+                    <div class="modal fade" id="newListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Add New List</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" align="left">
+                                    <div class="form-group row">
+                                        <label for="listName" class="col-sm-3 col-form-label">List Name:</label>
+                                        <div class="col-sm-9">
+                                            <input type="text" class="form-control" id="listName">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <button type="button" class="btn btn-primary">Create List</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn btn-dark btn-lg" data-toggle="modal" data-target="#steamListModal"><i class="fab fa-steam"></i> &nbsp; Import Steam Wishlist</button>
+                    <div class="modal fade" id="steamListModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Import Steam Wishlist</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body" align="left">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-8" align="center">
+                                                <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                                            </div>
+                                            <div class="col-md-2"></div>
+                                        </div><p></p>
+                                        <div class="row">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-8" align="center">
+                                                <p>OR</p>
+                                            </div>
+                                            <div class="col-md-2"></div>
+                                        </div>
+                                        <div class="row">
+                                            <label for="accountLink" class="col-sm-4 col-form-label">Other account link:</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" id="accountLink">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-primary">Create List</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="">
+                <div class="accordion" id="accordionExample">
+                    <% for (let i=0; i<listsResult.length; i++) { %>
+                    <div class="card">
+                        <div class="card-header" id="heading<%=i%>">
+                            <h5 class="mb-0">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapse<%=i%>" aria-expanded="true" aria-controls="collapse<%=i%>">
+                                            <%= listsResult[i].name %>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2" align="right">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=i%>"><i class="fas fa-trash"></i></button>
+                                        <div class="modal fade" id="deleteModal<%=i%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Delete List</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body" align="left">
+                                                        Are you sure to delete this list?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                        <button type="button" class="btn btn-danger">Yes</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn btn-success" href="/editList"><i class="fas fa-edit"></i></button>
+                                    </div>
+                                </div>
+                            </h5>
+                        </div>
+                        <div id="collapse<%=i%>" class="collapse" aria-labelledby="heading<%=i%>" data-parent="#accordionExample">
+                            <ul class="list-group">
+                                <% for(let j=0; j<listsResult[i].items.length; j++) { %>
+                                    <div id="l_<%= listsResult[i]['id']%>item_<%= listsResult[i].items[j]['steamID']%>">
+                                        <li class="list-group-item">
+                                            <div class="row align-items-center">
+                                                <div class="col-md-5">
+                                                    <b><%= listsResult[i].items[j].name %></b><br>
+                                                    <div class="image-parent">
+                                                        <img src="<%= listsResult[i].items[j].image %>" class="img-fluid" alt="quixote">&nbsp;
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <% for(let k=0; k<listsResult[i].items[j].offers.length; k++) { %>
+                                                        <% if (listsResult[i].items[j].offers[k].reseller === "Steam") { %>
+                                                            <button class="btn btn-dark btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="white-space:nowrap;">
+                                                                <i class="fab fa-steam"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
+                                                            </button>
+                                                        <% } else if (listsResult[i].items[j].offers[k].reseller === "Gamivo") { %>
+                                                            <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#BF353D;white-space:nowrap;">
+                                                                <i class="icon-play" style="background-image : url(logos/gamivo-logo-single.png);"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
+                                                            </button>
+                                                        <% } else if (listsResult[i].items[j].offers[k].reseller === "HRK") { %>
+                                                            <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#EF4125;white-space:nowrap;">
+                                                                <i class="icon-play" style="background-image : url(logos/hrk-logo.webp)"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
+                                                            </button>
+                                                        <% } else { %>
+                                                            <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#019EE9;white-space:nowrap;">
+                                                                <i class="icon-play" style="background-image : url(logos/cdkeys-logo.png);"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
+                                                            </button>
+                                                        <% } %>
+                                                    <% } %>
+                                                </div>
+                                                <div class="col-md-2" align="center">
+                                                    <p></p><button type="button" class="btn btn-danger" onclick="deleteItem('<%= listsResult[i]['id']%>', '<%= listsResult[i].items[j]['steamID']%>')"><i class="fas fa-trash"></i></button>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </div>
+                                <% } %>
+                            </ul>
+                        </div>
+                    </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+        <div class="row m-5">
+        </div>
+        <%- include('footer'); -%>
+    </body>
+    <%- include('generic_js') -%>
+
+    <script>
+        let url;
+        let gToken;
+        let sToken;
+        $.each(document.cookie.split(/; */), function()  {
+            let splitCookie = this.split('=');
+            if(splitCookie[0] === 'gToken')
+                gToken = splitCookie[1];
+            else if(splitCookie[0] === 'sToken')
+                sToken = splitCookie[1];
+        });
+
+        function deleteItem(id, steamID){
+            console.log("Asking the server to delete game " + steamID + " in list " + id);
+            if(gToken)
+                url = "/google/userlist/"+id;
+            else if(sToken)
+                url = "/steam/userlist/"+id;
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                headers: {
+                    "Authorization": "Bearer "+(gToken || sToken),
+                    "Content-Type": "application/json"
+                },
+                success: function(fetchedList) {
+                    for(let i=0; i<fetchedList['items'].length; i++)
+                        if(fetchedList['items'][i]['steamID'] == steamID){//put element which has been requested to be deleted to null
+                            fetchedList['items'][i] = null;
+                            break;
+                        }
+
+                    $.ajax({
+                        url: url,
+                        type: 'PUT',
+                        headers: {
+                            "Authorization": "Bearer "+(gToken || sToken),
+                            "Content-Type": "application/json"
+                        },
+                        data: JSON.stringify(fetchedList),//list has been updated with a removed item
+                        success: function(result) {
+                            console.log("Updated list");
+                            console.log(result);
+                            $("#l_"+id+"item_"+steamID).fadeTo(2000, 500).slideUp(500, function(){
+                                $("#l_"+id+"item_"+steamID).slideUp(500);
+                                $("#l_"+id+"item_"+steamID).html("");
+                            });
+
+                        }
+                    });
+                }
+            });
+        }
+    </script>
+
+</html>

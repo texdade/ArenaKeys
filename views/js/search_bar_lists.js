@@ -35,6 +35,8 @@ $( "#searchBar" ).keyup(() => {
                 }
             
             console.log("Found game with steamID " + steamID); //TODO redirect
+            window.location.replace('/gameSearch?steamID=' + steamID);
+
         },
         open: function() {
             $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );

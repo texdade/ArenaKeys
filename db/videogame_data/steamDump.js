@@ -78,6 +78,7 @@ function getGameBasicInfo(steamID){
 * */
 function getMatchingGamesBasicInfo(name){
     //console.log("Finding in db matching games for title " + name);
+    name = name.split(' ').join('%');
     let nameLike = '%'+name+'%';//query LIKE value
     return new Promise((resolve, reject) => {
         mysqlConnection.query("SELECT steam_id, name, image_link, description, last_update FROM steam_games WHERE name LIKE ?",

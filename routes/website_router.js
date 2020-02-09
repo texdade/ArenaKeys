@@ -3,6 +3,7 @@
 *
 */
 const userProcess = require('../process_centric_services/user_process');
+const gameProcess = require('../process_centric_services/price_checker');
 const express = require('express');
 const router = express.Router();
 
@@ -31,102 +32,28 @@ router.get('/', (req, res) => {
 });
 
 router.get('/gameSearch', (req, res) => {
-    let input = {
-        //stringa nome gioco   
-    };
-
-    let output =
-            [
-                {
-                    "steamID": "10",
-                    "name": "Counter-Strike",
-                    "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
-                    "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
-                    "lastUpdate": "2020-02-04T19:14:44.000Z",
-                    "offers": [
-                        {
-                            "steamID": "10",
-                            "reseller": "Gamivo",
-                            "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
-                            "availability": 1,
-                            "price": 7.87
-                        },
-                        {
-                            "steamID": "10",
-                            "reseller": "Steam",
-                            "link": "https://store.steampowered.com/app/10",
-                            "availability": 1,
-                            "price": 8.19
-                        }
-                    ]
-                },
-                {
-                    "steamID": "10",
-                    "name": "Counter-Strike",
-                    "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
-                    "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
-                    "lastUpdate": "2020-02-04T19:14:44.000Z",
-                    "offers": [
-                        {
-                            "steamID": "10",
-                            "reseller": "Gamivo",
-                            "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
-                            "availability": 1,
-                            "price": 7.87
-                        },
-                        {
-                            "steamID": "10",
-                            "reseller": "Steam",
-                            "link": "https://store.steampowered.com/app/10",
-                            "availability": 1,
-                            "price": 8.19
-                        },
-                        {
-                            "steamID": "10",
-                            "reseller": "HRK",
-                            "link": "https://store.steampowered.com/app/10",
-                            "availability": 1,
-                            "price": 8.19
-                        },
-                        {
-                            "steamID": "10",
-                            "reseller": "CDKeys",
-                            "link": "https://store.steampowered.com/app/10",
-                            "availability": 1,
-                            "price": 8.19
-                        }
-                    ]
-                }
-            ];
-
-    //servirebbe anche la lista delle liste associate all'utente
-    let userLists = [
-        {
-            "name": "Ciao"
-        }, 
-        {
-            "name": "Come"
-        },
-        { 
-            "name": "Va"
-        }
-    ]
+    
     let gToken = req.cookies['gToken'];
     let sToken = req.cookies['sToken'];
     let userBaseInfo = req.cookies['userInfo'];
 
-    userProcess.tryGetUserInfo(gToken, sToken)
-        .then( userInfo => res.render('gameListResult', {user: userInfo, err: null, searchResults: output, userLists: userLists}))
+    let steamID = req.query.steamID;
+    let gameName = req.query.name;
+
+    let getUser = userProcess.tryGetUserInfo(gToken, sToken);
+
+    let priceChecker;
+    if(steamID)
+        priceChecker = gameProcess.getGameOffer(steamID);
+    else
+        priceChecker = gameProcess.getGameOffers(gameName);
+
+    Promise.all([getUser,priceChecker])
+        .then( results => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))
         .catch(err => {
-            if(parseInt(err) === 404 && userBaseInfo && utilities.isUserNoId(userBaseInfo)){
-                userProcess.createNewUser(userBaseInfo, gToken || sToken).then(user => { 
-                    res.render('gameListResult', {user: user, err: null, searchResults: output, userLists: userLists});
-                }).catch(err => res.render('gameListResult', {user: null, err: err, searchResults: output, userLists: userLists}));
-            }else{
-                res.clearCookie('gToken');
-                res.clearCookie('sToken');
-                res.render('gameListResult', {user: null, err: err, searchResults: output, userLists: userLists});
-            }
+            res.clearCookie('gToken');
+            res.clearCookie('sToken');
+            res.render('gameListResult', {user: null, err: err, searchResults: null, userLists: [] });
         });
     //res.render('gameListResult', {searchResults: output, userLists: userLists});
 });

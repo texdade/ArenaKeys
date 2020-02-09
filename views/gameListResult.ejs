@@ -15,7 +15,7 @@
                 <div class="input-group mb-3">
                     <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="searchBar">
                     <div class="input-group-prepend">
-                        <button class="btn btn-secondary" type="button"><i class="fas fa-search"></i></button>
+                        <button class="btn btn-secondary" type="button" id="searchBtn"><i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </div>
@@ -59,11 +59,11 @@
                                                 <button class="btn btn-block" type="button" onclick="window.open('<%= searchResults[i].offers[j].link %>');" style="color:white;background-color:#BF353D;white-space:nowrap;">
                                                     <i class="icon-play" style="background-image : url(logos/gamivo-logo-single.png);"></i>&nbsp;<%= searchResults[i].offers[j].reseller %>: &euro;&nbsp;<%= searchResults[i].offers[j].price %>
                                                 </button>
-                                            <% } else if (searchResults[i].offers[j].reseller === "HRK") { %>
+                                            <% } else if (searchResults[i].offers[j].reseller === "HRKGame") { %>
                                                 <button class="btn btn-block" type="button" onclick="window.open('<%= searchResults[i].offers[j].link %>');" style="color:white;background-color:#EF4125;white-space:nowrap;">
                                                     <i class="icon-play" style="background-image : url(logos/hrk-logo.webp)"></i>&nbsp;<%= searchResults[i].offers[j].reseller %>: &euro;&nbsp;<%= searchResults[i].offers[j].price %>
                                                 </button>
-                                            <% } else { %>
+                                            <% } else if (searchResults[i].offers[j].reseller === "CDKeys") { %>
                                                 <button class="btn btn-block" type="button" onclick="window.open('<%= searchResults[i].offers[j].link %>');" style="color:white;background-color:#019EE9;white-space:nowrap;">
                                                     <i class="icon-play" style="background-image : url(logos/cdkeys-logo.png);"></i>&nbsp;<%= searchResults[i].offers[j].reseller %>: &euro;&nbsp;<%= searchResults[i].offers[j].price %>
                                                 </button>    
@@ -84,7 +84,7 @@
                                                 </div>
                                             <% } else { %>
                                                 <p></p>
-                                                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Feature restricted to logged users" disabled>
                                                     <i class="fas fa-plus"></i>
                                                 </button>   
                                             <% } %>
@@ -137,5 +137,5 @@
     </body>
     <%- include('generic_js') -%>  
     <script type="text/javascript" src="/js/auth_client.js"></script>
-    <script type="text/javascript" src="/js/search_bar_hints.js"></script>
+    <script type="text/javascript" src="/js/search_bar.js"></script>
 </html>

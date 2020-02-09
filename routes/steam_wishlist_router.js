@@ -14,7 +14,16 @@ router.get('/steamwishlist/:steamUserID', (req, res) => {
         res.status(400).json({}); //bad request!
     }
 
-    let promiseWishListData = listLogic.getSteamWishList(steamUserId);
+    let offers = true; //default value is true
+    let details = true; //default value is true
+
+    if(req.query.offers && ( (req.query.offers === "false") || (parseInt(req.query.offers) === 0) ) )
+        offers = false;
+
+    if(req.query.details && ( (req.query.details === "false") || (parseInt(req.query.details) === 0) ) )
+        details = false;
+
+    let promiseWishListData = listLogic.getSteamWishList(steamUserId, details, offers);
 
     promiseWishListData
         .then(list => res.status(200).json(list))

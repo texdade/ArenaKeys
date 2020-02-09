@@ -5,14 +5,14 @@ const utilities = require('../db/utilities');
 
 /*  Get all list data given the user, refreshing its game offers
 * */
-function getLists(userId){
+function getLists(userId, details, offers){
     return new Promise((resolve, reject) => {
         listHandler.getListsByUser(userId).then(listsData => {
             if(listsData !== undefined){
                 let userListsP = [];
 
                 for(let listData of listsData)
-                    userListsP.push(getList(listData['id'],userId));
+                    userListsP.push(getList(listData['id'], userId, details, offers));
 
                 Promise.all(userListsP).then(userLists => resolve(userLists)).catch(err => reject(err));
 
@@ -24,7 +24,7 @@ function getLists(userId){
 }
 
 //here just a single list is requested => filter it by id
-function getList(listId, userId){
+function getList(listId, userId, details, offers){
     return new Promise((resolve, reject) => {
         listHandler.getList(listId, userId).then(listData => {
             if(utilities.isList(listData)){
@@ -32,7 +32,7 @@ function getList(listId, userId){
                 listHandler.getGames(listData)
                     .then(listGames => {
                         listData['items'] = listGames;
-                        getItemsOffers(extractSteamIds(listData))//update offers for the list
+                        getItemsOffers(extractSteamIds(listData), details, offers)//update offers for the list
                             .then(itemsOffers => {
                                 listData['items'] = addPriceNotify(itemsOffers, listGames);//add price notify values
 
@@ -51,12 +51,12 @@ function getList(listId, userId){
 
 /*  Given the steam user ID retrieve his/her wishlist formatted following the standard of our
 * */
-function getSteamWishList(steamUserId){
+function getSteamWishList(steamUserId, details, offers){
     return new Promise((resolve, reject) => {
         if(steamUserId && /^\d+$/.test(steamUserId)){//contains just digits
 
             steamListAdapter.getWishList(steamUserId).then(wishlist => {
-                getItemsOffers(extractSteamIds(wishlist)).then(gamePrices => {
+                getItemsOffers(extractSteamIds(wishlist), details, offers).then(gamePrices => {
                     wishlist['items'] = gamePrices;
                     resolve(wishlist);
                 }).catch(err => reject(err));
@@ -87,7 +87,7 @@ function createList(list){
                         insertedGamesP.push(listHandler.addGame(list, listItem));
 
                     Promise.all(insertedGamesP).then(() => {
-                        getItemsOffers(extractSteamIds(list))
+                        getItemsOffers(extractSteamIds(list), true, true)
                             .then(itemsOffers => {
                                 list['items'] = addPriceNotify(itemsOffers, listItems);//add price notify values
                                 resolve(list);
@@ -109,12 +109,12 @@ function createList(list){
 }
 
 //get gamesOffers given an array of steamIds
-function getItemsOffers(steamIds){
+function getItemsOffers(steamIds, details, offers){
     return new Promise((resolve, reject) => {
         let pricesP = [];
 
         for(let steamId of steamIds)
-            pricesP.push(gamePrices.getGame(steamId, true, true));//refresh all data if needed
+            pricesP.push(gamePrices.getGame(steamId, details, offers));//refresh all data if needed
 
         Promise.all(pricesP)
             .then(gamesPrices => resolve(gamesPrices))

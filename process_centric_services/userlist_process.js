@@ -5,7 +5,7 @@ let apiBaseUrl = "https://gamekeys-arena.herokuapp.com";
 if(process.env.LOCAL)
     apiBaseUrl = "http://localhost:3000";
 
-function tryGetUserList(gToken, sToken){
+function tryGetUserList(gToken, sToken, details, offers){
     return new Promise((resolve, reject) => {
         let token = (gToken || sToken);
         let options = {
@@ -15,10 +15,16 @@ function tryGetUserList(gToken, sToken){
 
         let listsPromise;
 
+        let detailsOffers = '?';
+        if(!details)
+            detailsOffers += 'details=false&';
+        if(!offers)
+            detailsOffers += 'offers=false';
+
         if (sToken)
-            listsPromise = fetch(apiBaseUrl + '/steam/userlist', options);
+            listsPromise = fetch(apiBaseUrl + '/steam/userlist'+detailsOffers, options);
         else if (gToken)
-            listsPromise = fetch(apiBaseUrl + '/google/userlist', options);
+            listsPromise = fetch(apiBaseUrl + '/google/userlist'+detailsOffers, options);
         else
             reject(400);
 

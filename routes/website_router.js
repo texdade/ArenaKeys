@@ -64,7 +64,7 @@ router.get('/gameSearch', (req, res) => {
 
     Promise.all([getUser, priceChecker])
         .then( results => {
-            listProcess.tryGetUserList(gToken, sToken, false, false)
+            listProcess.tryGetUserList(gToken, sToken, false, false)//-1 on implies requiring all user lists
                 .then(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: lists }))
                 .catch(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))
         })
@@ -83,7 +83,7 @@ router.get('/lists', (req, res) => {
 
     loggedUser(gToken, sToken, userBaseInfo, res, true)
         .then(userInfo => {
-            listProcess.tryGetUserList(gToken, sToken, true, true)
+            listProcess.tryGetUserList(gToken, sToken, true, true) //-1 on implies requiring all user lists
                 .then( lists => {
                     res.render('myLists', {listsResult : lists, user: userInfo, err: null});
                 })
@@ -92,87 +92,6 @@ router.get('/lists', (req, res) => {
                 });
         })
         .catch(err =>  res.redirect('/index?session_expired=true'));
-});
-
-router.get('/editList', (req, res) => {
-    let input = {
-        //id della lista da modificare
-    }
-    
-    //la pagina viene caricata con lista con i dati vecchi che ora saranno modificati
-    let output =
-        [
-            {
-                "id": 123,
-                "name": "Ciao",
-                "notifyMe": false,
-                "items": [
-                    {
-                        "steamID": "10",
-                        "name": "Counter-Strike",
-                        "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
-                        "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
-                        "lastUpdate": "2020-02-04T19:14:44.000Z",
-                        "offers": [
-                            {
-                                "steamID": "10",
-                                "reseller": "Gamivo",
-                                "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
-                                "availability": 1,
-                                "price": 7.87
-                            },
-                            {
-                                "steamID": "10",
-                                "reseller": "Steam",
-                                "link": "https://store.steampowered.com/app/10",
-                                "availability": 1,
-                                "price": 8.19
-                            }
-                        ]
-                    },
-                    {
-                        "steamID": "10",
-                        "name": "Counter-Strike",
-                        "description": "Play the world's number 1 online action game. Engage in an incredibly realistic brand of terrorist warfare in this wildly popular team-based game. Ally with teammates to complete strategic missions. Take out enemy sites. Rescue hostages. Your role affects your team's success. Your team's success affects your role.",
-                        "image": "https://steamcdn-a.akamaihd.net/steam/apps/10/header.jpg?t=1568751918",
-                        "lastUpdate": "2020-02-04T19:14:44.000Z",
-                        "offers": [
-                            {
-                                "steamID": "10",
-                                "reseller": "Gamivo",
-                                "link": "https://www.gamivo.com/product/counter-strike-steam-gift",
-                                "availability": 1,
-                                "price": 7.87
-                            },
-                            {
-                                "steamID": "10",
-                                "reseller": "Steam",
-                                "link": "https://store.steampowered.com/app/10",
-                                "availability": 1,
-                                "price": 8.19
-                            },
-                            {
-                                "steamID": "10",
-                                "reseller": "HRK",
-                                "link": "https://store.steampowered.com/app/10",
-                                "availability": 1,
-                                "price": 8.19
-                            },
-                            {
-                                "steamID": "10",
-                                "reseller": "CDKeys",
-                                "link": "https://store.steampowered.com/app/10",
-                                "availability": 1,
-                                "price": 8.19
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
-
-    //lista aggiornata + boolean che indica la modifica avvenuta con successo o meno
-    res.render('editList', {list : output});
 });
 
 router.get('/user', (req, res) => {

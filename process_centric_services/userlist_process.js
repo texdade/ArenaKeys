@@ -1,4 +1,4 @@
-const fetch = require('node-fetch-npm')
+const fetch = require('node-fetch-npm');
 const utilities = require('../db/utilities');
 
 let apiBaseUrl = "https://gamekeys-arena.herokuapp.com";
@@ -21,10 +21,13 @@ function tryGetUserList(gToken, sToken, details, offers){
         if(!offers)
             detailsOffers += 'offers=false';
 
+        const requireUserlistSteam = '/steam/userlist';
+        const requireUserlistGoogle = '/google/userlist';
+
         if (sToken)
-            listsPromise = fetch(apiBaseUrl + '/steam/userlist'+detailsOffers, options);
+            listsPromise = fetch(apiBaseUrl + requireUserlistSteam + detailsOffers, options);
         else if (gToken)
-            listsPromise = fetch(apiBaseUrl + '/google/userlist'+detailsOffers, options);
+            listsPromise = fetch(apiBaseUrl + requireUserlistGoogle + detailsOffers, options);
         else
             reject(400);
 
@@ -33,15 +36,16 @@ function tryGetUserList(gToken, sToken, details, offers){
                 let status = fetched.status;
 
                 fetched.json()
-                    .then(lists => {
-                        let listCheck = true;
+                    .then(lists => {//could be an array of lists or a single one (depends if id is valid or not)
+                        let check = true;
 
                         for (let el of lists)
                             if (!utilities.isList(el))
-                                listCheck = false;
+                                check = false;
 
-                        if (parseInt(status) === 200 && listCheck)
+                        if (parseInt(status) === 200 && check)
                             resolve(lists);
+
                         else//could be a 400, 401, 404
                             reject(status);
 

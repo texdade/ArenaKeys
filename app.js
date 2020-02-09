@@ -2,12 +2,12 @@
 */
 
 //continuously refresh data and prices of games (adding also new one) in the db
-const refreshGameAllDayLong = require('./process_centric_services/refreshGameDataPrice').refreshGamesDump;
+const refreshGameAllDayLong = require('./server_processes/refreshGameDataPrice').refreshGamesDump;
 if(process.env.REFRESH)
     refreshGameAllDayLong();
 
 //continuously check for deals which interest our users and eventually notify them
-const emailNotifier = require('./process_centric_services/email_notifier').checkPricesForNotifier;
+const emailNotifier = require('./server_processes/email_notifier').checkPricesForNotifier;
 if(process.env.EMAIL_NOTIFIER)
     emailNotifier();
 

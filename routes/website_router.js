@@ -2,9 +2,9 @@
 *
 *
 */
-const userProcess = require('../process_centric_services/user_process');
-const gameProcess = require('../process_centric_services/price_checker');
-const listProcess = require('../process_centric_services/userlist_process');
+const userProcess = require('../website_processes/user_process');
+const gameProcess = require('../website_processes/price_checker');
+const listProcess = require('../website_processes/userlist_process');
 const express = require('express');
 const router = express.Router();
 

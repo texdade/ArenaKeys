@@ -18,7 +18,7 @@ function checkPricesForNotifierRound(interval){
                     setTimeout(()=>{
                         if(process.env.LOG)
                             console.log("EMAIL_NOTIFIER: fetching lists for user " + user['name'] + " id = " + user['id']);
-                        listLogic.getLists(user['id']).then(lists => {
+                        listLogic.getLists(user['id'], true, true).then(lists => {
                             resolve1({user: user, lists: lists});
                         }).catch(err => reject(err));
 

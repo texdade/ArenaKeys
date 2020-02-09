@@ -152,7 +152,7 @@
                                                         <% } %>
                                                     <% } %>
                                                 </div>
-                                                <div class="col-md-2" align="center">
+                                                <div class="col-md-2" id="btnDlt_<%= listsResult[i]['id']%>_<%= listsResult[i].items[j]['steamID']%> align="center">
                                                     <p></p><button type="button" class="btn btn-danger" onclick="deleteItem('<%= listsResult[i]['id']%>', '<%= listsResult[i].items[j]['steamID']%>')"><i class="fas fa-trash"></i></button>
                                                 </div>
                                             </div>
@@ -185,7 +185,10 @@
         });
 
         function deleteItem(id, steamID){
-            console.log("Asking the server to delete game " + steamID + " in list " + id);
+            document.getElementById("btnDlt_"+id+"_"+steamID)
+                .innerHTML="<button class='btn btn-danger' type='button' disabled><span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Deleting...</button>"
+            
+                console.log("Asking the server to delete game " + steamID + " in list " + id);
             if(gToken)
                 url = "/google/userlist/"+id;
             else if(sToken)

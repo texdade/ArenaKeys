@@ -14,7 +14,12 @@ router.post('/userlist', (req, res) => {
     let listName = req.body.name;
     let notifyMe = (req.body.notifyMe && (parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
     let games = req.body.items;
-
+    console.log("POST");
+    console.log("googleId" + googleId);
+    console.log("steamId" + steamId);
+    console.log("listName" + listName);
+    console.log("notifyMe" + notifyMe);
+    console.log("games" + games);
     if(!listName){
         res.status(400).json({}); //bad request!
     }

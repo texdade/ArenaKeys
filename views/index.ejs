@@ -32,7 +32,7 @@
     </body>
 
     <%- include('generic_js') -%>
-    <% if(err.session_expired){ %>
+    <% if(err && err.session_expired){ %>
         <script>
             $("#alertSessionExpired").fadeTo(2000, 500).slideUp(500, function(){
                 $("#alertSessionExpired").slideUp(500);

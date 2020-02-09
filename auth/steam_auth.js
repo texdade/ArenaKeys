@@ -52,7 +52,7 @@ const registerSteamAuth = app => {
     passportSteam.use(new SteamStrategy({
             returnURL: returnUrlSteam,
             realm: realmSteam,
-            apiKey: '64C32EE47A2E9D468A769A1567B6749C'
+            apiKey: process.env.STEAM_API_KEY
         },
         function(identifier, profile, done) {
             // asynchronous verification, for effect...

@@ -3,7 +3,7 @@ const fetch = require("node-fetch-npm");
 const urlSingleGame = "https://store.steampowered.com/api/appdetails/?appids="; //incomplete url for single game info
 const urlAllGamesListv2 = "http://api.steampowered.com/ISteamApps/GetAppList/v0002/";
 const urlAllGamesListv1 = "http://api.steampowered.com/ISteamApps/GetAppList/v0001/";
-const urlSteamWishlist = "https://store.steampowered.com/wishlist/profiles/";
+const urlSteamWishlist = "https://store.steampowered.com/wishlist";
 
 const NodeCache = require( "node-cache" );
 const mcache = new NodeCache();
@@ -25,7 +25,15 @@ function getDumpList(v1, v2){
 }
 
 function getUserWishlist(userID){
-    let url = urlSteamWishlist+userID+"/wishlistdata";
+    let profileOrId; //use /profile for numerical ids, /id for the personalised ones
+
+    //Note
+    if(/^\d+$/.test(userID))//not the best checks of all time if one decides to have an id of just digits, but I'd like to speak with the guy
+        profileOrId = "/profiles/";
+    else
+        profileOrId = "/id/";
+
+    let url = urlSteamWishlist+profileOrId+userID+"/wishlistdata";
     return fetch(url);
 }
 

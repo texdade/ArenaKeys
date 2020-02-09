@@ -53,18 +53,13 @@ function getList(listId, userId, details, offers){
 * */
 function getSteamWishList(steamUserId, details, offers){
     return new Promise((resolve, reject) => {
-        if(steamUserId && /^\d+$/.test(steamUserId)){//contains just digits
-
-            steamListAdapter.getWishList(steamUserId).then(wishlist => {
-                getItemsOffers(extractSteamIds(wishlist), details, offers).then(gamePrices => {
-                    wishlist['items'] = gamePrices;
-                    resolve(wishlist);
-                }).catch(err => reject(err));
-
+        steamListAdapter.getWishList(steamUserId).then(wishlist => {
+            getItemsOffers(extractSteamIds(wishlist), details, offers).then(gamePrices => {
+                wishlist['items'] = gamePrices;
+                resolve(wishlist);
             }).catch(err => reject(err));
 
-        }else
-            reject(400);
+        }).catch(err => reject(err));
 
     });
 }

@@ -15,8 +15,20 @@
             </button>
             <div class="dropdown-menu dropdown-menu-right">
                 <a class="dropdown-item" href="/user" type="button"><i class="fas fa-info-circle"></i>&nbsp;Account Info</a>
-                <button class="dropdown-item" type="button"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
+                <button class="dropdown-item" id="logoutBtn" type="button" onclick="logout()"><i class="fas fa-sign-out-alt"></i>&nbsp;Logout</button>
             </div>
         </div>
     </form>
 </nav>
+
+<script>
+    function logout(){
+        delete_cookie("sToken");
+        delete_cookie("gToken");
+        window.location.replace('/');
+    }
+
+    function delete_cookie(name) {
+        document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+</script>

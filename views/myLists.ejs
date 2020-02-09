@@ -27,13 +27,13 @@
                                     <div class="form-group row">
                                         <label for="listName" class="col-sm-3 col-form-label">List Name:</label>
                                         <div class="col-sm-9">
-                                            <input type="text" class="form-control" id="listName">
+                                            <input type="text" class="form-control" id="listNameTxt">
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary">Create List</button>
+                                    <button type="button" class="btn btn-primary" id="createEmptyListBtn">Create List</button>
                                 </div>
                             </div>
                         </div>
@@ -94,8 +94,8 @@
                                         </button>
                                     </div>
                                     <div class="col-md-2" align="right">
-                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%=i%>"><i class="fas fa-trash"></i></button>
-                                        <div class="modal fade" id="deleteModal<%=i%>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal<%= listsResult[i]['id'] %>"><i class="fas fa-trash"></i></button>
+                                        <div class="modal fade" id="deleteModal<%= listsResult[i]['id'] %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
@@ -109,7 +109,7 @@
                                                     </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                                        <button type="button" class="btn btn-danger">Yes</button>
+                                                        <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="deleteList('<%= listsResult[i]['id']%>')">Yes</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -141,19 +141,19 @@
                                                             <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#BF353D;white-space:nowrap;">
                                                                 <i class="icon-play" style="background-image : url(logos/gamivo-logo-single.png);"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
                                                             </button>
-                                                        <% } else if (listsResult[i].items[j].offers[k].reseller === "HRK") { %>
+                                                        <% } else if (listsResult[i].items[j].offers[k].reseller === "HRKGame") { %>
                                                             <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#EF4125;white-space:nowrap;">
                                                                 <i class="icon-play" style="background-image : url(logos/hrk-logo.webp)"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
                                                             </button>
-                                                        <% } else { %>
+                                                        <% } else if (listsResult[i].items[j].offers[k].reseller === "CDKeys"){ %>
                                                             <button class="btn btn-block" type="button" onclick="window.open('<%= listsResult[i].items[j].offers[k].link %>');" style="color:white;background-color:#019EE9;white-space:nowrap;">
                                                                 <i class="icon-play" style="background-image : url(logos/cdkeys-logo.png);"></i>&nbsp;<%= listsResult[i].items[j].offers[k].reseller %>: &euro;&nbsp;<%= listsResult[i].items[j].offers[k].price %>
                                                             </button>
                                                         <% } %>
                                                     <% } %>
                                                 </div>
-                                                <div class="col-md-2" id="btnDlt_<%= listsResult[i]['id']%>_<%= listsResult[i].items[j]['steamID']%> align="center">
-                                                    <p></p><button type="button" class="btn btn-danger" onclick="deleteItem('<%= listsResult[i]['id']%>', '<%= listsResult[i].items[j]['steamID']%>')"><i class="fas fa-trash"></i></button>
+                                                <div class="col-md-2" id="btnDlt_<%= listsResult[i]['id']%>_<%= listsResult[i].items[j]['steamID']%>" align="center">
+                                                    <p></p><button type="button" class="btn btn-danger" onclick="deleteItem('<%= listsResult[i]['id']%>', '<%= listsResult[i].items[j]['steamID']%>')"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete</button>
                                                 </div>
                                             </div>
                                         </li>
@@ -184,11 +184,38 @@
                 sToken = splitCookie[1];
         });
 
+        $("#createEmptyListBtn").click(function(e) {
+            let listName = $("#listNameTxt").val();
+            
+            let list = {
+                name: listName,
+                games: []
+            };
+
+            if(gToken)
+                url = "/google/userlist/";
+            else if(sToken)
+                url = "/steam/userlist/";
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                headers: {
+                    "Authorization": "Bearer "+(gToken || sToken),
+                    "Content-Type": "application/json"
+                },
+                data: JSON.stringify(list),//list has been updated with a removed item
+                success: function(result) {
+                    window.location.replace('/lists');
+                }
+            });
+        });
+
         function deleteItem(id, steamID){
             document.getElementById("btnDlt_"+id+"_"+steamID)
                 .innerHTML="<button class='btn btn-danger' type='button' disabled><span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Deleting...</button>"
             
-                console.log("Asking the server to delete game " + steamID + " in list " + id);
+            console.log("Asking the server to delete game " + steamID + " in list " + id);
             if(gToken)
                 url = "/google/userlist/"+id;
             else if(sToken)
@@ -226,6 +253,26 @@
 
                         }
                     });
+                }
+            });
+        }
+
+        function deleteList(id){
+            if(gToken)
+                url = "/google/userlist/"+id;
+            else if(sToken)
+                url = "/steam/userlist/"+id;
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                headers: {
+                    "Authorization": "Bearer "+(gToken || sToken),
+                    "Content-Type": "application/json"
+                },
+                success: function(result) {
+                    console.log("Delete list");
+                    window.location.replace('/lists');
                 }
             });
         }

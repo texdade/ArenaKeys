@@ -18,7 +18,6 @@ function tryGetUserInfo(gToken, sToken){
         userPromise
             .then(fetched => {
                 let status = fetched.status;
-
                 fetched.json()
                     .then(user => {
                         if(parseInt(status) === 200 && utilities.isUser(user))

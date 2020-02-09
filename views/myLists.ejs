@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                                    <button type="button" class="btn btn-primary" id="createEmptyListBtn">Create List</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="createEmptyListBtn">Create List</button>
                                 </div>
                             </div>
                         </div>
@@ -53,7 +53,11 @@
                                         <div class="row">
                                             <div class="col-md-2"></div>
                                             <div class="col-md-8" align="center">
-                                                <button class="btn btn-dark"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                                                <% if(user.steamUserId){ %>
+                                                    <button class="btn btn-dark" id="importFromSteamBtn"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                                                <% } else { %>
+                                                    <button class="btn btn-secondary" title="Only available for Steam users" disabled><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                                                <% } %>
                                             </div>
                                             <div class="col-md-2"></div>
                                         </div><p></p>
@@ -65,10 +69,11 @@
                                             <div class="col-md-2"></div>
                                         </div>
                                         <div class="row">
-                                            <label for="accountLink" class="col-sm-4 col-form-label">Other account link:</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" id="accountLink">
+                                            <div class="col-md-2"></div>
+                                            <div class="col-md-8" align="center">
+                                                <input type="text" class="form-control" id="accountLink" placeholder="Other account link">
                                             </div>
+                                            <div class="col-md-2"></div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -182,6 +187,40 @@
                 gToken = splitCookie[1];
             else if(splitCookie[0] === 'sToken')
                 sToken = splitCookie[1];
+        });
+
+        $("#importFromSteamBtn").click(function(e){
+            let steamID = "<%= user.steamUserId %>";
+
+            $.ajax({
+                url: "/steamwishlist/"+steamID,
+                type: 'GET',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                success: function(result) {
+                    //TODO txtbox in order to give name to this 
+                    result["id"]=null;
+                    result["userId"]= <%= user.id %>;
+                    result["notifyMe"]=true;
+                    console.log(result);
+                    $.ajax({
+                        url: "/userlist/",
+                        type: 'POST',
+                        headers: {
+                            "Authorization": "Bearer "+ (gToken || sToken),
+                            "Content-Type": "application/json"
+                        },
+                        data: result,
+                        success: function(resultFinal) {
+                            console.log("Imported wishlist from Steam");
+                        },
+                        error: function(err){
+                            console.log(err);
+                        }
+                    });
+                }
+            });
         });
 
         $("#createEmptyListBtn").click(function(e) {

@@ -77,7 +77,6 @@ router.get('/gameSearch', (req, res) => {
     
 
 router.get('/lists', (req, res) => {
-
     let gToken = req.cookies['gToken'];
     let sToken = req.cookies['sToken'];
     let userBaseInfo = req.cookies['userInfo'];
@@ -93,19 +92,6 @@ router.get('/lists', (req, res) => {
                 });
         })
         .catch(err =>  res.redirect('/index?session_expired=true'));
-
-
-});
-
-router.get('/lists/:id/delete', (req, res) => {
-    let input = {
-        //id della lista da eliminare
-    }
-
-    let output = {
-        //boolean che indica l'eliminazione con successo o meno
-    }
-    res.render('index', vgObj);
 });
 
 router.get('/editList', (req, res) => {
@@ -186,7 +172,7 @@ router.get('/editList', (req, res) => {
         ]
 
     //lista aggiornata + boolean che indica la modifica avvenuta con successo o meno
-    res.render('EditList', {list : output});
+    res.render('editList', {list : output});
 });
 
 router.get('/user', (req, res) => {

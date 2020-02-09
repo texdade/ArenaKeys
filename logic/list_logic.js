@@ -74,6 +74,7 @@ function getSteamWishList(steamUserId, details, offers){
 * */
 function createList(list){
     return new Promise((resolve, reject) => {
+        console.log(list);
         if(utilities.isListNoId(list)){
             listHandler.createList(list).then(createdList => {
                 let listId = createdList['id'];

@@ -126,7 +126,6 @@ router.put('/userlist/:id', (req, res) => {
         notifyMe=false;
     }
 
-
     if(!games || (Array.isArray(games) && games.length === 0) || !Array.isArray(games))
         games = [];
 

@@ -58,8 +58,8 @@ router.put('/user', (req, res) => {
     let id = parseInt(req.body.id);
 
     let updUser = {
-        steamUserId: steamId,
-        googleUserId: googleId,
+        steamUserId: steamId,//this should avoid the user to change things he/she's not allowed to
+        googleUserId: googleId,//this should avoid the user to change things he/she's not allowed to
         id: id,
         name: name,
         imageLink: imageLink,

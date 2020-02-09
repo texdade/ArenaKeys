@@ -176,10 +176,8 @@ function deleteList(listId, userId){
 //update a single list
 function updateList(list){
     return new Promise((resolve, reject) => {
-        console.log(list);
         if(utilities.isList(list)){
             getList(list['id'], list['userId']).then(listData => {//security check
-                console.log(listData);
                 if (listData['userId'] === list['userId']){
                     listData['name'] = list['name'];
                     listData['notifyMe'] = list['notifyMe'];
@@ -218,8 +216,13 @@ function updateList(list){
     });
 }
 
+
 //given two list of items, return the one which appears in the first one, but not in the second one
 function gamesToDeleteInUpdate(oldItems, newItems){
+    newItems = newItems.filter(function (el) {
+        return el != null;
+    });
+
     let result = [];
     for(let oldIt of oldItems){
         let found = false;
@@ -237,6 +240,10 @@ function gamesToDeleteInUpdate(oldItems, newItems){
 
 //given two list of items, return the one which appears in the second one, but not in the first one
 function gamesToAddInUpdate(oldItems, newItems){
+    newItems = newItems.filter(function (el) {
+        return el != null;
+    });
+
     let result = [];
     for(let newIt of newItems){
         let found = false;
@@ -255,6 +262,10 @@ function gamesToAddInUpdate(oldItems, newItems){
 
 //given two list of items, return the one which appears in the second one and in the first one with different value of priceNotify and/or notified
 function gamesToUpdPriceNotifier(oldItems, newItems){
+    newItems = newItems.filter(function (el) {
+        return el != null;
+    });
+
     let result = [];
     for(let newIt of newItems){
         for(let oldIt of oldItems){

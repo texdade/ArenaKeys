@@ -83,7 +83,7 @@
 
       $("#editBtn").click(function(e) {
         $("#successUpdAlert").addClass('d-none');
-        $("#errorAlert").addClass('d-none');
+        $("#errorUpdAlert").addClass('d-none');
         $("#successDltAlert").addClass('d-none');
 
         let gToken;
@@ -115,16 +115,21 @@
             },
             data: JSON.stringify(user),
             success: function(data) {
-              console.log(data);
-              $("#successAlert").removeClass('d-none');
+              $("#successUpdAlert").removeClass('d-none');
+              $("#successUpdAlert").fadeTo(2000, 500).slideUp(500, function(){
+                $("#successUpdAlert").slideUp(500);
+              });
             }
           });
         } else {
-          $("#errorAlert").removeClass('d-none');
+          $("#errorUpdAlert").removeClass('d-none');
         }
       });
 
       $("#deleteBtn").click(function(e) {
+        $("#successUpdAlert").addClass('d-none');
+        $("#errorUpdAlert").addClass('d-none');
+        $("#successDltAlert").addClass('d-none');
         let gToken;
         let sToken;
 
@@ -153,16 +158,12 @@
             success: function(data) {
               $("#successDltAlert").removeClass('d-none');
               //TODO - remove token cookies
+                delete_cookie("sToken");
+                delete_cookie("gToken");
+                setTimeout(()=>{window.location.replace('/')}, 3000);//refresh home after giving alert notification
             }
           });
         }
       });
-
-      function validateEmail(email){
-        if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)){
-          return (true)
-        }
-        return (false)
-      }
     </script>
 </html>

@@ -9,8 +9,24 @@
             <%- include('navbar_anonymous'); -%>
         <% } %>
         <div id="bg"></div>  
-        <div class="container" style="min-height: 100%;">
-            <div class="row m-5">
+            <div class="container" style="min-height: 100%;">
+                <div class="row m-5">
+                </div>
+
+                <% if(err.session_expired){ %>
+                    <div id="alertSessionExpired" class="alert alert-danger font-weight-bold text-center">
+                        Session expired
+                    </div>
+                <% } %>
+
+                <div class="md-form active-pink active-pink-2 mb-3 mt-0">
+                    <h1 id="arena" align="center">ArenaKeys</h1>
+                    <div class="input-group mb-3">
+                    <input class="form-control" type="text" placeholder="What game are you looking for?" aria-label="What game are you looking for?" aria-describedby="basic-addon1" id="searchBar">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-secondary" type="button"><i class="fas fa-search"></i></button>
+                    </div>  
+                </div>
             </div>
             <div class="md-form active-pink active-pink-2 mb-3 mt-0">
                 <h1 id="arena" align="center">ArenaKeys</h1>
@@ -25,6 +41,14 @@
     </body>
 
     <%- include('generic_js') -%>
+    <% if(err.session_expired){ %>
+        <script>
+            $("#alertSessionExpired").fadeTo(2000, 500).slideUp(500, function(){
+                $("#alertSessionExpired").slideUp(500);
+            });
+        </script>
+    <% } %>
+
     <script type="text/javascript" src="/js/auth_client.js"></script>
     <script type="text/javascript" src="/js/search_bar.js"></script>
 </html>

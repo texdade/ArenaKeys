@@ -63,13 +63,16 @@ router.get('/gameSearch', (req, res) => {
         priceChecker = gameProcess.getGameOffers(gameName);
 
     Promise.all([getUser, priceChecker])
-        .then( results => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))
+        .then( results => {
+            listProcess.tryGetUserList(gToken, sToken, false, false)
+                .then(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: lists }))
+                .catch(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))
+        })
         .catch(err => {
             res.clearCookie('gToken');
             res.clearCookie('sToken');
             res.redirect('/index?session_expired=true');
         });
-    //res.render('gameListResult', {searchResults: output, userLists: userLists});
 });
     
 
@@ -81,7 +84,7 @@ router.get('/lists', (req, res) => {
 
     loggedUser(gToken, sToken, userBaseInfo, res, true)
         .then(userInfo => {
-            listProcess.tryGetUserList(gToken, sToken)
+            listProcess.tryGetUserList(gToken, sToken, true, true)
                 .then( lists => {
                     res.render('myLists', {listsResult : lists, user: userInfo, err: null});
                 })

@@ -51,6 +51,15 @@ router.get('/userlist', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
 
+    let offers = true; //default value is true
+    let details = true; //default value is true
+
+    if(req.query.offers && ( (req.query.offers === "false") || (parseInt(req.query.offers) === 0) ) )
+        offers = false;
+
+    if(req.query.details && ( (req.query.details === "false") || (parseInt(req.query.details) === 0) ) )
+        details = false;
+
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
@@ -65,7 +74,7 @@ router.get('/userlist', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            listLogic.getLists(userData["id"]).then(lists => { //and return all the lists associated with him
+            listLogic.getLists(userData["id"], details, offers).then(lists => { //and return all the lists associated with him
                 res.status(200).json(lists);
             }).catch(err => res.status(500).send(err));
         })
@@ -83,6 +92,15 @@ router.get('/userlist/:id', (req, res) => {
         res.status(400).json({}); //bad request!
     }
 
+    let offers = true; //default value is true
+    let details = true; //default value is true
+
+    if(req.query.offers && ( (req.query.offers === "false") || (parseInt(req.query.offers) === 0) ) )
+        offers = false;
+
+    if(req.query.details && ( (req.query.details === "false") || (parseInt(req.query.details) === 0) ) )
+        details = false;
+
     let promiseUserData;
 
     if(!googleId && steamId){ //section for users logged with steam
@@ -97,12 +115,17 @@ router.get('/userlist/:id', (req, res) => {
 
     promiseUserData
         .then(userData => { //get the user id from the steam id
-            listLogic.getList(listId, userData['id']).then(list => { //and return the list
+            listLogic.getList(listId, userData['id'], details, offers).then(list => { //and return the list
                 if(userData['id'] === list['userId'])
                     res.status(200).json(list);
                 else
                     res.status(404).json({});
-            }).catch(err => res.status(500).send(err));
+            }).catch(err => {
+                if(err && parseInt(err) >=400 && parseInt(err) < 500)
+                    res.status(parseInt(err)).json({});
+                else
+                    res.status(500).json({});
+            });
         })
         .catch(err => res.status(404).json({}));
 });

@@ -72,6 +72,7 @@
                                             <div class="col-md-8" align="center">
                                                 <% if(user.steamUserId){ %>
                                                     <button class="btn btn-dark" id="importFromSteamBtn"><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
+                                                    <input type="hidden" id="steamUserIdVal" value="<%= user.steamUserId %>" />
                                                 <% } else { %>
                                                     <button class="btn btn-secondary" title="Only available for Steam users" disabled><i class="fab fa-steam"></i> &nbsp; Import from personal account</button>
                                                 <% } %>
@@ -147,7 +148,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" class="btn btn-success" href="/editList"><i class="fas fa-edit"></i></button>
                                     </div>
                                 </div>
                             </h5>
@@ -186,6 +186,19 @@
                                                     <% } %>
                                                 </div>
                                                 <div class="col-md-2" id="btnDlt_<%= listsResult[i]['id']%>_<%= listsResult[i].items[j]['steamID']%>" align="center">
+                                                    <div class="form-group row align-self-center">
+                                                        <div class="input-group mb-3">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-euro-sign"></i></span>
+                                                            </div>
+                                                            <% if(listsResult[i].items[j].notifyPrice){ %>
+                                                                <input type="text" class="form-control" id="notifyPrice" value="<%= listsResult[i].items[j]['notifyPrice']%>">
+                                                            <% }else{ %>
+                                                                <input type="text" class="form-control" id="notifyPrice" placeholder="-">
+                                                            <% } %>
+                                                            <button class="btn btn-primary" onclick="notifyMe('<%= listsResult[i]['id']%>','<%= listsResult[i].items[j]['steamID']%>',$(this).prev().val())" data-toggle="tooltip" data-placement="top" title="Notify me when price goes below" ><i class="fas fa-bell"></i></button>
+                                                        </div>
+                                                    </div>
                                                     <p></p><button type="button" class="btn btn-danger" onclick="deleteItem('<%= listsResult[i]['id']%>', '<%= listsResult[i].items[j]['steamID']%>')"><i class="fas fa-trash"></i>&nbsp;&nbsp;Delete</button>
                                                 </div>
                                             </div>
@@ -203,7 +216,14 @@
         </div>
         <%- include('footer'); -%>
     </body>
+
     <%- include('generic_js') -%>
+
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
 
     <script>
         let url;
@@ -217,10 +237,116 @@
                 sToken = splitCookie[1];
         });
 
+        function createList(list){
+            return new Promise((resolve, reject) => {
+                if(gToken)
+                    url = "/google/userlist/";
+                else if(sToken)
+                    url = "/steam/userlist/";
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    headers: {
+                        "Authorization": "Bearer "+(gToken || sToken),
+                        "Content-Type": "application/json"
+                    },
+                    data: JSON.stringify(list),//list has been updated with a removed item
+                    success: function(result) {
+                        console.log("New list created!");
+                        console.log(result);
+                        resolve(result);
+                    },
+                    error: function(err){
+                        reject(err);
+                    }
+                });
+            });
+        }
+
+        function getList(listId){
+            return new Promise((resolve, reject) => {
+                if(gToken)
+                    url = "/google/userlist/"+listId;
+                else if(sToken)
+                    url = "/steam/userlist/"+listId;
+
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    headers: {
+                        "Authorization": "Bearer "+(gToken || sToken),
+                        "Content-Type": "application/json"
+                    },
+                    success: function(fetchedList) {
+                        resolve (fetchedList);
+                    },
+                    error: function(err){
+                        reject(err);
+                    }
+                });
+            });
+        }
+
+        function updList(updList){
+            return new Promise((resolve, reject) => {
+                if(gToken)
+                    url = "/google/userlist/"+updList['id'];
+                else if(sToken)
+                    url = "/steam/userlist/"+updList['id'];
+
+                $.ajax({
+                    url: url,
+                    type: 'PUT',
+                    headers: {
+                        "Authorization": "Bearer "+(gToken || sToken),
+                        "Content-Type": "application/json"
+                    },
+                    data: JSON.stringify(updList),
+                    success: function(updatedList) {
+                        resolve (updatedList);
+                    },
+                    error: function(err){
+                        reject(err);
+                    }
+                });
+            });
+        }
+
+        function deleteList(id){
+            if(gToken)
+                url = "/google/userlist/"+id;
+            else if(sToken)
+                url = "/steam/userlist/"+id;
+
+            $.ajax({
+                url: url,
+                type: 'DELETE',
+                headers: {
+                    "Authorization": "Bearer "+(gToken || sToken),
+                    "Content-Type": "application/json"
+                },
+                success: function(result) {
+                    console.log("Delete list");
+                    window.location.replace('/lists');
+                }
+            });
+        }
 
         function importFromSteam(recoverFromLink){
-            let loggedUserSteamID = "<%= user.steamUserId %>";
-            let steamID = loggedUserSteamID;//default behaviour: read steamID from steam-logged user
+
+            let steamID = $('#steamUserIdVal').val();//default behaviour: read steamID from steam-logged user
+
+            let listName = $('#importFromSteamListName').val();
+
+            if(listName.length < 2) {
+                $("#alertInvalidListName").removeClass('d-none');
+                $("#alertInvalidListName").fadeTo(1600, 600).slideUp(600, function(){
+                    $("#alertInvalidListName").slideUp(600);
+                    $("#alertInvalidListName").addClass('d-none');
+                });
+                return;
+            }
 
             if(recoverFromLink){//importing steam wishlist from user specified in profile link
                 let accountLink = $('#accountLink').val();
@@ -248,17 +374,6 @@
                 $('#importFromSteamBtn').prop("disabled", true);
             }
 
-            let listName = $('#importFromSteamListName').val();
-            console.log(listName);
-            if(listName.length < 2) {
-                $("#alertInvalidListName").removeClass('d-none');
-                $("#alertInvalidListName").fadeTo(1600, 600).slideUp(600, function(){
-                    $("#alertInvalidListName").slideUp(600);
-                    $("#alertInvalidListName").addClass('d-none');
-                });
-                return;
-            }
-
             $.ajax({
                 url: "/steamwishlist/"+steamID,
                 type: 'GET',
@@ -278,15 +393,8 @@
                     else if(sToken)
                         url = "/steam/userlist/";
 
-                    $.ajax({
-                        url: url,
-                        type: 'POST',
-                        headers: {
-                            "Authorization": "Bearer "+ (gToken || sToken),
-                            "Content-Type": "application/json"
-                        },
-                        data: JSON.stringify(list),
-                        success: function() {
+                    createList(list)
+                        .then(createdList => {
                             $('#accountLink').val("");//reset values
                             $('#importFromSteamListName').val("");//reset values
                             $('#importFromSteamBtn').html("<i class=\"fab fa-steam\"></i> &nbsp; Import from personal account");//reset to default
@@ -294,15 +402,14 @@
                             $('#importFromSteamLinkBtn').html("Import List");
                             $('#importFromSteamLinkBtn').prop("disabled", false);
                             window.location.reload();
-                        },
-                        error: function(err){
-                            console.log(err);
+                        })
+                        .catch(err => {
+                            console.error(err);
                             $('#importFromSteamBtn').html("<i class=\"fab fa-steam\"></i> &nbsp; Import from personal account");
                             $('#importFromSteamBtn').prop("disabled", false);
                             $('#importFromSteamLinkBtn').html("Import List");
                             $('#importFromSteamLinkBtn').prop("disabled", false);
-                        }
-                    });
+                        })
                 }
             });
         }
@@ -313,96 +420,77 @@
 
         $("#createEmptyListBtn").click(function(e) {
             let listName = $("#listNameTxt").val();
-            
+
             let list = {
                 name: listName,
                 notifyMe: true,
                 games: []
             };
 
-            if(gToken)
-                url = "/google/userlist/";
-            else if(sToken)
-                url = "/steam/userlist/";
-
-            $.ajax({
-                url: url,
-                type: 'POST',
-                headers: {
-                    "Authorization": "Bearer "+(gToken || sToken),
-                    "Content-Type": "application/json"
-                },
-                data: JSON.stringify(list),//list has been updated with a removed item
-                success: function(result) {
-                    window.location.replace('/lists');
-                }
-            });
+            createList(list).then(() => window.location.replace('/lists')).catch(err => console.error(err));
         });
+
+
+        function notifyMe(listId, steamId, price){
+            if(isNaN(parseFloat(price))){
+                //TODO handle error
+                return;
+            }
+
+            getList(listId)
+                .then(list => {
+                    for(let i=0; i<list['items'].length; i++){
+                        if(list['items'][i]['steamID'] === steamId){
+                            list['items'][i]['notifyPrice'] = parseFloat(price);
+                            break;
+                        }
+                    }
+
+                    updList(list)
+                        .then(updList => {
+                            alert("You'll received a notification when the price goes below " + price + " €");
+                        })
+                        .catch(err => {
+                            //TODO handle err
+                        })
+
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
 
         function deleteItem(id, steamID){
             $("#btnDlt_"+id+"_"+steamID)
                 .html("<button class='btn btn-danger' type='button' disabled><span class='spinner-border spinner-border-sm' role='status' aria-hidden='true'></span> Deleting...</button>");
-            
+
             console.log("Asking the server to delete game " + steamID + " in list " + id);
             if(gToken)
                 url = "/google/userlist/"+id;
             else if(sToken)
                 url = "/steam/userlist/"+id;
 
-            $.ajax({
-                url: url,
-                type: 'GET',
-                headers: {
-                    "Authorization": "Bearer "+(gToken || sToken),
-                    "Content-Type": "application/json"
-                },
-                success: function(fetchedList) {
+            getList(id)
+                .then(fetchedList => {
                     for(let i=0; i<fetchedList['items'].length; i++)
                         if(fetchedList['items'][i]['steamID'] == steamID){//put element which has been requested to be deleted to null
                             fetchedList['items'][i] = null;
                             break;
                         }
 
-                    $.ajax({
-                        url: url,
-                        type: 'PUT',
-                        headers: {
-                            "Authorization": "Bearer "+(gToken || sToken),
-                            "Content-Type": "application/json"
-                        },
-                        data: JSON.stringify(fetchedList),//list has been updated with a removed item
-                        success: function(result) {
+                    updList(fetchedList)
+                        .then(updList => {
                             console.log("Updated list");
-                            console.log(result);
+                            console.log(updList);
                             $("#l_"+id+"item_"+steamID).fadeTo(2000, 500).slideUp(500, function(){
                                 $("#l_"+id+"item_"+steamID).slideUp(500);
                                 $("#l_"+id+"item_"+steamID).html("");
                             });
-
-                        }
-                    });
-                }
-            });
-        }
-
-        function deleteList(id){
-            if(gToken)
-                url = "/google/userlist/"+id;
-            else if(sToken)
-                url = "/steam/userlist/"+id;
-
-            $.ajax({
-                url: url,
-                type: 'DELETE',
-                headers: {
-                    "Authorization": "Bearer "+(gToken || sToken),
-                    "Content-Type": "application/json"
-                },
-                success: function(result) {
-                    console.log("Delete list");
-                    window.location.replace('/lists');
-                }
-            });
+                        })
+                })
+                .catch(err => {
+                    console.error("There seems to be error while fetching the list " + id + "\t" + err);
+                });
         }
     </script>
 

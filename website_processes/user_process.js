@@ -1,7 +1,7 @@
 const fetch = require('node-fetch-npm')
 const utilities = require('../db/utilities');
 
-let apiBaseUrl = "http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com";
+let apiBaseUrl = "http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000";
 if(process.env.LOCAL)
     apiBaseUrl = "http://localhost:3000";
 

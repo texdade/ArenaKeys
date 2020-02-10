@@ -12,7 +12,7 @@ router.post('/userlist', (req, res) => {
     let googleId = req.user.googleUserId;
     let steamId = req.user.steamUserId;
     let listName = req.body.name;
-    let notifyMe = (req.body.notifyMe && (parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
+    let notifyMe = (req.body.notifyMe && (req.body.notifyMe === true || parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
     let games = req.body.items;
     console.log("POST");
     console.log("googleId" + googleId);
@@ -42,11 +42,11 @@ router.post('/userlist', (req, res) => {
     }
 
     promiseUserData.
-        then(userData => { //get the user id from the steam id
-            listLogic.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
-                res.status(201).json(newList);
-            });
-        })
+    then(userData => { //get the user id from the steam id
+        listLogic.createList({userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(newList => {
+            res.status(201).json(newList);
+        });
+    })
         .catch(err => res.status(400).json({}));
 
 });
@@ -141,7 +141,7 @@ router.put('/userlist/:id', (req, res) => {
     let steamId = req.user.steamUserId;
 
     let listName = req.body.name;
-    let notifyMe = (req.body.notifyMe && (parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
+    let notifyMe = (req.body.notifyMe && (req.body.notifyMe === true || parseInt(req.body.notifyMe) === 1) || req.body.notifyMe === 'true')? 1:0;
     let games = req.body.items;
 
     let listId = req.params.id;
@@ -170,16 +170,16 @@ router.put('/userlist/:id', (req, res) => {
     }
 
     promiseUserData.
-        then(userData => { //get the user id from the steam id
-            listLogic.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
-                res.status(200).json(updList);
-            }).catch(err => {
-                if(parseInt(err) >=400 && parseInt(err) <500)
-                    res.status(parseInt(err)).json({});
-                else
-                    res.status(500).send(err)
-            });
-        })
+    then(userData => { //get the user id from the steam id
+        listLogic.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
+            res.status(200).json(updList);
+        }).catch(err => {
+            if(parseInt(err) >=400 && parseInt(err) <500)
+                res.status(parseInt(err)).json({});
+            else
+                res.status(500).send(err)
+        });
+    })
         .catch(err => res.status(400).json({}));
 
 });

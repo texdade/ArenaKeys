@@ -1,4 +1,4 @@
-let apiBaseURL = 'https://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com';
+let apiBaseURL = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com';
 if(window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com')
     apiBaseURL = 'http://localhost:3000';
 

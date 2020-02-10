@@ -1,8 +1,12 @@
 let temporaryHints;
 
-let apiBaseURL = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
-if(window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000')
-    apiBaseURL = 'http://localhost:3000';
+let apiBaseUrlForHints = apiBaseURL;
+
+if(!apiBaseURL) {
+    apiBaseUrlForHints = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
+    if (window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000')
+        apiBaseURL = 'http://localhost:3000';
+}
 
 $( "#searchBar" ).keyup(() => {
     console.log("" + $( "#searchBar" ).val());
@@ -15,7 +19,7 @@ $( "#searchBar" ).keyup(() => {
             success: function( data ) {
                 
                 temporaryHints = data;
-                
+		                
                 let hints = [];
                 for(let hint of data)
                     hints.push(hint['name']);

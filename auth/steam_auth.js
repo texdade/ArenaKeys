@@ -5,8 +5,8 @@ const util = require('util');
 const jwt = require('jsonwebtoken');
 const SteamStrategy = require('passport-steam').Strategy;
 
-let returnUrlSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com/auth/steam/return';
-let realmSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com/';
+let returnUrlSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000/auth/steam/return';
+let realmSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000/';
 
 if(process.env.LOCAL) {//working on localhost
     returnUrlSteam = 'http://localhost:3000/auth/steam/return';

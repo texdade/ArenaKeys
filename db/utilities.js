@@ -8,8 +8,8 @@ let db_config = {
         database: 'bmjNX6on7f'
     };
 
-handleDisconnect();
-
+connection = mysql.createConnection(db_config);
+/*
 function handleDisconnect() {
     connection = mysql.createConnection(db_config); // Recreate the connection, since
                                                     // the old one cannot be reused.
@@ -29,7 +29,7 @@ function handleDisconnect() {
             throw err;                                  // server variable configures this)
         }
     });
-}
+}*/
 
 /*  Check validity of object gameData
 * */

@@ -452,6 +452,7 @@
                     for(let i=0; i<list['items'].length; i++){
                         if(list['items'][i]['steamID'] === steamId){
                             list['items'][i]['notifyPrice'] = parseFloat(price);
+                            list['items'][i]['notified'] = 0;
                             break;
                         }
                     }

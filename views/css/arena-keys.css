@@ -45,3 +45,27 @@ img {
     height: 18px;
     width: 18px;
 }
+
+#anonymousLogo{
+    width:98px;
+    height:46.7px;
+}
+
+@media (max-width: 468px) {
+    #anonymousLogo{
+        width:72px;
+        height:36px;
+    }
+
+    #loginDiv, #gLoginBtn, #sLoginBtn{
+        font-size: 80%;
+    }
+
+    #gLoginBtn, #sLoginBtn{
+        width: 72px;
+    }
+
+    #loginText{
+        display: none;
+    }
+}

@@ -19,7 +19,7 @@ $( "#searchBar" ).keyup(() => {
             success: function( data ) {
                 
                 temporaryHints = data;
-                
+		                
                 let hints = [];
                 for(let hint of data)
                     hints.push(hint['name']);

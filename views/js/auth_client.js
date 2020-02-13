@@ -1,5 +1,5 @@
-let apiBaseURL = 'https://gamekeys-arena.herokuapp.com';
-if(window.location.hostname != 'gamekeys-arena.herokuapp.com')
+let apiBaseURL = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
+if(window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com')
     apiBaseURL = 'http://localhost:3000';
 
 $("#gLoginBtn").click(function(e) {

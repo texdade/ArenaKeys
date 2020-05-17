@@ -22,7 +22,7 @@ router.get('/videogame', (req, res) => {
     if(name && typeof(name)==='string' && name.length > 1)
         videogameLogic.getMatchingGames(name, details, offers)
             .then(gamesDataPrice => {
-                res.status(200).json(gamesDataPrice)
+                res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(gamesDataPrice)
             })
             .catch(err => {
                 console.log(err);
@@ -39,7 +39,7 @@ router.get('/videogame', (req, res) => {
 
 router.get('/videogame/:id', (req, res) => {
     let steamID = req.params.id;
-    console.log("Videogame " + steamID + " request HTTP");
+
     let offers = true; //default value is true
     let details = true; //default value is true
 
@@ -51,7 +51,7 @@ router.get('/videogame/:id', (req, res) => {
 
     if(steamID)
         videogameLogic.getGame(steamID, details, offers)
-            .then(gameDataPrice => res.status(200).json([gameDataPrice]))//return an array of a single element to be consistent wrt type of response
+            .then(gameDataPrice => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(gameDataPrice))//return an array of a single element to be consistent wrt type of response
             .catch(err => res.status(404).json({}));
     else
         res.status(400).send("Bad request. steamID is necessary!");

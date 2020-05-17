@@ -209,7 +209,7 @@ function refreshGamePrices(gameData){
         let promiseGamivo = resellerHandler.getGamePriceInfo(steamID, gameName, "Gamivo");
 	let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
 
-        Promise.all([promiseSteam, promiseHRKgame, promiseGamivo, promiseCDkeys])
+        Promise.all([promiseSteam, promiseHRKgame, promiseGamivo/*, promiseCDkeys*/])
             .then(results => {
 
                 let steamGameDataP = null, cdkeysGameDataP = null, hrkGameDataP = null, gamivoGameDataP = null;

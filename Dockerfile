@@ -15,6 +15,6 @@ RUN npm install
 # Bundle app source
 COPY . .
 
-EXPOSE 3000
+EXPOSE 3030
 CMD ["npm", "start"]
 # CMD [ "node -r dotenv/config", "server.js" ]

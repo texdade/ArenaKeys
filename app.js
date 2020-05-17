@@ -2,14 +2,14 @@
 */
 
 //continuously refresh data and prices of games (adding also new one) in the db
-const refreshGameAllDayLong = require('./server_processes/refreshGameDataPrice').refreshGamesDump;
-if(process.env.REFRESH)
-    refreshGameAllDayLong();
+//const refreshGameAllDayLong = require('./server_processes/refreshGameDataPrice').refreshGamesDump;
+//if(process.env.REFRESH)
+//    refreshGameAllDayLong();
 
 //continuously check for deals which interest our users and eventually notify them
-const emailNotifier = require('./server_processes/email_notifier').checkPricesForNotifier;
-if(process.env.EMAIL_NOTIFIER)
-    emailNotifier();
+//const emailNotifier = require('./server_processes/email_notifier').checkPricesForNotifier;
+//if(process.env.EMAIL_NOTIFIER)
+//    emailNotifier();
 
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -39,7 +39,7 @@ app.set('view engine', 'ejs'); // set the engine render ejs for dynamic building
 //set up routers for app
 const genericRouter = require('./routes/generic_router'); //testing if the application is working
 const secureRouter = require('./routes/secure_router'); //testing if normal auth is working
-const websiteRouter = require('./routes/website_router'); //testing website engine ejs
+//const websiteRouter = require('./routes/website_router'); //testing website engine ejs
 
 const videogameRouter = require('./routes/videogame_router'); //router for getting videogame data
 const userRouter = require('./routes/user_router'); //router for getting user data
@@ -53,7 +53,7 @@ app.use('/steam/', sProtect(), secureRouter);//protected end-points (requiring s
 app.use('/google/', gProtect(), secureRouter);//protected end-points (requiring google auth)
 
 //set up routers for latest version app
-app.use('/', websiteRouter);
+//app.use('/', websiteRouter);
 
 //set up router for videogame data
 app.use('/', videogameRouter);

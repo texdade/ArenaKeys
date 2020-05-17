@@ -22,7 +22,6 @@ function getDump() {
     }
 }
 
-getAllGamesInfo();
 
 //returns info of all games in proper formatted json
 //note that CDKeys has a steamID field but it's empty (at least at the time of writing of this code)

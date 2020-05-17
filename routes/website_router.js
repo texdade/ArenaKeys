@@ -55,7 +55,7 @@ router.get('/gameSearch', (req, res) => {
     let gameName = req.query.name;
 
     let getUser = userProcess.tryGetUserInfo(gToken, sToken);
-    
+    console.log("Rerquesting result for "+ steamID || gameName);    
     let priceChecker;
     if(steamID)
         priceChecker = gameProcess.getGameOffer(steamID);
@@ -64,6 +64,7 @@ router.get('/gameSearch', (req, res) => {
     
     Promise.all([getUser, priceChecker])
         .then( results => {
+	    console.log(results);
             listProcess.tryGetUserList(gToken, sToken, false, false)//-1 on implies requiring all user lists
                 .then(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: lists }))
                 .catch(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))

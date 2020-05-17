@@ -5,7 +5,7 @@ let apiBaseUrlForHints = apiBaseURL;
 if(!apiBaseURL) {
     apiBaseUrlForHints = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
     if (window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000')
-        apiBaseUrlForHints = 'http://localhost:3000';
+        apiBaseUrlForHints = 'http://172.24.4.137:3030';
 }
 
 $( "#searchBar" ).keyup(() => {

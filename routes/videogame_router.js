@@ -39,7 +39,7 @@ router.get('/videogame', (req, res) => {
 
 router.get('/videogame/:id', (req, res) => {
     let steamID = req.params.id;
-
+    console.log("Videogame " + steamID + " request HTTP");
     let offers = true; //default value is true
     let details = true; //default value is true
 

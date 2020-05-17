@@ -13,22 +13,27 @@ const cacheDuration = process.env.CACHE_DUR || 60 * 60 * 24;
 //raw dump of reseller's db
 function getDump() {
     let cachedData = mcache.get(cacheKey);
-    if(!cachedData)
+    if(!cachedData){
+	console.log("CDKeys DUMP no cached data!");
         return fetch(url);
-    else{
+    }else{
+	console.log("CDKeys DUMP found cached data");
         return new Promise((resolve) => resolve(cachedData));
     }
 }
+
+getAllGamesInfo();
 
 //returns info of all games in proper formatted json
 //note that CDKeys has a steamID field but it's empty (at least at the time of writing of this code)
 function getAllGamesInfo(){
     return new Promise((resolve, reject) => {
-        getDump()
+        console.log("GET ALL GAMES CDKeys");
+	getDump()
         
         .then(res => {
                 let textPromise;
-
+		console.log("GOT DUMP from CDKeys");
                 let cachedData = mcache.get(cacheKey);
 
                 if(!cachedData)
@@ -47,6 +52,7 @@ function getAllGamesInfo(){
                     let games = [];
                     for(let i=0; i<result.data.length; i++){
                         //json generation
+			console.log("inspecting CDKeys game " + result.data[i][1]);
                         let game = {
                             internalID: result.data[i][0], //cdKeys internal id
                             name: result.data[i][1], //name
@@ -60,6 +66,7 @@ function getAllGamesInfo(){
                         };
                         games.push(game);
                     }
+		    console.log("Finished inspecting CDKeys dump");
                     //console.log(JSON.stringify(games));
                     resolve(games);
                 });
@@ -73,20 +80,22 @@ function getAllGamesInfo(){
 
 //returns the price of the specified game in proper formatted json
 function getSingleGameInfo(steamID){
+    console.log("CIAOOOOOOO");
     return new Promise((resolve, reject) => {
-
+	console.log("CDKEYS getSingleGameInfo");
         getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
                     if(data[i]["steamID"] && steamID === data[i]["steamID"]){
-                        resolve(data[i]);
+                        console.log("CDKEYS getSingleGameInfo FOUND!");
+			resolve(data[i]);
                         break;
                     }
                 }
                 resolve(null);
             })
 
-            .catch(err => reject(err));
+            .catch(err => {console.log(err); reject(err)});
     });
 }
 

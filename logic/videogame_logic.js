@@ -65,15 +65,15 @@ function getGame(steamID, details, offers){
 
                                     resolve(gameDataPrices)
                                 })
-                                .catch(err => reject(err));
+                                .catch(err =>{ console.log(err); reject(err);});
                         })
 
-                        .catch(err => reject(err));
+                        .catch(err => {console.log(err);reject(err);});
                 }
 
             })
 
-            .catch(err => reject(err));
+            .catch(err => {console.log(err);reject(err)});
     });
 }
 
@@ -205,11 +205,11 @@ function refreshGamePrices(gameData){
     return new Promise((resolve, reject) => {
 
         let promiseSteam = resellerHandler.getGamePriceInfo(steamID, gameName, "Steam");
-        let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
         let promiseHRKgame = resellerHandler.getGamePriceInfo(steamID, gameName, "HRKGame");
         let promiseGamivo = resellerHandler.getGamePriceInfo(steamID, gameName, "Gamivo");
+	let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
 
-        Promise.all([promiseSteam, promiseCDkeys, promiseHRKgame, promiseGamivo])
+        Promise.all([promiseSteam, promiseHRKgame, promiseGamivo, promiseCDkeys])
             .then(results => {
 
                 let steamGameDataP = null, cdkeysGameDataP = null, hrkGameDataP = null, gamivoGameDataP = null;
@@ -226,28 +226,14 @@ function refreshGamePrices(gameData){
                 if(process.env.LOG)
                     console.log("SteamGameDataPrice(" + steamID + ") = " + JSON.stringify(steamGameDataP));
 
-                //cdkeys
-                if(results[1] && results[1]['price']){
-                    cdkeysGameDataP = {
-                        steamID: steamID,
-                        reseller: "CDKeys",
-                        availability: results[1]['availability'] === "In Stock",
-                        link: results[1]['link'],
-                        price: parseFloat(results[1]['price'])
-                    };
-                }
-
-                if(process.env.LOG)
-                    console.log("CDKeysGameDataPrice(" + steamID + ") = " + JSON.stringify(cdkeysGameDataP));
-
                 //hrkgame
-                if(results[2] && results[2]['price']){
+                if(results[1] && results[1]['price']){
                     hrkGameDataP = {
                         steamID: steamID,
                         reseller: "HRKGame",
-                        availability: results[2]['availability'] === "in stock",
-                        link: results[2]['link'],
-                        price: parseFloat(results[2]['price'].substring(0,results[2]['price'].length-4))
+                        availability: results[1]['availability'] === "in stock",
+                        link: results[1]['link'],
+                        price: parseFloat(results[1]['price'].substring(0,results[1]['price'].length-4))
                     };
                 }
 
@@ -255,19 +241,34 @@ function refreshGamePrices(gameData){
                     console.log("HRKGameDataPrice(" + steamID + ") = " + JSON.stringify(hrkGameDataP));
 
                 //gamivo
-                if(results[3] && results[3]['price']){
+                if(results[2] && results[2]['price']){
                     gamivoGameDataP = {
                         steamID: steamID,
                         reseller: "Gamivo",
-                        availability: results[3]['availability'] === "in stock",
-                        link: results[3]['link'],
-                        price: parseFloat(results[3]['price'].substring(0,results[3]['price'].length-4))
+                        availability: results[2]['availability'] === "in stock",
+                        link: results[2]['link'],
+                        price: parseFloat(results[2]['price'].substring(0,results[2]['price'].length-4))
                     };
                 }
 
                 if(process.env.LOG)
                     console.log("GamivoGameDataPrice(" + steamID + ") = " + JSON.stringify(gamivoGameDataP));
+		
+		//cdkeys
+                if(results[3] && results[3]['price']){
+                    cdkeysGameDataP = {
+                        steamID: steamID,
+                        reseller: "CDKeys",
+                        availability: results[3]['availability'] === "In Stock",
+                        link: results[3]['link'],
+                        price: parseFloat(results[3]['price'])
+                    };
+                }
 
+                if(process.env.LOG)
+                    console.log("CDKeysGameDataPrice(" + steamID + ") = " + JSON.stringify(cdkeysGameDataP));
+
+		
                 insertUpdateGamePrices([steamGameDataP, cdkeysGameDataP, hrkGameDataP, gamivoGameDataP])
                     .then(() => {
 

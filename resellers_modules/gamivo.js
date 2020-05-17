@@ -100,19 +100,20 @@ function getAllGamesInfo(){
 //returns the price of the specified game in proper formatted json
 function getSingleGameInfo(steamID){
     return new Promise((resolve, reject) => {
-
+	console.log("GAMIVO getSingleGameInfo");
         getAllGamesInfo()
             .then(data => {
                 for(let i=0; i<data.length; i++){
                     if(data[i]["steamID"] && steamID === data[i]["steamID"]){
-                        resolve([data[i]]);
+                        console.log("GAMIVO getSingleGameInfo FOUND!");
+			resolve([data[i]]);
                         break;
                     }
                 }
                 resolve(null);
             })
 
-            .catch(err => reject(err));
+            .catch(err =>{console.log(err); reject(err)});
     });
 }
 

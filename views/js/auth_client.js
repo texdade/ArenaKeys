@@ -1,6 +1,6 @@
 let apiBaseURL = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
 if(window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com')
-    apiBaseURL = 'http://localhost:3000';
+    apiBaseURL = 'http://172.24.4.137';
 
 $("#gLoginBtn").click(function(e) {
     e.preventDefault();

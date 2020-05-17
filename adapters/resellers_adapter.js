@@ -17,7 +17,7 @@ function getGameData(steamID, name, reseller){
             reject("Invalid parameters");
 
         let gameDataPromise;
-
+	console.log("RESELLER ADAPTER searching for game " + steamID + " via " + reseller);
         if(reseller === "Steam")
             gameDataPromise = steamFetchModule.getSingleGameInfo(steamID);
 
@@ -30,9 +30,10 @@ function getGameData(steamID, name, reseller){
         else if(reseller === "HRKGame")
             gameDataPromise = hrkgameFetchModule.getSingleGameInfo(steamID);
 
-        else if(reseller === "CDKeys")
+        else if(reseller === "CDKeys"){
+	    console.log("CIAOOoooo00000123456");
             gameDataPromise = cdkeysFetchModule.getSingleGameInfo(steamID);
-
+	}
         else {
             if(process.env.LOG)
                 console.log("Invalid reseller info");
@@ -69,7 +70,7 @@ function getGameBasicInfo(steamID, name, reseller){
             };
 
             resolve(gameDataResult);
-        }).catch(err => reject(err));
+        }).catch(err =>{ console.log(err); reject(err)});
 
     });
 }

@@ -10,7 +10,7 @@ function getGameOffer(steamId){
     return new Promise((resolve, reject) => {
         fetch(apiBaseUrl + '/videogame/'+steamId)
             .then(data => data.json()
-                .then(gameOffer => resolve(gameOffer).catch(err => reject(err)))
+                .then(gameOffer => resolve([gameOffer]).catch(err => reject(err)))
             )
             .catch(err => reject(err));
     })

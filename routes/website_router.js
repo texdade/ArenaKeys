@@ -18,9 +18,10 @@ function loggedUser(gToken, sToken, userBaseInfo, res, createNew){
                 if(createNew && parseInt(err) === 404 && userBaseInfo && utilities.isUserNoId(userBaseInfo)){
                     userProcess.createNewUser(userBaseInfo, gToken || sToken).then(user => {
                         res.render('index', {user: user, err: null});
-                    }).catch(err => reject(err));
+                    }).catch(err =>{ console.log(err);reject(err)});
                 }else{
-                    res.clearCookie('gToken');
+                    console.log(err);
+		    res.clearCookie('gToken');
                     res.clearCookie('sToken');
                     reject(err);
                 }
@@ -65,12 +66,14 @@ router.get('/gameSearch', (req, res) => {
     Promise.all([getUser, priceChecker])
         .then( results => {
 	    console.log(results);
-            listProcess.tryGetUserList(gToken, sToken, false, false)//-1 on implies requiring all user lists
+            //console.log("OFFERS:\n"+JSON.stringify(results[1]));
+	    listProcess.tryGetUserList(gToken, sToken, false, false)//-1 on implies requiring all user lists
                 .then(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: lists }))
                 .catch(lists => res.render('gameListResult', {user: results[0], err: null, searchResults: results[1], userLists: [] }))
         })
         .catch(err => {
-            res.clearCookie('gToken');
+            console.log(err);
+	    res.clearCookie('gToken');
             res.clearCookie('sToken');
             res.redirect('/index?session_expired=true');
         });

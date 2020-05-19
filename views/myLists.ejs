@@ -252,13 +252,14 @@
                 if(gToken)
                     url = "/google/userlist/";
                 else if(sToken)
-                    url = "/steam/userlist/";
+                    url = "http://gamekeys.org:3030/steam/userlist/";
 
                 $.ajax({
                     url: url,
                     type: 'POST',
+	            crossDomain: true,
                     headers: {
-                        "Authorization": "Bearer "+(gToken || sToken),
+                        "Authorization": "Bearer "+sToken,
                         "Content-Type": "application/json"
                     },
                     data: JSON.stringify(list),//list has been updated with a removed item
@@ -279,13 +280,14 @@
                 if(gToken)
                     url = "/google/userlist/"+listId;
                 else if(sToken)
-                    url = "/steam/userlist/"+listId;
+                    url = "http://gamekeys.org:3030/steam/userlist/"+listId;
 
                 $.ajax({
                     url: url,
                     type: 'GET',
+                    crossDomain: true,
                     headers: {
-                        "Authorization": "Bearer "+(gToken || sToken),
+                        "Authorization": "Bearer "+sToken,
                         "Content-Type": "application/json"
                     },
                     success: function(fetchedList) {
@@ -303,11 +305,12 @@
                 if(gToken)
                     url = "/google/userlist/"+updList['id'];
                 else if(sToken)
-                    url = "/steam/userlist/"+updList['id'];
+                    url = "http://gamekeys.org:3030/steam/userlist/"+updList['id'];
 
                 $.ajax({
                     url: url,
                     type: 'PUT',
+	            crossDomain: true,
                     headers: {
                         "Authorization": "Bearer "+(gToken || sToken),
                         "Content-Type": "application/json"
@@ -327,11 +330,12 @@
             if(gToken)
                 url = "/google/userlist/"+id;
             else if(sToken)
-                url = "/steam/userlist/"+id;
+                url = "http://gamekeys.org:3030/steam/userlist/"+id;
 
             $.ajax({
                 url: url,
                 type: 'DELETE',
+                crossDomain: true,
                 headers: {
                     "Authorization": "Bearer "+(gToken || sToken),
                     "Content-Type": "application/json"
@@ -479,7 +483,7 @@
             if(gToken)
                 url = "/google/userlist/"+id;
             else if(sToken)
-                url = "/steam/userlist/"+id;
+                url = "http://gamekeys.org:3030/steam/userlist/"+id;
 
             getList(id)
                 .then(fetchedList => {

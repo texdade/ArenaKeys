@@ -1,6 +1,8 @@
 let apiBaseURL = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000';
 if(window.location.hostname != 'ec2-34-245-97-253.eu-west-1.compute.amazonaws.com')
-    apiBaseURL = 'http://172.24.4.137:3030';
+    apiBaseURL = 'http://gamekeys.org:3030';
+
+let websiteHome = 'http://gamekeys.org';
 
 $("#gLoginBtn").click(function(e) {
     e.preventDefault();
@@ -20,7 +22,7 @@ $("#gLoginBtn").click(function(e) {
             if(splitCookie[0] === 'gToken' && !loginSuccess){
                 loginSuccess = true;
                 loginWindow.close();
-                window.location.replace(apiBaseURL);
+                window.location.replace(websiteHome);
             }
         });
     }, 200);
@@ -44,7 +46,7 @@ $("#sLoginBtn").click(function(e) {
             if(splitCookie[0] === 'sToken' && !loginSuccess){
                 loginSuccess = true;
                 loginWindow.close();
-                window.location.replace(apiBaseURL);
+                window.location.replace(websiteHome);
             }
         });
     }, 200);

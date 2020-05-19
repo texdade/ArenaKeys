@@ -2,7 +2,7 @@
 const mysql = require('mysql');
 let connection;
 let db_config = {
-        host: '10.1.3.100',
+        host: '10.1.3.69',
         user: 'bmjNX6on7f',
         password: '2mwKzl3a96',
         database: 'bmjNX6on7f'

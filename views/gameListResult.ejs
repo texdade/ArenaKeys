@@ -140,16 +140,17 @@
 
         function addGame(listId, steamId){
             console.log("Adding game " + steamId + " with list " + listId);
-            if(gToken)
-                url = "/google/userlist/"+listId;
+            //let base = "172.24.4.137:3030";
+	    if(gToken)
+                url = ":3030/google/userlist/"+listId;
             else if(sToken)
-                url = "/steam/userlist/"+listId;
+                url = "http://gamekeys.org:3030/steam/userlist/"+listId;
 
             $.ajax({
                 url: url,
                 type: 'GET',
                 headers: {
-                    "Authorization": "Bearer "+(gToken || sToken),
+                    "Authorization": "Bearer " + sToken,
                     "Content-Type": "application/json"
                 },
                 success: function(fetchedList) {
@@ -158,8 +159,9 @@
                     $.ajax({
                         url: url,
                         type: 'PUT',
+			crossDomain: true,
                         headers: {
-                            "Authorization": "Bearer "+(gToken || sToken),
+                            "Authorization": "Bearer " + sToken,
                             "Content-Type": "application/json"
                         },
                         data: JSON.stringify(fetchedList),//list has been updated with a removed item
@@ -168,12 +170,18 @@
                             console.log(result);
                             $('#addGameModalSuccess').modal('show');
                         },
-                        error: function(error){
+                        error: function(error, options, thrownError){
                             console.log("Updated list error");
                             console.log(error);
+		            console.log(options);
+                            console.log(thrownError);
                             $('#addGameModalError').modal('show');
                         }
                     });
+                },
+                error: function(error){
+                    console.log("Fetch error");
+                    error.then(dataerr => console.log(dataerr));
                 }
             });
         }

@@ -101,7 +101,7 @@
         if(gToken)
           url = "/google/user";
         else if(sToken)
-          url = "/steam/user";
+          url = "http://gamekeys.org:3030/steam/user";
 
         if(validateEmail($('#emailTxt').val())){
           user["email"]=$('#emailTxt').val();
@@ -109,8 +109,9 @@
           $.ajax({
             url: url,
             type: 'PUT',
+            crossDomain: true,
             headers: {
-              "Authorization": "Bearer "+(gToken || sToken),
+              "Authorization": "Bearer "+(sToken),
               "Content-Type": "application/json"
             },
             data: JSON.stringify(user),
@@ -119,7 +120,13 @@
               $("#successUpdAlert").fadeTo(2000, 500).slideUp(500, function(){
                 $("#successUpdAlert").slideUp(500);
               });
-            }
+            },
+            error: function(err, options, thrownError){
+		console.log("PUT error");
+		console.log(err);
+		console.log(options);
+		console.log(thrownError);
+	    }
           });
         } else {
           $("#errorUpdAlert").removeClass('d-none');
@@ -145,14 +152,15 @@
         if(gToken)
           url = "/google/user";
         else if(sToken)
-          url = "/steam/user";
+          url = "http://gamekeys.org:3030/steam/user";
 
-        if(gToken || sToken){
+        if(sToken){
           $.ajax({
             url: url,
             type: 'DELETE',
+  	    crossDomain: true,
             headers: {
-              "Authorization": "Bearer " + (gToken || sToken),
+              "Authorization": "Bearer " + sToken,
               "Content-Type": "application/json"
             },
             success: function(data) {

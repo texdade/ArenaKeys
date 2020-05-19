@@ -12,12 +12,12 @@ router.get('/user', (req, res) => {
 
     if(!googleId && steamId){ //section for users logged with steam
         userLogic.getUser(steamId)
-            .then(userData => res.status(200).json(userData))
+            .then(userData => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
         userLogic.getUser(googleId)
-            .then(userData => res.status(200).json(userData))
+            .then(userData => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else{ //this should be impossible, but you never know!
@@ -35,12 +35,12 @@ router.post('/user', (req, res) => {
 
     if(!googleId && steamId){ //section for users logged with steam
         userLogic.createUser({steamUserId: steamId, googleUserId: null, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
-            .then(userData => res.status(201).json(userData)) //return the newly created user
+            .then(userData => res.status(201).header({"Access-Control-Allow-Origin": "*"}).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
         userLogic.createUser({steamUserId: null, googleUserId: googleId, name: name, imageLink: imageLink, steamProfileUrl: steamProfileUrl, email: email})
-            .then(userData => res.status(201).json(userData)) //return the newly created user
+            .then(userData => res.status(201).header({"Access-Control-Allow-Origin": "*"}).json(userData)) //return the newly created user
             .catch(err => res.status(400).json({}));
 
     }else{ //this should be impossible, but you never know!
@@ -69,7 +69,7 @@ router.put('/user', (req, res) => {
 
     if(googleId || steamId){ //section for users logged with steam
         userLogic.updateUser(updUser)
-            .then(userData => res.status(200).json(userData)) //return the modified user
+            .then(userData => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(userData)) //return the modified user
             .catch(err => res.status(404).json({}));
 
     }else{ //this should be impossible, but you never know!
@@ -83,12 +83,12 @@ router.delete('/user', (req, res) => {
 
     if(!googleId && steamId){ //section for users logged with steam
         userLogic.deleteUser(steamId)
-            .then(userData => res.status(200).json(userData))
+            .then(userData => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else if(googleId && !steamId){ //section for users logged with google
         userLogic.deleteUser(googleId)
-            .then(userData => res.status(200).json(userData))
+            .then(userData => res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(userData))
             .catch(err => res.status(404).json({}));
 
     }else{ //this should be impossible, but you never know!

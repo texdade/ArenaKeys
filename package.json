@@ -18,10 +18,11 @@
   },
   "homepage": "https://github.com/texdade/SDE_project#readme",
   "dependencies": {
+    "@popperjs/core": "^2.0.5",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.4",
+    "cors": "^2.8.5",
     "dotenv": "^8.2.0",
-    "@popperjs/core": "^2.0.5",
     "ejs": "^3.0.1",
     "express": "^4.17.1",
     "google-auth-library": "^5.9.2",

@@ -17,6 +17,7 @@ const cookieParser = require('cookie-parser');
 //const {auth, protect} = require('./auth/all_auth');
 const gProtect = require('./auth/google_auth').protect;
 const sProtect = require('./auth/steam_auth').protect;
+const cors = require('cors');
 
 const gAuth = require('./auth/google_auth').auth;
 const sAuth = require('./auth/steam_auth').auth;
@@ -31,7 +32,7 @@ app.use(express.static('views'));// folder in which to put the static files (htm
 app.use(bodyParser.json({limit: '50mb'})); // read json
 
 app.use(cookieParser());
-
+app.use(cors());
 //middlewares (just for the widget)
 app.use(bodyParser.urlencoded({ extended: true , limit: '50mb'})); // read form enctype data
 app.set('view engine', 'ejs'); // set the engine render ejs for dynamic building of html pages with ejs tags

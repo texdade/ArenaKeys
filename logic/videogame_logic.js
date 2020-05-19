@@ -207,7 +207,7 @@ function refreshGamePrices(gameData){
         let promiseSteam = resellerHandler.getGamePriceInfo(steamID, gameName, "Steam");
         let promiseHRKgame = resellerHandler.getGamePriceInfo(steamID, gameName, "HRKGame");
         let promiseGamivo = resellerHandler.getGamePriceInfo(steamID, gameName, "Gamivo");
-	let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
+	//let promiseCDkeys = resellerHandler.getGamePriceInfo(steamID, gameName, "CDKeys");
 
         Promise.all([promiseSteam, promiseHRKgame, promiseGamivo/*, promiseCDkeys*/])
             .then(results => {
@@ -255,7 +255,8 @@ function refreshGamePrices(gameData){
                     console.log("GamivoGameDataPrice(" + steamID + ") = " + JSON.stringify(gamivoGameDataP));
 		
 		//cdkeys
-                if(results[3] && results[3]['price']){
+                /*
+		if(results[3] && results[3]['price']){
                     cdkeysGameDataP = {
                         steamID: steamID,
                         reseller: "CDKeys",
@@ -267,9 +268,9 @@ function refreshGamePrices(gameData){
 
                 if(process.env.LOG)
                     console.log("CDKeysGameDataPrice(" + steamID + ") = " + JSON.stringify(cdkeysGameDataP));
-
+		*/
 		
-                insertUpdateGamePrices([steamGameDataP, cdkeysGameDataP, hrkGameDataP, gamivoGameDataP])
+                insertUpdateGamePrices([steamGameDataP, hrkGameDataP, gamivoGameDataP/*, cdkeysGameDataP*/])
                     .then(() => {
 
                         //log last_update in steam_games

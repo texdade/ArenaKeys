@@ -9,8 +9,8 @@ let returnUrlSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3
 let realmSteam = 'http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000/';
 
 if(process.env.LOCAL) {//working on localhost
-    returnUrlSteam = 'http://172.24.4.137:3030/auth/steam/return';
-    realmSteam = 'http://172.24.4.137:3030/';
+    returnUrlSteam = 'http://gamekeys.org:3030/auth/steam/return';
+    realmSteam = 'http://gamekeys.org:3030/';
 }
 //secret key to mount jwt over steam openID
 const secretKeyForSteamAuthJWT = "DevisIsTheCodeMaster"; //I am very humble guy

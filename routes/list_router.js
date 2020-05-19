@@ -80,7 +80,7 @@ router.get('/userlist', (req, res) => {
     promiseUserData
         .then(userData => { //get the user id from the steam id
             listLogic.getLists(userData["id"], details, offers).then(lists => { //and return all the lists associated with him
-                res.status(200).json(lists);
+                res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(lists);
             }).catch(err => res.status(500).send(err));
         })
         .catch(err => res.status(404).json({}));
@@ -122,17 +122,17 @@ router.get('/userlist/:id', (req, res) => {
         .then(userData => { //get the user id from the steam id
             listLogic.getList(listId, userData['id'], details, offers).then(list => { //and return the list
                 if(userData['id'] === list['userId'])
-                    res.status(200).json(list);
+                    res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(list);
                 else
-                    res.status(404).json({});
+                    res.status(404).header({"Access-Control-Allow-Origin": "*"}).json({});
             }).catch(err => {
                 if(err && parseInt(err) >=400 && parseInt(err) < 500)
-                    res.status(parseInt(err)).json({});
+                    res.status(parseInt(err)).header({"Access-Control-Allow-Origin": "*"}).json({});
                 else
-                    res.status(500).json({});
+                    res.status(500).header({"Access-Control-Allow-Origin": "*"}).json({});
             });
         })
-        .catch(err => res.status(404).json({}));
+        .catch(err => res.status(404).header({"Access-Control-Allow-Origin": "*"}).json({}));
 });
 
 //update an already existing list (adding/deleting games &/or changing attributes)
@@ -145,9 +145,16 @@ router.put('/userlist/:id', (req, res) => {
     let games = req.body.items;
 
     let listId = req.params.id;
+    
+    console.log("##################################");
+    console.log("listName   " + listName);
+    console.log("games      " + games);
+    console.log("listId     " + listId);
+    console.log("steamId    " + steamId);
+    console.log("##################################");
 
     if(!listName){
-        res.status(400).json({}); //bad request!
+        res.status(400).header({"Access-Control-Allow-Origin": "*"}).json({}); //bad request!
     }
 
     if(!notifyMe){
@@ -166,21 +173,21 @@ router.put('/userlist/:id', (req, res) => {
         promiseUserData = userLogic.getUser(googleId);
 
     }else{
-        res.status(403).json({});
+        res.status(403).header({"Access-Control-Allow-Origin": "*"}).json({});
     }
 
     promiseUserData.
     then(userData => { //get the user id from the steam id
         listLogic.updateList({id:listId, userId: userData["id"], name: listName, notifyMe: notifyMe, items: games}).then(updList => {
-            res.status(200).json(updList);
+            res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(updList);
         }).catch(err => {
             if(parseInt(err) >=400 && parseInt(err) <500)
-                res.status(parseInt(err)).json({});
+                res.status(parseInt(err)).header({"Access-Control-Allow-Origin": "*"}).json({});
             else
-                res.status(500).send(err)
+                res.status(500).header({"Access-Control-Allow-Origin": "*"}).send(err)
         });
     })
-        .catch(err => res.status(400).json({}));
+    .catch(err => res.status(400).header({"Access-Control-Allow-Origin": "*"}).json({}));
 
 });
 
@@ -209,7 +216,7 @@ router.delete('/userlist/:id', (req, res) => {
     promiseUserData
         .then(userData => { //get the user id from the steam id
             listLogic.deleteList(listId, userData['id']).then(list => { //and return the deleted list
-                res.status(200).json(list);
+                res.status(200).header({"Access-Control-Allow-Origin": "*"}).json(list);
             }).catch(err => {
                 if(parseInt(err) >=400 && parseInt(err) <500)
                     res.status(parseInt(err)).json({});

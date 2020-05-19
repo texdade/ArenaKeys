@@ -3,7 +3,7 @@ const utilities = require('../db/utilities');
 
 let apiBaseUrl = "http://ec2-34-245-97-253.eu-west-1.compute.amazonaws.com:3000";
 if(process.env.LOCAL)
-    apiBaseUrl = "http://172.24.4.137";
+    apiBaseUrl = "http://gamekeys.org";
 
 function getGameOffer(steamId){
     
